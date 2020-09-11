@@ -1,0 +1,9 @@
+- fix responsive design:
+    - looks bad  in 1366x768 (PC), correct
+    - looks good in WINDOWS keep it that way
+    - improve for android mobile devices, samsung s5
+    - looks bad in ipad 10, correct
+- HQ background image(s), related to space
+- fix css 'active' property for home|services|about us|process
+- client icons color should change to white when the cursor is over them
+- add arrow at the bottom so when the user gets to the end of the page it can go up easily
