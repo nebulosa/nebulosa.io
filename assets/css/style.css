@@ -124,8 +124,6 @@ ul {
   background: #121020;
   height: 100%;
   width: 100%;
-  z-index: ;
-  /*opacity: .6;*/
   opacity: .2;
 }
 
@@ -153,7 +151,6 @@ ul {
 }
 
 .hero-text h3 span {
-  display: ;
   font-weight: 500;
 }
 
@@ -214,7 +211,6 @@ ul {
 }
 
 .single-scale:last-child p {
-  padding: ;
 }
 
 .single-scale h3 {
@@ -526,7 +522,6 @@ ul.navbar-nav li {
 .overview-txt a {
   font-size: 16px;
   color: #fff;
-  bac: ;
   background: #1A1A1A;
   padding: 10px 26px;
   display: inline-block;
@@ -754,7 +749,6 @@ ul.navbar-nav li {
   color: #fff;
   font-size: 40px;
   font-weight: bold;
-  padding: ;
   margin-bottom: 50px;
 }
 
@@ -784,60 +778,70 @@ ul.navbar-nav li {
 .tc-tool img {
   width: 100px;
 }
-.tc-toolA{
+
+.tc-toolA {
   margin: 0 30px;
   text-align: center;
   margin-bottom: 40px;
   width: 120px;
 }
-.tc-toolB{
+
+.tc-toolB {
   text-align: center;
   margin: 0 30px;
   margin-bottom: 40px;
   width: 180px;
 }
-.tc-toolC{
+
+.tc-toolC {
   margin: 0 30px;
   text-align: center;
   margin-bottom: 40px;
   width: 135px;
 }
-.tc-toolD{
+
+.tc-toolD {
   margin: 0 30px;
   text-align: center;
   margin-bottom: 40px;
   width: 200px;
 }
-.tc-toolE{
+
+.tc-toolE {
   margin: 0 30px;
   text-align: center;
   margin-bottom: 40px;
   width: 95px;
 }
-.tc-toolF{
+
+.tc-toolF {
   margin: 0 30px;
   text-align: center;
   margin-bottom: 40px;
   width: 168px;
 }
-.tc-toolG{
+
+.tc-toolG {
   margin: 0 30px;
   text-align: center;
   margin-bottom: 40px;
   width: 95px;
 }
-.tc-toolH{
+
+.tc-toolH {
   margin: 0 30px;
   text-align: center;
   margin-bottom: 40px;
   width: 174px;
 }
-.tc-toolI{
+
+.tc-toolI {
   margin: 0 30px;
   text-align: center;
   margin-bottom: 40px;
   width: 72px;
 }
+
 .inr-btm-brn-area .barnnd-btn button {
   background: #DFE6E8;
 }
@@ -1477,4 +1481,27 @@ ul.navbar-nav li {
 
 .header-area {
   transition: linear .3s;
+}
+
+@media screen and (min-width: 991px) {
+  .hero-area .hero-screen-img img {
+    margin-right: 45px;
+  }
+}
+
+@media only screen and (min-width: 991px) {
+  .active-page {
+    background-color: #00CA92;
+    border-radius: 30px;
+    padding: 0 10px;
+    margin-left: 20px;
+  }
+
+  .active-page .nav-link {
+    margin-left: 0;
+  }
+
+  .active-page:hover .nav-link {
+    color: #fff !important;
+  }
 }

@@ -52,8 +52,10 @@ window.onscroll = function () {
 
 function scrollFunction() {
   if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
-    document.getElementById('header-area').style.height = '70px';
+    document.getElementById('header-area').style.paddingTop = '0';
+    document.getElementById('header-area').style.paddingBottom = '0';
   } else {
-    document.getElementById('header-area').style.height = '100px';
+    document.getElementById('header-area').style.paddingTop = '20px';
+    document.getElementById('header-area').style.paddingBottom = '20px';
   }
 }

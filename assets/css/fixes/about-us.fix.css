@@ -1,0 +1,45 @@
+.inner-hero .container {
+    padding-top: 100px;
+}
+
+@media screen and (min-width: 991px) {
+    .inner-hero {
+        padding-top: 90px;
+    }
+}
+
+@media screen and (min-width: 1200px) and (max-width: 1400px) {
+    .hero-area .hero-screen-img img {
+        max-width: 500px !important;
+    }
+}
+
+@media screen and (min-width: 1250px) and (max-width: 1450px) {
+    .hero-area .hero-screen-img img {
+        position: relative;
+        top: 350px;
+    }
+}
+
+@media screen and (min-width: 1080px) and (max-width: 1250px) {
+    .hero-area .hero-screen-img img {
+        position: relative;
+        top: 250px;
+    }
+}
+
+@media screen and (min-width: 991px) and (max-width: 1080px) {
+    .hero-area .hero-screen-img img {
+        max-width: 400px !important;
+        position: relative;
+        top: 250px;
+    }
+}
+
+.about-hero img {
+    margin-bottom: 30px;
+}
+
+.hero-area {
+    padding-bottom: 0 !important;
+}

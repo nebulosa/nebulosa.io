@@ -1,0 +1,140 @@
+@media screen and (max-width: 465px) {
+    .tch-tools > div {
+        width: 100px !important;
+    }
+
+    .tch-tools div img {
+        width: 100% !important;
+    }
+}
+
+.inner-hero .container {
+    padding-top: 170px;
+}
+
+@media screen and (min-width: 1200px) {
+    .inner-hero {
+        padding-top: 80px;
+    }
+}
+
+@media screen and (min-width: 1400px) and (max-width: 1700px) {
+    .hero-area .hero-screen-img img {
+        max-width: 500px !important;
+    }
+}
+
+@media screen and (min-width: 1200px) and (max-width: 1400px) {
+    .hero-area .hero-screen-img img {
+        max-width: 500px !important;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .hero-area .hero-screen-img img {
+        margin-top: 50px;
+    }
+}
+
+.hero-area .hero-screen-img img {
+    margin-bottom: 20px;
+}
+
+.tch-tools > div {
+    margin: 0 !important;
+}
+
+.tch-tools {
+    text-align: center !important;
+}
+
+.tch-tools div {
+    text-align: center;
+}
+
+.tch-tools div img {
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+@media screen and (max-width: 991px) and (min-width: 576px) {
+    .tch-tools > div {
+        margin: 0 30px !important;
+    }
+}
+
+
+@media screen and (max-width: 576px) {
+    .tch-tools div img {
+        width: 70%;
+        margin-bottom: 50px;
+    }
+}
+
+@media screen and (max-width: 474px) {
+    .tch-tools div img {
+        transform: scale(.8);
+    }
+}
+
+@media screen and (min-width: 991px) {
+    .tch-tools div {
+        margin: 0 10px !important;
+    }
+}
+
+
+@media screen and (min-width: 1200px) and (max-width: 1400px) {
+    .hero-area .hero-screen-img img {
+        max-width: 500px !important;
+    }
+}
+
+@media screen and (min-width: 1250px) and (max-width: 1450px) {
+    .hero-area .hero-screen-img img {
+        position: relative;
+        top: 350px;
+    }
+}
+
+@media screen and (min-width: 1080px) and (max-width: 1250px) {
+    .hero-area .hero-screen-img img {
+        position: relative;
+        top: 250px;
+    }
+}
+
+@media screen and (min-width: 991px) and (max-width: 1080px) {
+    .hero-area .hero-screen-img img {
+        max-width: 400px !important;
+        position: relative;
+        top: 250px;
+    }
+}
+
+
+@media screen and (min-width: 991px) {
+    .img-scale {
+        transform: scale(.8);
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .mobile-img-scale {
+        transform: scale(.6);
+    }
+
+    .java-scale {
+        transform: scale(.5);
+    }
+}
+
+@media screen and (max-width: 475px) {
+    .mobile-img-scale {
+        transform: scale(.6) !important;
+    }
+
+    .java-scale {
+        transform: scale(.5) !important;
+    }
+}

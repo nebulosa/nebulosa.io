@@ -1,0 +1,49 @@
+@media screen and (max-width:991px) {
+    .order-lg-last .hero-img {
+        margin-bottom: 30px;
+    }
+}
+
+@media screen and (min-width:991px) {
+    .index-hero img {
+        position: relative;
+        top: 0;
+        left: -100px;
+        transform: translate(0, -15%);
+    }
+}
+
+.hero-area {
+    padding-bottom: 60px;
+}
+
+@media screen and (min-width: 1400px) and (max-width: 1700px) {
+    .hero-area .hero-screen-img img {
+        max-width: 500px !important;
+    }
+}
+
+@media screen and (min-width: 1200px) and (max-width: 1400px) {
+    .hero-area .hero-screen-img img {
+        max-width: 500px !important;
+    }
+}
+
+@media screen and (min-width: 991px) {
+    .hero-area {
+        padding-top: 270px;
+        padding-bottom: 260px;
+    }
+}
+
+.partner-brands div .single-bbrand a {
+    width: 100%;
+}
+
+.partner-brands div .single-bbrand a img {
+    width: 100%;
+}
+
+.axa-logo {
+    width: 90% !important;
+}
