@@ -139,7 +139,7 @@ ul {
 }
 
 .nav-link.btn {
-  background: #00CA92;
+  background: #787381;
   padding: 7px 40px !important;
   border-radius: 34px;
 }
@@ -210,8 +210,7 @@ ul {
   margin: 0;
 }
 
-.single-scale:last-child p {
-}
+.single-scale:last-child p {}
 
 .single-scale h3 {
   position: relative;
@@ -323,7 +322,7 @@ ul {
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  border-bottom: 1px solid #16877E;
+  border-bottom: 1px solid #310583;
   padding-bottom: 30px;
   margin-bottom: 20px;
 }
@@ -859,7 +858,7 @@ ul.navbar-nav li {
   border: none;
   color: #fff;
   font-size: 16px;
-  border-bottom: 1px solid #008E6B;
+  border-bottom: 1px solid #4003b1;
   padding: 10px 0px;
   display: block;
   width: 450px;
@@ -995,7 +994,7 @@ ul.navbar-nav li {
 /* When the checkbox is checked, add a blue background */
 
 .checkbx-container input:checked~.checkmark {
-  background-color: #00CA92;
+  background-color: #180144;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
@@ -1276,7 +1275,7 @@ ul.navbar-nav li {
 
 .nav-link:hover {
   transition: linear .3s;
-  color: #22F2CD !important;
+  color: #d6d6d6 !important;
 }
 
 .section-title h3 {
@@ -1357,7 +1356,7 @@ ul.navbar-nav li {
 }
 
 .overview-area .overview-txt h4 {
-  color: #00CA92 !important;
+  /* color: #00CA92 !important; */
 }
 
 .overview-txt a {
@@ -1415,17 +1414,20 @@ ul.navbar-nav li {
 }
 
 .navbar-nav .nav-item a.btn {
-  color: #fff !important;
+  color: #000 !important;
+  background-color: #fff;
   border: none !important;
+  transition: .3s;
 }
 
 .navbar-nav .nav-item a.btn:hover {
-  color: #00CA92 !important;
+  color: #fff !important;
+  background-color: #5018b8 !important;
   border: none !important;
 }
 
 .overview-txts-area .oview-itm .oview-txt h3 {
-  color: #00CA92 !important;
+  /* color: #00CA92 !important; */
 }
 
 .reverse-nav {
@@ -1447,8 +1449,8 @@ ul.navbar-nav li {
 }
 
 .wht-nxt-txt span {
-  background-color: #00CA92;
-  color: #fff;
+  background-color: #ffff;
+  color: #000 !important;
 }
 
 .locations-area {
@@ -1491,17 +1493,80 @@ ul.navbar-nav li {
 
 @media only screen and (min-width: 991px) {
   .active-page {
-    background-color: #00CA92;
+    /* background-color: #180144; */
+    font-weight: bolder;
     border-radius: 30px;
     padding: 0 10px;
     margin-left: 20px;
   }
-
   .active-page .nav-link {
     margin-left: 0;
   }
-
   .active-page:hover .nav-link {
     color: #fff !important;
   }
+}
+
+.nav-link {
+  font-weight: lighter;
+}
+
+.active-page .nav-link {
+  font-weight: bolder !important;
+}
+
+.nav-link.hover-btn.btn {
+  font-weight: bold !important;
+}
+
+.scale-area, .overview-txts-area, .inr-btm-brn-area, .services-pg-txts-area, .results-area, .services-txt-area, .overview-area, .services-area, .wht-next-txt-area, html, .locations-area {
+  background-color: #180144;
+}
+
+* {
+  color: #fff !important;
+}
+
+.barnnd-btn button {
+  background-color: #fff !important;
+  color: #000 !important;
+}
+
+.barnnd-btn button:hover {
+  color: #000 !important;
+  background-color: rgb(153, 153, 153) !important;
+}
+
+.user-roles * {
+  color: #000 !important;
+}
+
+.ct-frm-txtarea {
+  background-color: #180144;
+}
+
+.ct-frm-blk ul li {
+  background-color: #180144;
+}
+
+.checkmark {
+  border: 2px solid #32038a !important;
+  background-color: #32038a !important;
+}
+
+.partner-brands * {
+  text-align: center !important;
+}
+
+.overview-txt * {
+  color: #fff !important;
+}
+
+.oview-txt h3 {
+  color: #fff !important;
+}
+
+.location img {
+  min-width: 100% !important;
+  min-height: 80% !important;
 }
