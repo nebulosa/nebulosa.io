@@ -50,7 +50,7 @@ window.onscroll = function () {
   scrollFunction();
 };
 
-function scrollFunction() {
+/*function scrollFunction() {
   if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
     document.getElementById('header-area').style.paddingTop = '0';
     document.getElementById('header-area').style.paddingBottom = '0';
@@ -59,3 +59,12 @@ function scrollFunction() {
     document.getElementById('header-area').style.paddingBottom = '20px';
   }
 }
+
+*/
+
+var nav = document.querySelector(".header-area");
+
+window.addEventListener("scroll", function(){
+    nav.classList.toggle("active", window.scrollY > 0)})
+
+
