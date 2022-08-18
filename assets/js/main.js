@@ -45,7 +45,7 @@
 })(jQuery);
 
 // shrink navbar on scroll
-
+/*
 window.onscroll = function () {
   scrollFunction();
 };
@@ -56,6 +56,13 @@ function scrollFunction() {
     document.getElementById('header-area').style.paddingBottom = '0';
   } else {
     document.getElementById('header-area').style.paddingTop = '20px';
-    document.getElementById('header-area').style.paddingBottom = '20px';
+    document.getElementById('header-area').style.paddingBottom = '5px';
   }
 }
+*/
+
+var nav = document.querySelector('.header-area');
+
+window.addEventListener('scroll', function(){
+  nav.classList.toggle('active', window.scrollY > 0)
+})
