@@ -59,12 +59,10 @@ window.onscroll = function () {
     document.getElementById('header-area').style.paddingBottom = '20px';
   }
 }
-
 */
 
 var nav = document.querySelector(".header-area");
 
 window.addEventListener("scroll", function(){
-    nav.classList.toggle("active", window.scrollY > 0)})
-
-
+    nav.classList.toggle("active", window.scrollY > 0)
+});
