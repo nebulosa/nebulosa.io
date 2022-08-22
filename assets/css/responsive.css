@@ -216,9 +216,18 @@
 /* MD Device :768px. */
 @media (min-width: 768px) and (max-width: 991px) {
     .navbar-nav {
-        background: #ddd;
+        background: rgba(16,8,41,0.5);
         padding: 20px;
         border-radius: 5px;
+    }
+
+    .nav-link{
+        text-align: center;
+
+    }
+
+    .nav-item:hover{
+    font-weight: 900;
     }
 
     .dropdown:hover .dropdown-menu {
@@ -384,7 +393,7 @@
 
     .nav-link {
         margin-left: 0;
-        color: #000 !important;
+        color: white !important;
     }
 
     ul.navbar-nav li {
@@ -543,24 +552,21 @@
 
 /* SM Small Device :320px. */
 @media only screen and (min-width: 320px) and (max-width: 767px) {
+
     .navbar-nav {
-        background: #ddd;
+        background: rgba(16,8,41,0.5);
         padding: 20px;
         border-radius: 5px;
     }
 
-    .dropdown:hover .dropdown-menu {
-        display: none;
+    .nav-link{
+        text-align: center;
     }
 
-
-
-    .navbar-nav {
-        background: #ddd;
-        padding: 20px;
-        border-radius: 5px;
+    .nav-item:hover{
+    font-weight: 900;
     }
-
+ 
     .dropdown:hover .dropdown-menu {
         display: none;
     }
@@ -733,7 +739,6 @@
 
     .nav-link {
         margin-left: 0;
-        color: #000 !important;
     }
 
     .hero-img img {
