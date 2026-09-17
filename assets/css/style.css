@@ -41,30 +41,18 @@ img {
 h1, h2, h3, h4, h5, h6 {
   margin: 0 0 15px;
   color: #1B1B21;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Montserrat', 'Montserrat Fallback', sans-serif;
 }
 
 body {
   color: #545051;
   font-weight: 300;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Montserrat', 'Montserrat Fallback', sans-serif;
 }
 
 @font-face {
   font-family: RusticLoveTattoo;
   src: url(../fonts/RusticLoveTattoo.otf);
-}
-
-@font-face {
-  font-family: 'Cocogoose';
-  src: url('../fonts/base/Cocogoose-Light.woff');
-  font-weight: 300;
-}
-
-@font-face {
-  font-family: 'Cocogoose';
-  src: url('../fonts/base/COCOGOOSE-DemiBold.woff');
-  font-weight: 700;
 }
 
 .selector-for-some-widget {
@@ -103,6 +91,8 @@ ul {
 .hero-area {
   padding-top: 300px;
   padding-bottom: 200px;
+  /* Average of hero-img.png: shown while that 1.2 MB image loads, instead of the teal body. */
+  background-color: #0f0b2d;
   background-size: cover;
   background-position: center center;
 }
@@ -168,6 +158,11 @@ ul {
 .hero-text p {
   font-size: 20px;
   color: #fff;
+}
+
+.hero-text p a {
+  color: #fff;
+  text-decoration: underline;
 }
 
 .hero-img img {
@@ -408,7 +403,7 @@ ul.navbar-nav li {
 /*--===== start inner hero area =====*/
 
 .inner-hero .hero-text h3 span {
-  font-family: 'Cocogoose';
+  font-family: 'Cocogoose', 'Cocogoose Fallback', sans-serif;
   font-weight: 700;
   font-size: 60px;
   line-height: 1;
@@ -532,7 +527,6 @@ ul.navbar-nav li {
   font-size: 16px;
   color: #fff;
   font-weight: 500;
-  text-align: justify;
 }
 
 .overview-txt a {
@@ -1226,7 +1220,7 @@ ul.navbar-nav li {
 }
 
 .oview-txt ul {
-  padding-left: 50px;
+  padding-left: 0;
 }
 
 .oview-txt {
@@ -1237,16 +1231,17 @@ ul.navbar-nav li {
   flex: 0 0 50%;
 }
 
+/* One box for every image, whatever its own proportions, centred in its half:
+   the illustrations differ in aspect, and at a fixed width alone their heights
+   ran from 249 to 419px. */
 .oview-img img {
-  max-width: 280px;
+  width: 280px;
+  height: 320px;
+  object-fit: contain;
 }
 
 .oview-img {
-  text-align: right;
-}
-
-.oview-itm.img-lft-align .oview-img {
-  text-align: left;
+  text-align: center;
 }
 
 .oview-itm.img-lft-align .oview-txt {
@@ -1255,7 +1250,7 @@ ul.navbar-nav li {
 
 .oview-itm.img-lft-align .oview-txt ul {
   padding-left: 0;
-  padding-right: 80px;
+  padding-right: 0;
 }
 
 .srvs-pg-hro .hero-text h3 span:after {
@@ -1475,18 +1470,6 @@ ul.navbar-nav li {
 
 .locations-area {
   padding-bottom: 70px;
-}
-
-.about-hero img {
-  width: 700px !important;
-}
-
-@media only screen and (min-width: 992px) {
-  .about-hero img {
-    position: relative;
-    transform: scale(1.2);
-    left: 0px;
-  }
 }
 
 .ct-frm-submit-btn button {

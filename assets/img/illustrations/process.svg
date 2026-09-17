@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 628.38" role="img" aria-label="Three satellites around a planet, linked by beams of light">
+  <!-- Fallback for assets/js/scenes/process.js. Illustration palette, Brand Guidelines v1.0 p.4-7. -->
+  <defs>
+    <linearGradient id="planet" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#908cc3"/><stop offset=".5" stop-color="#5c2684"/><stop offset="1" stop-color="#002b56"/>
+    </linearGradient>
+    <radialGradient id="aura"><stop offset="0" stop-color="#908cc3" stop-opacity=".35"/><stop offset="1" stop-color="#908cc3" stop-opacity="0"/></radialGradient>
+    <radialGradient id="spark"><stop offset="0" stop-color="#fff48c"/><stop offset="1" stop-color="#fff48c" stop-opacity="0"/></radialGradient>
+    <radialGradient id="signal"><stop offset="0" stop-color="#1fab84" stop-opacity=".9"/><stop offset="1" stop-color="#1fab84" stop-opacity="0"/></radialGradient>
+    <clipPath id="planet-clip"><circle cx="600" cy="314" r="165"/></clipPath>
+    <g id="sat">
+      <rect x="-9" y="-62" width="18" height="46" fill="#8585b9" stroke="#002b56" stroke-width="2"/>
+      <rect x="-9" y="16" width="18" height="46" fill="#8585b9" stroke="#002b56" stroke-width="2"/>
+      <rect x="-20" y="-16" width="40" height="32" rx="3" fill="#fab600"/>
+      <circle r="26" fill="url(#signal)"/>
+    </g>
+  </defs>
+  <style>
+    .pulse { animation: pulse 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .pulse.d1 { animation-delay: -.9s; } .pulse.d2 { animation-delay: -1.8s; }
+    @keyframes pulse { 50% { transform: scale(1.5); opacity: .5; } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+
+  <circle cx="600" cy="314" r="300" fill="url(#aura)"/>
+  <g fill="none" stroke="#8585b9" stroke-width="3" stroke-dasharray="12 16" opacity=".5">
+    <ellipse cx="600" cy="314" rx="300" ry="90" transform="rotate(-12 600 314)"/>
+    <ellipse cx="600" cy="314" rx="350" ry="120" transform="rotate(18 600 314)"/>
+    <ellipse cx="600" cy="314" rx="400" ry="70" transform="rotate(-30 600 314)"/>
+  </g>
+
+  <circle cx="600" cy="314" r="165" fill="url(#planet)"/>
+  <g clip-path="url(#planet-clip)" fill="none" stroke-width="9" opacity=".4">
+    <path d="M420 250q90-26 180 0t180 0" stroke="#e3e6e5"/>
+    <path d="M420 310q90-30 180 0t180 0" stroke="#e94884"/>
+    <path d="M420 370q90-22 180 0t180 0" stroke="#e3e6e5"/>
+  </g>
+
+  <!-- Beams between the satellites -->
+  <g stroke="#1fab84" stroke-width="3" opacity=".7">
+    <path d="M318 262 872 150M872 150 808 470M808 470 318 262"/>
+  </g>
+  <circle class="pulse" cx="600" cy="206" r="16" fill="url(#spark)"/>
+  <circle class="pulse d1" cx="840" cy="310" r="16" fill="url(#spark)"/>
+  <circle class="pulse d2" cx="563" cy="366" r="16" fill="url(#spark)"/>
+
+  <use href="#sat" x="318" y="262" transform="rotate(-10 318 262)"/>
+  <use href="#sat" x="872" y="150" transform="rotate(20 872 150)"/>
+  <use href="#sat" x="808" y="470" transform="rotate(-25 808 470)"/>
+</svg>

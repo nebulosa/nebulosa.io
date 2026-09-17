@@ -1,0 +1,53 @@
+    <!-- Header bar section start -->
+    <div id="header-area" class="header-area">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <nav class="navbar navbar-expand-lg navbar-light">
+              <a class="navbar-brand" href="index.html"
+                ><img src="assets/img/nebulosa-logo.png" alt="nebulosa logo"
+              /></a>
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+              >
+                <span class="navbar-toggler-icon2"
+                  >{%- comment -%} Font Awesome Free "bars", CC BY 4.0 {%- endcomment -%}<svg
+                    viewBox="0 0 448 512" width="0.875em" height="1em" fill="currentColor"
+                    style="vertical-align: -0.125em" aria-hidden="true"
+                  ><path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg
+                ></span>
+              </button>
+
+              {%- comment -%} page.nav (front matter) marks the current item. {%- endcomment -%}
+              {%- assign current = " active active-page" %}
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                  <li class="nav-item{% if page.nav == 'home' %}{{ current }}{% endif %}">
+                    <a class="nav-link" href="index.html">home</a>
+                  </li>
+                  <li class="nav-item{% if page.nav == 'services' %}{{ current }}{% endif %}">
+                    <a class="nav-link" href="services.html">services</a>
+                  </li>
+                  <li class="nav-item{% if page.nav == 'process' %}{{ current }}{% endif %}">
+                    <a class="nav-link" href="process.html">process</a>
+                  </li>
+                  <li class="nav-item dropdown{% if page.nav == 'about' %}{{ current }}{% endif %}">
+                    <a class="nav-link" href="about-us.html">about us</a>
+                  </li>
+                  <li class="nav-item nav-item-link{% if page.nav == 'contact' %} active{% endif %}">
+                    <a class="nav-link hover-btn btn" href="contact-us.html">contact us</a>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Header bar section complate -->

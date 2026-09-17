@@ -1,0 +1,13 @@
+_site/
+.jekyll-cache/
+vendor/bundle
+.bundle/
+.git/
+.github/
+*.log
+.DS_Store
+node_modules/
+.cursor/
+.idea/
+.vscode/
+.env*

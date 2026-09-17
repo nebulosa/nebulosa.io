@@ -1,0 +1,16 @@
+    {%- comment -%} Header scene for pages with `scene:` in front matter; see .agents/jekyll.md. {%- endcomment %}
+    <link href="assets/css/scene-hero.css" rel="stylesheet" />
+    <link href="assets/css/space-scene.css" rel="stylesheet" />
+    <script>
+      document.documentElement.classList.add('js-scene');
+      setTimeout(function () {
+        var root = document.documentElement;
+        if (!root.classList.contains('scene-ready')) root.classList.add('scene-fallback');
+      }, 6000);
+    </script>
+    <script type="importmap">
+      { "imports": { "three": "./assets/js/vendor/three-0.184.0/three.module.min.js" } }
+    </script>
+    <link rel="modulepreload" href="assets/js/vendor/three-0.184.0/three.module.min.js" />
+    <link rel="modulepreload" href="assets/js/vendor/three-0.184.0/three.core.min.js" />
+    <link rel="modulepreload" href="assets/js/space-scene.js" />

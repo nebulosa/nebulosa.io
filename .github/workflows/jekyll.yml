@@ -1,0 +1,42 @@
+name: Jekyll build and deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6
+
+      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b  # v1.321.0
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Build Jekyll site
+        run: bundle exec jekyll build
+
+      # Only the site ships: fail the deploy if a script or dev file reached _site
+      # (a new root file is published unless _config.yml excludes it).
+      - name: Check nothing private is published
+        run: |
+          leaked=$(find _site -type f \( -name '*.py' -o -name '*.sh' -o -name '*.rb' -o -name '*.md' \
+            -o -name '*.yml' -o -name '*.yaml' -o -name 'Gemfile*' -o -name 'Dockerfile' -o -name '.*' \) -print)
+          if [ -n "$leaked" ]; then echo "Refusing to deploy, found:"; echo "$leaked"; exit 1; fi
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9  # v5.0.0
+        with:
+          path: ./_site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: github_pages
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128  # v5.0.0

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 628.38" role="img" aria-label="The Nebulosa symbol">
+  <!-- Fallback for assets/js/scenes/about.js: the mark alone, no background.
+       Facet colors are the 3D symbol handoff's model materials. Same aspect as
+       the other hero illustrations (1501:786), so the hero layout matches. -->
+  <g stroke="#e9e7f2" stroke-width="6" stroke-linejoin="round">
+    <path d="M600 50 395 570 616 430Z" fill="#4b2470"/>
+    <path d="M600 50 616 430 805 570Z" fill="#9c3b8e"/>
+    <path d="M395 570 616 430 805 570Z" fill="#6a79c2"/>
+  </g>
+</svg>

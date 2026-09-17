@@ -1,0 +1,38 @@
+/* Header scenes (assets/js/space-scene.js): a canvas laid over <img data-scene>. */
+.space-scene {
+  position: absolute;
+  cursor: grab;
+  touch-action: pan-y; /* horizontal drag spins, vertical drag still scrolls the page */
+  opacity: 0;
+  transition: opacity .6s ease;
+}
+
+/* Soft edges: two linear masks intersected, so all four sides fade. */
+.space-scene--feathered {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent),
+    linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent),
+    linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  mask-composite: intersect;
+}
+
+.space-scene.is-dragging {
+  cursor: grabbing;
+}
+
+.scene-ready .space-scene {
+  opacity: 1;
+}
+
+/* The SVG waits hidden for the scene and only shows if the scene never arrives. */
+.js-scene:not(.scene-fallback) img[data-scene],
+.scene-ready img[data-scene] {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .space-scene {
+    transition: none;
+  }
+}

@@ -1,0 +1,14 @@
+domain:      nebulosa.io
+title:       "Nebulosa"
+url:         "https://nebulosa.io"
+description: "Full-cycle digital development tailored to your needs."
+lang:        "en"
+
+source:      .
+destination: ./_site
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+exclude: [tools, Gemfile, Gemfile.lock, .dockerignore, README.md, AGENTS.md, CLAUDE.md, todo.txt, Dockerfile, docker-compose.yml]

@@ -1,68 +1,50 @@
-(function ($) {
-  'use strict';
+// Mobile menu toggle. Mirrors Bootstrap 4's collapse class cycle
+// (collapse -> collapsing -> collapse show) so its CSS transition still applies.
+document.querySelectorAll('[data-toggle="collapse"]').forEach(function (button) {
+  var target = document.querySelector(button.getAttribute('data-target'));
+  if (!target) return;
 
-  jQuery(document).ready(function ($) {
-    $('.embed-responsive iframe').addClass('embed-responsive-item');
-    $('.carousel-inner .item:first-child').addClass('active');
+  button.addEventListener('click', function () {
+    if (target.classList.contains('collapsing')) return;
+    var opening = !target.classList.contains('show');
 
-    $('[data-toggle="tooltip"]').tooltip();
+    if (opening) {
+      target.classList.remove('collapse');
+      target.classList.add('collapsing');
+      target.style.height = '0px';
+      target.offsetHeight; // force reflow so the height change animates
+      target.style.height = target.scrollHeight + 'px';
+    } else {
+      target.style.height = target.getBoundingClientRect().height + 'px';
+      target.offsetHeight;
+      target.classList.add('collapsing');
+      target.classList.remove('collapse', 'show');
+      target.style.height = '';
+    }
 
-    $('#mobile-menu-active').meanmenu({
-      meanScreenWidth: '767',
-      meanMenuContainer: '.menu-prepent',
-    });
+    button.classList.toggle('collapsed', !opening);
+    button.setAttribute('aria-expanded', String(opening));
 
-    $('.menu-open').click(function () {
-      $('.body-left-bar').toggleClass('activee');
-      $('.menu-open').toggleClass('toggle');
-    });
+    function done() {
+      target.removeEventListener('transitionend', done);
+      target.classList.remove('collapsing');
+      target.classList.add('collapse');
+      target.classList.toggle('show', opening);
+      target.style.height = '';
+    }
 
-    $('.single-slider-item').owlCarousel({
-      items: 5,
-      nav: true,
-      dot: true,
-      loop: true,
-      margin: 20,
-      autoplay: false,
-      autoplayTimeout: 3000,
-      smartSpeed: 1000,
-      responsiveClass: true,
-      responsive: {
-        0: {
-          items: 2,
-        },
-        768: {
-          items: 4,
-        },
-        1000: {
-          items: 5,
-        },
-      },
-    });
+    // No transition (prefers-reduced-motion) means no transitionend event.
+    if (parseFloat(getComputedStyle(target).transitionDuration) > 0) {
+      target.addEventListener('transitionend', done);
+    } else {
+      done();
+    }
   });
+});
 
-  jQuery(window).load(function () {});
-})(jQuery);
+// Shrink the header once the page scrolls.
+var nav = document.querySelector('.header-area');
 
-// shrink navbar on scroll
-
-window.onscroll = function () {
-  scrollFunction();
-};
-
-/*function scrollFunction() {
-  if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
-    document.getElementById('header-area').style.paddingTop = '0';
-    document.getElementById('header-area').style.paddingBottom = '0';
-  } else {
-    document.getElementById('header-area').style.paddingTop = '20px';
-    document.getElementById('header-area').style.paddingBottom = '20px';
-  }
-}
-*/
-
-var nav = document.querySelector(".header-area");
-
-window.addEventListener("scroll", function(){
-    nav.classList.toggle("active", window.scrollY > 0)
+window.addEventListener('scroll', function () {
+  nav.classList.toggle('active', window.scrollY > 0);
 });

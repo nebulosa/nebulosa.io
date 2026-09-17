@@ -524,7 +524,8 @@
     }
 
     .oview-img img {
-        max-width: 150px;
+        width: 150px;
+        height: 170px;
     }
 
     .overview-txts-area {
@@ -1125,7 +1126,8 @@
     }
 
     .oview-img img {
-        max-width: 150px;
+        width: 150px;
+        height: 170px;
     }
 
     .overview-txts-area {
