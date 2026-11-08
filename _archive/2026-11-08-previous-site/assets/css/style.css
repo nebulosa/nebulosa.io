@@ -1573,15 +1573,3 @@ ul.navbar-nav li {
   min-width: 100% !important;
   min-height: 80% !important;
 }
-
-/* LinkedIn and RSS icons in the footer's Contact column, side by side. */
-.footer-social {
-  display: flex;
-  gap: 18px;
-  margin-top: 6px;
-}
-
-.footer-single .footer-social a {
-  display: inline-flex;
-  line-height: 1;
-}

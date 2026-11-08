@@ -1,0 +1,14 @@
+services:
+  jekyll:
+    build: .
+    ports:
+      - "${JEKYLL_PORT:-5000}:${JEKYLL_PORT:-5000}"
+      - "${JEKYLL_LIVERELOAD_PORT:-35729}:${JEKYLL_LIVERELOAD_PORT:-35729}"
+    environment:
+      JEKYLL_PORT: "${JEKYLL_PORT:-5000}"
+      JEKYLL_LIVERELOAD_PORT: "${JEKYLL_LIVERELOAD_PORT:-35729}"
+    # Files the container writes (_site, .jekyll-cache) stay owned by the
+    # host user instead of root. See .agents/dev-server.md.
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - .:/srv/jekyll

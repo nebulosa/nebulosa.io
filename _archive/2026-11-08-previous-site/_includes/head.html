@@ -3,7 +3,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     {%- comment -%} title=false: the layout writes its own <title>. {%- endcomment -%}
     {% seo title=false %}
-{% include core/organization.html %}
 
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
@@ -23,27 +22,24 @@
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 
-    <title>{% if page.title %}{{ page.title | escape }} | {{ site.title }}{% else %}{{ site.title }} | Cosmic Engine{% endif %}</title>
+    <title>{{ site.title }} | Cosmic Engine</title>
 
     {%- comment -%} Preload so the fonts usually arrive before first paint; the CSS
         alone discovers them only after layout. Cocogoose is used by inner pages only. {%- endcomment %}
-    <link rel="preload" href="/assets/fonts/montserrat/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="assets/fonts/montserrat/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin />
     {%- if page.nav != 'home' %}
-    <link rel="preload" href="/assets/fonts/base/COCOGOOSE-DemiBold.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="assets/fonts/base/COCOGOOSE-DemiBold.woff" as="font" type="font/woff" crossorigin />
     {%- endif %}
-    <link href="/assets/css/fonts.css" rel="stylesheet" />
+    <link href="assets/css/fonts.css" rel="stylesheet" />
 
     {%- comment -%} Only the Bootstrap 4.5 rules the pages use; see .agents/jekyll.md. {%- endcomment %}
-    <link href="/assets/css/bootstrap-subset.min.css" rel="stylesheet" />
-    <link href="/assets/css/default.css" rel="stylesheet" />
-    <link href="/assets/css/style.css" rel="stylesheet" />
-    <link href="/assets/css/responsive.css" rel="stylesheet" />
+    <link href="assets/css/bootstrap-subset.min.css" rel="stylesheet" />
+    <link href="assets/css/default.css" rel="stylesheet" />
+    <link href="assets/css/style.css" rel="stylesheet" />
+    <link href="assets/css/responsive.css" rel="stylesheet" />
     {%- if page.scene %}
 {% include scene-head.html %}
     {%- endif %}
-    {%- if page.blog_css %}
-    <link href="/assets/css/blog.css" rel="stylesheet" />
-    {%- endif %}
     {%- if page.fix_css %}
-    <link href="/assets/css/fixes/{{ page.fix_css }}.fix.css" rel="stylesheet" />
+    <link href="assets/css/fixes/{{ page.fix_css }}.fix.css" rel="stylesheet" />
     {%- endif %}
