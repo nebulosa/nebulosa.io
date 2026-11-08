@@ -1163,10 +1163,13 @@ async function comments(run) {
       const pick = await pickTemplate(s.page, other);
       if (pick) { fails.push(`${at}: ${pick}`); continue; }
       let got = [];
-      for (let i = 0; i < 20 && !got.length; i++) { await s.page.waitForTimeout(100); got = frame() ? await frame().evaluate(() => window.got) : []; }
+      const last = () => { const g = got.map(x => x.setConfig && x.setConfig.theme).filter(Boolean); return g.length ? new URL(g[g.length - 1]).pathname : ''; };
+      for (let i = 0; i < 20 && last() !== `/assets/templates/${other}/giscus.css`; i++) { await s.page.waitForTimeout(100); got = frame() ? await frame().evaluate(() => window.got) : []; }
       const want = `/assets/templates/${other}/giscus.css`;
       const themes = got.map(g => g.setConfig && g.setConfig.theme).filter(Boolean);
-      if (themes.length !== 1 || new URL(themes[0]).pathname !== want) fails.push(`${at} → ${other}: the iframe got ${JSON.stringify(themes)} (want one setConfig theme ending ${want})`);
+      // Arrow keys walk the radio group and each option applies live, so the iframe may pass through a template on
+      // the way: what counts is that it ends on the page's.
+      if (!themes.length || new URL(themes[themes.length - 1]).pathname !== want) fails.push(`${at} → ${other}: the iframe got ${JSON.stringify(themes)} (want the last setConfig theme ending ${want})`);
     } finally { await s.close(); }
   }
   // Each template's giscus.css is built (front matter rendered), maps the template's tokens and loads its fonts.
