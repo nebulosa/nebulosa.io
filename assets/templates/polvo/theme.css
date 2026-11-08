@@ -445,9 +445,8 @@
   [data-template="polvo"] .nb-nav__link[aria-current]::after { left: 8px; right: 8px; }
   [data-template="polvo"] .nb-nav__item--cta { margin-left: 4px; }
   [data-template="polvo"] .nb-nav__link--cta { padding: 0 14px; }
-  [data-template="polvo"] .nb-switcher__toggle { padding: 0 14px; font-size: 14px; }
-  [data-template="polvo"] .nb-switcher__toggle-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  [data-template="polvo"] .nb-switcher__current { max-width: 36vw; }
+  [data-template="polvo"] .nb-switcher__toggle { justify-content: center; inline-size: 44px; padding: 0; }
+  [data-template="polvo"] .nb-switcher__toggle::after { content: none; }
   [data-template="polvo"] .nb-hero { padding: 40px var(--p-x) 36px; }
   [data-template="polvo"] .nb-kicker { font-size: 14px; }
   [data-template="polvo"] .nb-hero__title { margin-top: 16px; font-size: clamp(40px, 11.5vw, 56px); }

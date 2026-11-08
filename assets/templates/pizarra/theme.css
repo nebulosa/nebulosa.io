@@ -441,8 +441,8 @@
   [data-template="pizarra"] .nb-nav__item--cta { margin-left: 4px; }
   [data-template="pizarra"] .nb-nav__link--cta { height: 40px; padding: 0 14px; }
   [data-template="pizarra"] .nb-switcher { margin-left: 8px; font-size: 12px; }
-  [data-template="pizarra"] .nb-switcher__toggle { padding: 0 10px; }
-  [data-template="pizarra"] .nb-switcher__toggle-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  [data-template="pizarra"] .nb-switcher__toggle { justify-content: center; inline-size: 44px; padding: 0; }
+  [data-template="pizarra"] .nb-switcher__toggle::after { content: none; }
   [data-template="pizarra"] .nb-hero { padding-top: 36px; padding-bottom: 36px; }
   [data-template="pizarra"] .nb-hero__title { font-size: clamp(32px, 9.5vw, 40px); }
   [data-template="pizarra"] .nb-hero__lead { margin-top: 14px; font-size: 17px; }

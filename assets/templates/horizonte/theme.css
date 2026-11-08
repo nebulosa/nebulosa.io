@@ -423,9 +423,8 @@
   [data-template="horizonte"] .nb-nav__link { padding: 0 8px; font-size: 14px; }
   [data-template="horizonte"] .nb-nav__item--cta { margin-left: 4px; }
   [data-template="horizonte"] .nb-nav__link--cta { padding: 0 14px; }
-  [data-template="horizonte"] .nb-switcher__toggle { padding: 0 12px; }
-  [data-template="horizonte"] .nb-switcher__toggle-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  [data-template="horizonte"] .nb-switcher__current { max-width: 36vw; }
+  [data-template="horizonte"] .nb-switcher__toggle { justify-content: center; inline-size: 44px; padding: 0; }
+  [data-template="horizonte"] .nb-switcher__toggle::after { content: none; }
   /* the 240px slot crops the limb at 0.69: its crest stands 93px above the hero's bottom, the buttons 57px above it */
   [data-template="horizonte"] .nb-hero { min-height: 0; padding: 36px var(--h-x) 150px; }
   [data-template="horizonte"] .nb-hero .nb-slot[data-slot="hero-art"]:not(:empty) { bottom: -40px; height: 240px; }

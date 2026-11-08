@@ -3,13 +3,13 @@
     scheme's radio group lists its templates (only the active scheme's group shows, and only templates whose
     theme.css is in the build are listed: nb_available). Under them, the "Animated effects" checkbox: unchecked by
     default in the markup, switch.js syncs it with html[data-motion] (the visitor's saved choice, else the system's
-    prefers-reduced-motion) and stores a change as nebulosa.effects. The server marks the default template;
+    prefers-reduced-motion) and stores a change as nebulosa.effects. Up to 720 px the button shows only its icon. The server marks the default template;
     switch.js syncs the controls and the button's label with the one actually applied. {%- endcomment -%}
 {%- include core/templates-available.html -%}
 {%- assign nb_def = site.data.templates | where: "slug", site.default_template | first -%}
 {%- assign nb_schemes = "light,dark" | split: "," %}
     <div class="nb-switcher">
-      <button class="nb-switcher__toggle" type="button" aria-expanded="false" aria-controls="nb-switcher-panel"><span class="nb-switcher__toggle-label">Theme:</span> <span class="nb-switcher__current">{{ nb_def.name }}</span></button>
+      <button class="nb-switcher__toggle" type="button" aria-expanded="false" aria-controls="nb-switcher-panel"><svg class="nb-switcher__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 2.5a7.5 7.5 0 0 1 0 15z" fill="currentColor"/></svg><span class="nb-switcher__toggle-label">Theme:</span> <span class="nb-switcher__current">{{ nb_def.name }}</span></button>
       <div class="nb-switcher__panel" id="nb-switcher-panel" role="group" aria-label="Site style" hidden>
         <div class="nb-switcher__schemes" role="group" aria-label="Color scheme">
           {%- for sc in nb_schemes %}
