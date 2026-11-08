@@ -1,0 +1,9 @@
+{%- comment -%} A list of named items in the nb-* vocabulary. block is the class base (nb-staff gives
+    nb-staff__list / __item / __name / __text); tag is ul (default) or ol; items is [{name, text}]. {%- endcomment -%}
+{%- assign b = include.block -%}
+{%- assign tag = include.tag | default: "ul" -%}
+<{{ tag }} class="{{ b }}__list">
+          {%- for it in include.items %}
+          <li class="{{ b }}__item"><h3 class="{{ b }}__name">{{ it.name }}</h3><p class="{{ b }}__text">{{ it.text }}</p></li>
+          {%- endfor %}
+        </{{ tag }}>

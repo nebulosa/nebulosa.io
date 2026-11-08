@@ -1,0 +1,220 @@
+# The site's copy, one block per page (page.nb_page). Facts come from the LinkedIn intro post, the post
+# "AI multiplies your engineers" and the other posts; the readable draft is docs/superpowers/specs/2026-11-06-copy-draft.md.
+home:
+  kicker: "AI products · Cloud platforms · Product engineering"
+  title: "AI-first engineering"
+  title_em: "from Latin America"
+  lead: "We help startups and companies build AI-powered products and the cloud platforms that run them."
+  primary: { label: "Let's talk" }
+  secondary: { label: "Read the blog", href: "/blog/" }
+  services_title: "What we build"
+  services:
+    - "LLM features, AI agents and workflow automation"
+    - "Machine learning: NLP, speech and computer vision"
+    - "AI infrastructure and MLOps on AWS, Azure and GCP"
+    - "Web, mobile and APIs, with QA built in"
+  services_more: { label: "All services →", href: "/services.html" }
+  staff_title: "Staff augmentation"
+  staff_lead: "Managed engineering contractors from Latin America who work in your stack, your time zone and your repos."
+  staff:
+    - name: "Screened for judgment"
+      text: "Candidates review an AI-generated pull request and tell us what they'd send back, and why. You interview the shortlist."
+    - name: "Working agreements for AI"
+      text: "Which agents are used, what needs human review and how changes are tested, agreed with you on day one."
+    - name: "Ongoing management"
+      text: "Code quality checks, performance follow-up and replacement if someone isn't a fit."
+    - name: "One contract"
+      text: "Scale up or down as your roadmap changes."
+  staff_more: { label: "How we staff your team →", href: "/services.html#staff-augmentation" }
+  how_title: "How we work"
+  how_main: "A proof of concept on your own code and data, or a shortlist you interview. Then one contract and one point of contact. English and Spanish, US time-zone overlap."
+  how_ask: "Have an AI idea stuck in a prototype, or a product that needs to run reliably in production?"
+  how_more: { label: "How an engagement runs →", href: "/process.html" }
+  clients_title: "Worked with"
+  insights_title: "Latest insights"
+  insights_more: "All posts →"
+  cta_title: "Need a proof? Contact Nebulosa."
+
+services:
+  heading: "Services"
+  lead: "We build AI-powered products and the cloud platforms that run them, and we place managed engineers on your team. Both under one contract, with one point of contact."
+  ai:
+    id: "ai-first-engineering"
+    title: "AI-first engineering"
+    lead: "For startups and companies with an AI idea stuck in a prototype, or a product that needs to run reliably in production. The same team builds the product, the platform under it and the tests."
+    items:
+      - name: "LLM features, AI agents and workflow automation"
+        text: "Language-model features inside your product, agents that run a defined job in your systems, and automation of the workflow around them. Where no conversation is needed, a decision model returns a typed answer with a confidence score in milliseconds: triage, guardrails, routing, alerts."
+      - name: "Machine learning: NLP, speech and computer vision"
+        text: "Text, speech and image models trained or tuned on your data. They run on a provider's API or on open-source models inside your own cloud, so your data never leaves your infrastructure. The model is the easy part. The work is choosing the right questions, calibrating the thresholds and wiring it into your systems."
+      - name: "AI infrastructure and MLOps on AWS, Azure and GCP"
+        text: "The platform that runs the models in production: pipelines, deployments, monitoring and cost, on AWS, Azure and GCP. Security baselines enforced in CI, and one patch report across packages, images and apps."
+      - name: "Web, mobile and APIs, with QA built in"
+        text: "The product around the model: web and mobile apps and the APIs behind them. Tests ship with the code. Business rules, money paths and concurrency get explicit checks, and every line that reaches main has an owner who can explain it."
+    more: { label: "How an engagement runs →", href: "/process.html#ai-first-engineering" }
+  staff:
+    id: "staff-augmentation"
+    title: "Staff augmentation"
+    lead: "Managed engineering contractors from Latin America, for companies that need to grow their team or run part of it. They work in your stack, your time zone and your repos. We handle the rest."
+    items:
+      - name: "Screening for judgment"
+        text: "Candidates review an AI-generated pull request and tell us what they'd send back, and why. You interview the ones who pass."
+      - name: "Working agreements for AI"
+        text: "Clear rules on which agents are used, what needs human review and how changes are tested, agreed with you on day one."
+      - name: "Ongoing management"
+        text: "Code quality checks, performance follow-up and replacement if someone isn't a fit, so your leads aren't doing HR."
+      - name: "One contract"
+        text: "English and Spanish, US time-zone overlap. Scale up or down as your roadmap changes."
+    screen_title: "What we screen for"
+    screen_lead: "Coding agents amplify whoever steers them. Typing speed stopped being a differentiator. What separates engineers now is judgment:"
+    screen:
+      - "They read what the agent wrote. Every line that reaches main has an owner who can explain it."
+      - "They keep the system coherent. Before generating something new, they check whether it already exists and extend it."
+      - "They specify before they prompt. Constraints, failure modes and edge cases go into the task."
+      - "They write the tests the agent can't guess. Business rules, money paths and concurrency get explicit checks."
+      - "They delete code. Smaller diffs, fewer abstractions, less for the next person and the next agent to misread."
+    more: { label: "Read: AI multiplies your engineers. Including the bad ones. →", href: "/blog/ai-multiplies-your-engineers" }
+  fit:
+    title: "Which one fits"
+    items:
+      - name: "AI-first engineering"
+        text: "You have an outcome to ship and want one team to own it end to end: the proof of concept, the build and the platform it runs on."
+      - name: "Staff augmentation"
+        text: "You have the roadmap and the leads, and need engineers who can be trusted with coding agents inside your own team."
+    note: "Either way: one contract, one point of contact. English and Spanish, US time-zone overlap."
+  cta:
+    title: "Let's talk."
+    text: "Have an AI idea stuck in a prototype, or a product that needs to run reliably in production?"
+
+process:
+  heading: "Process"
+  lead: "Every engagement starts with something real: a proof of concept on your code and data, or a shortlist you interview. Here is how it runs for each approach."
+  poc:
+    title: "Proof of concept first"
+    text: "For AI-first engineering, you send us something real: a repo, a data sample, a build, your telemetry. We scope one question and build a proof of concept on your own code and data, next to what you already run. If the evidence holds, we build from it. If it does not, you learned that before signing for the build."
+    examples_title: "Proofs we offer"
+    examples:
+      - "A Rust drop-in running side by side with your C library under a differential fuzzer, so you see the evidence before you decide."
+      - "A decision model on a sample of your data, for triage, guardrails, routing or alerts."
+      - "What an AI agent can learn from your app, run on your own build and with authorization."
+      - "One read-only agent on your telemetry, watching the subsystem that hurts most when it fails silently."
+  ai:
+    id: "ai-first-engineering"
+    title: "AI-first engineering: how an engagement runs"
+    steps:
+      - name: "Start with one"
+        text: "Pick the problem that hurts most: one workflow, one subsystem, one model. We scope the proof of concept around that question and nothing else."
+      - name: "Proof of concept on your own code and data"
+        text: "You send the repo, the data sample, the build or the telemetry. We build the proof next to what you already run, so the comparison is real."
+      - name: "Decide with the evidence in front of you"
+        text: "You see the proof working before you commit to the build. The scope, the team and the contract come after that."
+      - name: "Build"
+        text: "The same team takes it to production: the product, the platform under it and the tests. Tests ship with the code. Business rules, money paths and concurrency get explicit checks."
+      - name: "Run it in production"
+        text: "Deployments, observability and cost on AWS, Azure or GCP. If you want it, a read-only agent per subsystem watches production next to the alerts you already have."
+    note: "One contract, one point of contact throughout. English and Spanish, US time-zone overlap."
+  staff:
+    id: "staff-augmentation"
+    title: "Staff augmentation: how an engagement runs"
+    steps:
+      - name: "Tell us the role"
+        text: "The stack, the repos and what the engineer will own, whether you are growing your team or running part of it."
+      - name: "We screen for judgment"
+        text: "Candidates review an AI-generated pull request and tell us what they'd send back, and why."
+      - name: "You interview the shortlist"
+        text: "You meet the candidates who passed, ask what you need to, and choose who joins."
+      - name: "Working agreements for AI, on day one"
+        text: "Which agents are used, what needs human review and how changes are tested. Agreed with you before the first commit."
+      - name: "They work in your stack, your time zone and your repos"
+        text: "Your tools and your process, with US time-zone overlap, in English and Spanish."
+      - name: "We manage"
+        text: "Code quality checks, performance follow-up and replacement if someone isn't a fit, so your leads aren't doing HR."
+      - name: "Scale with the roadmap"
+        text: "One contract. Scale up or down as your roadmap changes."
+  cta:
+    title: "Start with one."
+    text: "Tell us the problem that hurts most and what you can share: a repo, a data sample, a build, your telemetry, or the role you need to fill."
+
+about:
+  heading: "About Nebulosa"
+  lead: "Nebulosa is an AI-first engineering team from Latin America."
+  what:
+    title: "What we do"
+    paras:
+      - "We help startups and companies build AI-powered products and the cloud platforms that run them: LLM features, AI agents and workflow automation; machine learning for text, speech and vision; AI infrastructure and MLOps on AWS, Azure and GCP; web, mobile and APIs, with QA built in."
+      - "We also provide managed engineering contractors from Latin America for companies that need to grow their team or run part of it. They work in your stack, your time zone and your repos, screened for judgment and managed by us."
+      - "Either way, one contract and one point of contact. English and Spanish, US time-zone overlap."
+  how:
+    title: "How we work"
+    items:
+      - name: "Something real first"
+        text: "AI-first engineering starts with a proof of concept on your own code, data or build. Staff augmentation starts with a shortlist you interview. Either way you see something real before you commit."
+      - name: "The model is the easy part"
+        text: "The real work is choosing the right questions, calibrating the thresholds and wiring the result into your systems. That is what we do."
+      - name: "Judgment is the hire"
+        text: "Coding agents amplify whoever steers them. We hire and staff engineers who read what the agent wrote, keep the system coherent and specify before they prompt."
+      - name: "Every line has an owner"
+        text: "Every line that reaches main has an owner who can explain it. Business rules, money paths and concurrency get explicit checks."
+      - name: "Less code"
+        text: "Smaller diffs, fewer abstractions, less for the next person and the next agent to misread. We delete code."
+      - name: "Defaults get reviewed"
+        text: "The risk sits in defaults nobody reviewed. We inventory what actually runs and enforce baselines in CI."
+  where:
+    title: "Where we are"
+    text: "We work from Guadalajara, Mexico City and Caracas, with US time-zone overlap, in English and Spanish."
+  clients_title: "Worked with"
+  cta:
+    title: "Let's talk."
+    text: "Have an AI idea stuck in a prototype, or a product that needs to run reliably in production?"
+    linkedin: "Follow Nebulosa on LinkedIn →"
+    blog: "Read our notes →"
+
+contact:
+  heading: "Contact us"
+  lead: "Have an AI idea stuck in a prototype, or a product that needs to run reliably in production? Write to us, in English or Spanish."
+  reach:
+    title: "Reach us"
+    email_label: "Email"
+    linkedin_label: "LinkedIn"
+    linkedin_text: "Nebulosa on LinkedIn"
+    note: "English and Spanish, US time-zone overlap."
+  send:
+    title: "What to send"
+    text: "Tell us the problem that hurts most and what you can share: a repo, a data sample, a build, your telemetry, or the role you need to fill."
+    compose:
+      name_label: "Your name"
+      email_label: "Your email"
+      message_label: "Your message"
+      nda_label: "I need an NDA before sharing anything"
+      submit: "Send message"
+      subject: "Project inquiry"
+      nda_subject: "NDA requested"
+      sending: "Sending…"
+      sent: "Message sent. We'll reply from hello@nebulosa.io."
+      failed: "It didn't go through. Write to us directly:"
+  next:
+    title: "What happens next"
+    steps:
+      - name: "We reply"
+        text: "We read it and write back."
+      - name: "A short call"
+        text: "We go through what you have and the question you want answered, and tell you whether we are the right team for it."
+      - name: "A proof of concept, or a shortlist"
+        text: "For a product: we scope one question and build a proof of concept on your own code and data. For staff augmentation: we agree the role and the working agreements for AI, we screen candidates for judgment, and you interview the shortlist."
+      - name: "One contract"
+        text: "When you decide to go ahead: one contract, one point of contact, and work starts."
+  places:
+    title: "Where we are"
+    items:
+      - { city: "Guadalajara", country: "Mexico" }
+      - { city: "Mexico City", country: "Mexico" }
+      - { city: "Caracas", country: "Venezuela" }
+
+comments:
+  title: "Comments"
+  noscript: "Comments load from GitHub Discussions and need JavaScript."
+
+sent:
+  heading: "Message sent"
+  lead: "Thanks. We'll reply from hello@nebulosa.io."
+  link: "Back to the home page"

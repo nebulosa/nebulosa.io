@@ -1,0 +1,22 @@
+{%- comment -%} page.nb_page marks the current item; an article marks Blog with aria-current="true", since that link
+    goes to another page. {%- endcomment -%}
+{%- assign cur = page.nb_page -%}
+{%- if cur == "post" -%}{%- assign cur = "blog" -%}{%- endif -%}
+  <header class="nb-header">
+    {%- if page.nb_page == "blog" or page.nb_page == "post" %}
+    {% include core/slot.html name="header-band-art" %}
+    {%- endif %}
+    <a class="nb-brand" href="/" aria-label="Nebulosa, home"><img class="nb-logo" src="/assets/img/nebulosa-logo.png" alt="Nebulosa" width="356" height="63"></a>
+    <nav class="nb-nav" aria-label="Main">
+      <ul class="nb-nav__list">
+        <li class="nb-nav__item"><a class="nb-nav__link" href="/"{% if cur == "home" %} aria-current="page"{% endif %}>Home</a></li>
+        <li class="nb-nav__item"><a class="nb-nav__link" href="/services.html"{% if cur == "services" %} aria-current="page"{% endif %}>Services</a></li>
+        <li class="nb-nav__item"><a class="nb-nav__link" href="/process.html"{% if cur == "process" %} aria-current="page"{% endif %}>Process</a></li>
+        <li class="nb-nav__item"><a class="nb-nav__link" href="/about-us.html"{% if cur == "about" %} aria-current="page"{% endif %}>About</a></li>
+        <li class="nb-nav__item"><a class="nb-nav__link" href="/blog/"{% if page.nb_page == "post" %} aria-current="true"{% elsif cur == "blog" %} aria-current="page"{% endif %}>Blog</a></li>
+        <li class="nb-nav__item nb-nav__item--cta"><a class="nb-nav__link nb-nav__link--cta" href="/contact-us.html"{% if cur == "contact" %} aria-current="page"{% endif %}>Contact us</a></li>
+      </ul>
+    </nav>
+{% include core/switcher.html %}
+    {% include core/slot.html name="header-art" %}
+  </header>

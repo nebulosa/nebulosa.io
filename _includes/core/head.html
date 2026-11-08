@@ -1,0 +1,49 @@
+{%- assign nb_t = site.data.templates | where: "slug", site.default_template | first -%}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {%- comment -%} A page without a title takes its heading from _data/site_copy.yml (one source). {%- endcomment %}
+    {%- assign nb_title = page.title | default: site.data.site_copy[page.nb_page].heading %}
+    <title>{% if nb_title %}{{ nb_title | escape }} | {{ site.title }}{% else %}{{ site.title }} | AI-first engineering from Latin America{% endif %}</title>
+    {%- comment -%} title=false: the <title> above is ours. {%- endcomment %}
+    {% seo title=false %}
+    {%- if page.robots %}
+    <meta name="robots" content="{{ page.robots }}">
+    {%- endif %}
+    {% feed_meta %}
+{% include core/organization.html %}
+    {%- comment -%} The core base comes before any template CSS, the bootstrap's included. {%- endcomment %}
+    <link rel="stylesheet" href="/assets/core/base.css?v={{ site.time | date: '%s' }}">
+    {%- if nb_t.fonts.size > 0 %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    {%- endif %}
+    {%- comment -%} Before any template CSS: applies the saved template (or the default) to <html> and writes the
+        links of that template only (its CSS and fonts), so the first paint is already the right one and no other
+        template's files load (no fonts link when it has no fonts); without JS the <noscript> links are the default's. A non-default choice also hides
+        the server-rendered (default) slots until switch.js has replaced them. Only templates whose theme.css is in
+        the build are candidates (nb_available): the saved choice, else the default, else the first available (a
+        page with no built template at all gets no template links). It also sets data-motion ("full" | "reduce") from the visitor's
+        saved "Animated effects" choice (nebulosa.effects: on | off), else from prefers-reduced-motion; fx.js and the
+        templates' motion rules read that attribute, and without JS (no attribute) the media query rules. {%- endcomment %}
+    {%- include core/templates-available.html %}
+    <script>(function(){var d=document.documentElement,T=[{% for t in nb_available %}{"slug":{{ t.slug | jsonify }},"scheme":{{ t.scheme | jsonify }},"font":{{ t.fonts | first | default: "" | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}],s,m,def={{ site.default_template | jsonify }};
+try{s=localStorage.getItem('nebulosa.template');m=localStorage.getItem('nebulosa.effects')}catch(e){}
+var t=null;for(var i=0;i<T.length;i++)if(T[i].slug===s)t=T[i];if(!t)for(i=0;i<T.length;i++)if(T[i].slug===def)t=T[i];if(!t)t=T[0];
+d.className+=' js';
+d.setAttribute('data-motion',m==='on'?'full':m==='off'?'reduce':(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches?'reduce':'full'));
+if(t){d.setAttribute('data-template',t.slug);d.setAttribute('data-scheme',t.scheme);
+if(t.slug!==def)d.className+=' nb-slots-pending';
+var a=function(v){return v.replace(/&/g,'&amp;').replace(/"/g,'&quot;')};
+document.write((t.font?'<link id="nb-template-fonts" rel="stylesheet" href="'+a(t.font)+'">':'')+'<link id="nb-template-css" rel="stylesheet" href="/assets/templates/'+t.slug+'/theme.css?v={{ site.time | date: '%s' }}">')}})();</script>
+    <noscript>
+      {%- if nb_t.fonts.size > 0 %}
+      <link id="nb-template-fonts" rel="stylesheet" href="{{ nb_t.fonts | first }}">
+      {%- endif %}
+      <link id="nb-template-css" rel="stylesheet" href="/assets/templates/{{ site.default_template }}/theme.css?v={{ site.time | date: '%s' }}">
+    </noscript>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="manifest" href="/manifest.json">

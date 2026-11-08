@@ -1,8 +1,27 @@
 domain:      nebulosa.io
 title:       "Nebulosa"
 url:         "https://nebulosa.io"
-description: "Full-cycle digital development tailored to your needs."
+description: "AI-first engineering from Latin America: AI-powered products and the cloud platforms that run them."
 lang:        "en"
+email:       "hello@nebulosa.io"
+linkedin:    "https://www.linkedin.com/company/nebulosa-io/"
+goatcounter: "https://nebulosa.goatcounter.com/count"
+# The Contact form posts to Web3Forms. Public by design: the access key from web3forms.com for hello@nebulosa.io.
+web3forms_key: "3d95506f-de84-4515-bfb4-954b62c43e56"
+# Post comments: giscus, threads in this repo's GitHub Discussions (announcement-type category, so only maintainers
+# and the giscus bot open threads; readers reply). Both ids from the GitHub GraphQL API; no category_id, no comments.
+giscus:
+  repo:        nebulosa/nebulosa.io
+  repo_id:     MDEwOlJlcG9zaXRvcnkyNTMxMjUxMTc=
+  category:    Announcements
+  category_id: DIC_kwDODxZh_c4DKrF3
+# The template the server renders (HTML slots, CSS) and the one a visitor without a saved choice gets.
+default_template: constelacion
+
+# jekyll-seo-tag: publisher logo in each post's JSON-LD, and large preview cards.
+logo:        "/android-icon-192x192.png"
+twitter:
+  card:      summary_large_image
 
 source:      .
 destination: ./_site
@@ -10,5 +29,22 @@ destination: ./_site
 plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
+  - jekyll-feed
 
-exclude: [tools, Gemfile, Gemfile.lock, .dockerignore, README.md, AGENTS.md, CLAUDE.md, todo.txt, Dockerfile, docker-compose.yml]
+feed:
+  path: blog/rss.xml
+
+# Extensionless /blog/<slug> is served from blog/<slug>.html by GitHub Pages.
+# That is also why covers live in assets/img/blog/, not in a blog/<slug>/ folder.
+defaults:
+  - scope: { type: posts }
+    values:
+      layout: post
+      nb_page: post
+      permalink: /blog/:slug
+      author:
+        type: Organization
+        name: Nebulosa
+        url: "https://nebulosa.io/"
+
+exclude: [tools, docs, .playwright-mcp, .superpowers, Gemfile, Gemfile.lock, .dockerignore, README.md, AGENTS.md, CLAUDE.md, todo.txt, Dockerfile, docker-compose.yml]

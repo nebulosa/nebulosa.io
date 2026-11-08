@@ -1,0 +1,11 @@
+{%- comment -%} One blog post as a card; used by /blog/ and the home's "Latest insights". {%- endcomment %}
+{%- assign h = include.heading | default: "h2" %}
+<a class="post-card" href="{{ include.post.url }}">
+  <img src="{{ include.post.image }}" alt="" width="1200" height="627" loading="lazy" />
+  <div class="post-card-text">
+    <time datetime="{{ include.post.date | date_to_xmlschema }}">{{ include.post.date | date: "%b %-d, %Y" }}</time>
+    <{{ h }} class="post-card-title">{{ include.post.title }}</{{ h }}>
+    <p>{{ include.post.description }}</p>
+    <span class="post-card-more">Read →</span>
+  </div>
+</a>

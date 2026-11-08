@@ -1,0 +1,16 @@
+{%- comment -%} The page-closing call to action: a title, an optional line and the email button; the inner pages
+    pass their block from _data/site_copy.yml (include.cta). {%- endcomment -%}
+      <section class="nb-cta" aria-labelledby="nb-cta-title">
+        {% include core/slot.html name="cta-art" %}
+        <h2 class="nb-cta__title" id="nb-cta-title">{{ include.cta.title }}</h2>
+        {%- if include.cta.text %}
+        <p class="nb-cta__text">{{ include.cta.text }}</p>
+        {%- endif %}
+        <a class="nb-btn nb-btn--primary" href="mailto:{{ site.email }}">{{ site.email }}</a>
+        {%- if include.cta.linkedin %}
+        <a class="nb-more" href="{{ site.linkedin }}" rel="noopener">{{ include.cta.linkedin }}</a>
+        {%- endif %}
+        {%- if include.cta.blog %}
+        <a class="nb-more" href="/blog/">{{ include.cta.blog }}</a>
+        {%- endif %}
+      </section>

@@ -2,3 +2,9 @@ _site
 .jekyll-cache
 .playwright-mcp
 .DS_Store
+node_modules/
+.superpowers/**/out/
+.superpowers/**/_shots/
+.superpowers/**/_preview.html
+tools/check/out/
+.superpowers/sdd/2026-11-06-core-y-plantillas/

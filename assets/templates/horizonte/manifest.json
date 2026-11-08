@@ -1,0 +1,5 @@
+---
+layout: null
+template: horizonte
+---
+{% include core/template-manifest.json slug=page.template %}

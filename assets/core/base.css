@@ -1,0 +1,80 @@
+/* Core base: what every template sits on. A reset, accessibility utilities and slot defaults;
+   no colors, no type, no composition. The template's theme.css comes after this file. */
+.nb, .nb *, .nb *::before, .nb *::after { box-sizing: border-box; }
+/* Long words and URLs wrap: break-word (unlike anywhere) leaves min-content widths alone, so flex and grid
+   items keep theirs; a template that wants a track to shrink below a long word says so (minmax(0, 1fr)). */
+.nb { position: relative; margin: 0; min-height: 100vh; isolation: isolate; overflow-wrap: break-word; }
+.nb [hidden] { display: none !important; }
+.nb img, .nb svg { max-width: 100%; }
+.nb img { height: auto; display: block; }
+.nb ul, .nb ol { margin: 0; padding: 0; }
+.nb h1, .nb h2, .nb h3, .nb p, .nb figure { margin: 0; }
+.nb a { color: inherit; }
+
+/* Visually hidden, still read; the skip link shows itself on focus. */
+.nb-sr-only:not(:focus):not(:active) {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+.nb-skip:focus { position: absolute; z-index: 100; top: 8px; left: 8px; padding: 12px 16px; background: Canvas; color: CanvasText; }
+.nb :focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+/* A slot is decoration only: empty slots take no space; filled ones never catch clicks.
+   With a saved non-default template the server-rendered (default) slots stay hidden until switch.js replaces them. */
+.nb .nb-slot { pointer-events: none; }
+.nb .nb-slot:empty { display: none; }
+.nb-slots-pending .nb-slot { visibility: hidden; }
+
+/* The template switcher needs switch.js. A disclosure: one button naming the active template opens a panel with
+   the scheme buttons and the template options. Its base: 44 px targets, a focus ring, inherited colors; a template
+   adds only color and composition. */
+html:not(.js) .nb-switcher { display: none; }
+.nb-switcher { position: relative; }
+.nb-switcher__toggle {
+  display: inline-flex; align-items: center; gap: 6px; min-block-size: 44px; min-inline-size: 44px; padding: 0 14px;
+  border: 1px solid currentColor; border-radius: 22px; background: transparent; color: inherit; font: inherit; cursor: pointer;
+}
+.nb-switcher__panel { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.nb-switcher__schemes { display: flex; gap: 4px; }
+.nb-switcher__scheme {
+  min-block-size: 44px; min-inline-size: 44px; padding: 0 14px; border: 1px solid currentColor; border-radius: 22px;
+  background: transparent; color: inherit; font: inherit; cursor: pointer;
+}
+.nb-switcher__scheme[aria-pressed="true"] { box-shadow: inset 0 0 0 1px currentColor; font-weight: 600; }
+.nb-switcher__templates { display: flex; flex-wrap: wrap; gap: 4px; min-inline-size: 0; margin: 0; padding: 0; border: 0; }
+.nb-switcher__option {
+  display: inline-flex; align-items: center; gap: 8px; min-block-size: 44px; min-inline-size: 44px; padding: 0 10px;
+  cursor: pointer;
+}
+.nb-switcher__radio { inline-size: 18px; block-size: 18px; margin: 0; accent-color: currentColor; }
+.nb-switcher__radio:focus-visible { outline: none; }
+.nb-switcher__option:has(:focus-visible) { outline: 2px solid currentColor; outline-offset: 2px; border-radius: 4px; }
+
+/* The "Animated effects" checkbox in the switcher's panel: a 44 px row, a focus ring on the label. */
+.nb-switcher__effects { display: inline-flex; align-items: center; gap: 10px; min-block-size: 44px; min-inline-size: 44px; padding: 0 10px; cursor: pointer; }
+.nb-switcher__effects-box { inline-size: 18px; block-size: 18px; margin: 0; accent-color: currentColor; }
+.nb-switcher__effects-box:focus-visible { outline: none; }
+.nb-switcher__effects:has(:focus-visible) { outline: 2px solid currentColor; outline-offset: 2px; border-radius: 4px; }
+
+/* The Contact composer (compose.js, or a plain post to Web3Forms without JS): 44 px targets, usable fields, a focus
+   ring, inherited colors; a template adds only color and composition. The honeypot is hidden from everyone. */
+.nb-compose { display: grid; gap: 12px; justify-items: start; }
+.nb-compose__field { display: grid; gap: 6px; inline-size: 100%; }
+.nb-compose__input, .nb-compose__message {
+  inline-size: 100%; min-block-size: 44px; padding: 12px; font: inherit; color: inherit; background: transparent;
+  border: 1px solid currentColor; border-radius: 4px;
+}
+.nb-compose__message { min-block-size: 8em; }
+.nb-compose__trap { display: none; }
+/* Empty, the status stays in the accessibility tree (a live region must exist before it speaks) but takes no room. */
+.nb-compose__status:empty { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
+.nb-compose__submit[aria-disabled="true"] { opacity: .6; cursor: progress; }
+.nb-compose__mailto { display: inline-flex; align-items: center; min-block-size: 44px; color: inherit; text-decoration: underline; }
+.nb-compose__check { display: inline-flex; align-items: center; gap: 10px; min-block-size: 44px; cursor: pointer; }
+.nb-compose__nda { inline-size: 20px; block-size: 20px; margin: 0; accent-color: currentColor; }
+.nb-compose__nda:focus-visible { outline: none; }
+.nb-compose__check:has(:focus-visible) { outline: 2px solid currentColor; outline-offset: 2px; border-radius: 4px; }
+.nb-compose__submit {
+  min-block-size: 44px; min-inline-size: 44px; padding: 0 20px; border: 1px solid currentColor; border-radius: 22px;
+  background: transparent; color: inherit; font: inherit; cursor: pointer;
+}

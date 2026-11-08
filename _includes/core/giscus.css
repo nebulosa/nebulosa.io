@@ -1,0 +1,143 @@
+{%- comment -%} The giscus theme every template's giscus.css includes (include.slug): loaded INSIDE the giscus iframe,
+    so nothing inherits from the page. The template file sets the --g-* tokens on main; this maps them onto giscus'
+    Primer variables (names and the code colours from giscus' light.css / dark.css, MIT, GitHub Inc.). {%- endcomment -%}
+{%- assign t = site.data.templates | where: "slug", include.slug | first -%}
+{%- if t.fonts.size > 0 %}
+@import url("{{ t.fonts | first }}");
+{%- endif %}
+
+main {
+  font-family: var(--g-font);
+  color-scheme: {{ t.scheme }};
+{%- if t.scheme == "light" %}
+  --color-prettylights-syntax-comment: #6e7781;
+  --color-prettylights-syntax-constant: #0550ae;
+  --color-prettylights-syntax-entity: #8250df;
+  --color-prettylights-syntax-storage-modifier-import: #24292f;
+  --color-prettylights-syntax-entity-tag: #116329;
+  --color-prettylights-syntax-keyword: #cf222e;
+  --color-prettylights-syntax-string: #0a3069;
+  --color-prettylights-syntax-variable: #953800;
+  --color-prettylights-syntax-brackethighlighter-unmatched: #82071e;
+  --color-prettylights-syntax-invalid-illegal-text: #f6f8fa;
+  --color-prettylights-syntax-invalid-illegal-bg: #82071e;
+  --color-prettylights-syntax-carriage-return-text: #f6f8fa;
+  --color-prettylights-syntax-carriage-return-bg: #cf222e;
+  --color-prettylights-syntax-string-regexp: #116329;
+  --color-prettylights-syntax-markup-list: #3b2300;
+  --color-prettylights-syntax-markup-heading: #0550ae;
+  --color-prettylights-syntax-markup-italic: #24292f;
+  --color-prettylights-syntax-markup-bold: #24292f;
+  --color-prettylights-syntax-markup-deleted-text: #82071e;
+  --color-prettylights-syntax-markup-deleted-bg: #ffebe9;
+  --color-prettylights-syntax-markup-inserted-text: #116329;
+  --color-prettylights-syntax-markup-inserted-bg: #dafbe1;
+  --color-prettylights-syntax-markup-changed-text: #953800;
+  --color-prettylights-syntax-markup-changed-bg: #ffd8b5;
+  --color-prettylights-syntax-markup-ignored-text: #eaeef2;
+  --color-prettylights-syntax-markup-ignored-bg: #0550ae;
+  --color-prettylights-syntax-meta-diff-range: #8250df;
+  --color-prettylights-syntax-brackethighlighter-angle: #57606a;
+  --color-prettylights-syntax-sublimelinter-gutter-mark: #8c959f;
+  --color-prettylights-syntax-constant-other-reference-link: #0a3069;
+{%- else %}
+  --color-prettylights-syntax-comment: #8b949e;
+  --color-prettylights-syntax-constant: #79c0ff;
+  --color-prettylights-syntax-entity: #d2a8ff;
+  --color-prettylights-syntax-storage-modifier-import: #c9d1d9;
+  --color-prettylights-syntax-entity-tag: #7ee787;
+  --color-prettylights-syntax-keyword: #ff7b72;
+  --color-prettylights-syntax-string: #a5d6ff;
+  --color-prettylights-syntax-variable: #ffa657;
+  --color-prettylights-syntax-brackethighlighter-unmatched: #f85149;
+  --color-prettylights-syntax-invalid-illegal-text: #f0f6fc;
+  --color-prettylights-syntax-invalid-illegal-bg: #8e1519;
+  --color-prettylights-syntax-carriage-return-text: #f0f6fc;
+  --color-prettylights-syntax-carriage-return-bg: #b62324;
+  --color-prettylights-syntax-string-regexp: #7ee787;
+  --color-prettylights-syntax-markup-list: #f2cc60;
+  --color-prettylights-syntax-markup-heading: #1f6feb;
+  --color-prettylights-syntax-markup-italic: #c9d1d9;
+  --color-prettylights-syntax-markup-bold: #c9d1d9;
+  --color-prettylights-syntax-markup-deleted-text: #ffdcd7;
+  --color-prettylights-syntax-markup-deleted-bg: #67060c;
+  --color-prettylights-syntax-markup-inserted-text: #aff5b4;
+  --color-prettylights-syntax-markup-inserted-bg: #033a16;
+  --color-prettylights-syntax-markup-changed-text: #ffdfb6;
+  --color-prettylights-syntax-markup-changed-bg: #5a1e02;
+  --color-prettylights-syntax-markup-ignored-text: #c9d1d9;
+  --color-prettylights-syntax-markup-ignored-bg: #1158c7;
+  --color-prettylights-syntax-meta-diff-range: #d2a8ff;
+  --color-prettylights-syntax-brackethighlighter-angle: #8b949e;
+  --color-prettylights-syntax-sublimelinter-gutter-mark: #484f58;
+  --color-prettylights-syntax-constant-other-reference-link: #a5d6ff;
+{%- endif %}
+  --color-btn-text: var(--g-ink);
+  --color-btn-bg: var(--g-panel);
+  --color-btn-border: var(--g-line);
+  --color-btn-shadow: 0 0 transparent;
+  --color-btn-inset-shadow: 0 0 transparent;
+  --color-btn-hover-bg: color-mix(in srgb, var(--g-panel), var(--g-ink) 6%);
+  --color-btn-hover-border: var(--g-line-strong);
+  --color-btn-active-bg: color-mix(in srgb, var(--g-panel), var(--g-ink) 10%);
+  --color-btn-active-border: var(--g-line-strong);
+  --color-btn-selected-bg: var(--g-bg);
+  --color-btn-primary-text: var(--g-on-btn);
+  --color-btn-primary-bg: var(--g-btn);
+  --color-btn-primary-border: transparent;
+  --color-btn-primary-shadow: 0 0 transparent;
+  --color-btn-primary-inset-shadow: 0 0 transparent;
+  --color-btn-primary-hover-bg: var(--g-btn-hover);
+  --color-btn-primary-hover-border: transparent;
+  --color-btn-primary-selected-bg: var(--g-btn);
+  --color-btn-primary-selected-shadow: 0 0 transparent;
+  --color-btn-primary-disabled-text: color-mix(in srgb, var(--g-on-btn) 60%, transparent);
+  --color-btn-primary-disabled-bg: color-mix(in srgb, var(--g-btn) 50%, transparent);
+  --color-btn-primary-disabled-border: transparent;
+  --color-action-list-item-default-hover-bg: color-mix(in srgb, var(--g-ink) 8%, transparent);
+  --color-segmented-control-bg: color-mix(in srgb, var(--g-ink) 6%, transparent);
+  --color-segmented-control-button-bg: var(--g-bg);
+  --color-segmented-control-button-selected-border: var(--g-line-strong);
+  --color-fg-default: var(--g-ink);
+  --color-fg-muted: var(--g-mute);
+  --color-fg-subtle: var(--g-mute);
+  --color-canvas-default: var(--g-bg);
+  --color-canvas-overlay: var(--g-panel);
+  --color-canvas-inset: var(--g-bg);
+  --color-canvas-subtle: var(--g-panel);
+  --color-border-default: var(--g-line);
+  --color-border-muted: var(--g-line);
+  --color-neutral-muted: color-mix(in srgb, var(--g-mute) 25%, transparent);
+  --color-accent-fg: var(--g-link);
+  --color-accent-emphasis: var(--g-btn);
+  --color-accent-muted: color-mix(in srgb, var(--g-link) 40%, transparent);
+  --color-accent-subtle: color-mix(in srgb, var(--g-link) 12%, transparent);
+{%- if t.scheme == "light" %}
+  --color-success-fg: #1a7f37;
+  --color-attention-fg: #9a6700;
+  --color-attention-muted: rgb(212 167 44 / 40%);
+  --color-attention-subtle: #fff8c5;
+  --color-danger-fg: #d1242f;
+  --color-danger-muted: rgb(255 129 130 / 40%);
+  --color-danger-subtle: #ffebe9;
+{%- else %}
+  --color-success-fg: #3fb950;
+  --color-attention-fg: #d29922;
+  --color-attention-muted: rgb(187 128 9 / 40%);
+  --color-attention-subtle: rgb(187 128 9 / 15%);
+  --color-danger-fg: #f85149;
+  --color-danger-muted: rgb(248 81 73 / 40%);
+  --color-danger-subtle: rgb(248 81 73 / 10%);
+{%- endif %}
+  --color-primer-shadow-inset: 0 0 transparent;
+  --color-social-reaction-bg-hover: color-mix(in srgb, var(--g-ink) 8%, transparent);
+  --color-social-reaction-bg-reacted-hover: color-mix(in srgb, var(--g-link) 18%, transparent);
+}
+
+main .pagination-loader-container {
+  background-image: url("https://github.com/images/modules/pulls/progressive-disclosure-line{% if t.scheme != "light" %}-dark{% endif %}.svg");
+}
+
+main .gsc-loading-image {
+  background-image: url("https://github.githubassets.com/images/mona-loading-{% if t.scheme == "light" %}default{% else %}dark{% endif %}.gif");
+}

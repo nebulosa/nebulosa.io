@@ -1,0 +1,49 @@
+---
+layout: core
+---
+{%- comment -%} "On this page" from the h2s kramdown gives ids to; shown when there are two or more. {%- endcomment -%}
+{%- assign h2s = content | split: '<h2 id="' -%}
+      <article class="nb-article">
+        <header class="nb-article__head">
+          {% include core/slot.html name="page-head-art" %}
+          <div class="nb-article__meta">
+            <a class="nb-back" href="/blog/">← Blog</a>
+            <time class="nb-article__date" datetime="{{ page.date | date: '%Y-%m-%d' }}">{{ page.date | date: "%b %-d, %Y" }}</time>
+            {%- if page.tags.size > 0 %}
+            <ul class="nb-tags">{% for tag in page.tags %}<li class="nb-tag">{{ tag }}</li>{% endfor %}</ul>
+            {%- endif %}
+          </div>
+          <h1 class="nb-article__title">{{ page.title }}</h1>
+          <p class="nb-article__lead">{{ page.description }}</p>
+        </header>
+
+        <figure class="nb-article__cover">
+          <img class="nb-article__img" src="{{ page.image }}" alt="" width="1200" height="627">
+        </figure>
+        {%- if h2s.size > 2 %}
+
+        <nav class="nb-toc" aria-labelledby="nb-toc-title">
+          <h2 class="nb-toc__title" id="nb-toc-title">On this page</h2>
+          <ol class="nb-toc__list">
+            {%- for part in h2s offset: 1 %}
+            {%- assign head = part | split: '</h2>' | first %}
+            {%- assign id = head | split: '">' | first %}
+            {%- assign text = head | remove_first: id | remove_first: '">' | strip_html %}
+            <li><a class="nb-toc__link" href="#{{ id }}">{{ text }}</a></li>
+            {%- endfor %}
+          </ol>
+        </nav>
+        {%- endif %}
+
+        <div class="nb-prose">
+{{ content }}
+        </div>
+
+        <aside class="nb-article-cta" aria-labelledby="nb-article-cta-title">
+          {% include core/slot.html name="cta-art" %}
+          <h2 class="nb-article-cta__title" id="nb-article-cta-title">Need a proof? Contact Nebulosa.</h2>
+          <a class="nb-btn nb-btn--primary" href="mailto:{{ site.email }}?subject={{ page.title | uri_escape }}">{{ site.email }}</a>
+          <a class="nb-more" href="{{ site.linkedin }}" rel="noopener">Follow Nebulosa on LinkedIn →</a>
+        </aside>
+{% include core/comments.html %}
+      </article>

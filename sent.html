@@ -1,0 +1,11 @@
+---
+layout: page
+nb_page: sent
+sitemap: false
+robots: noindex
+---
+{%- comment -%} Where Web3Forms sends a visitor who posted the Contact form without JS. Title, heading and lead
+    come from site_copy.yml (sent). {%- endcomment %}
+      <section class="nb-section nb-sent">
+        <p class="nb-section__text"><a class="nb-btn nb-btn--primary nb-sent__home" href="/">{{ site.data.site_copy.sent.link }}</a></p>
+      </section>

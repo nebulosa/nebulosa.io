@@ -1,0 +1,9 @@
+{%- comment -%} Sets nb_available: the entries of _data/templates.yml whose theme.css is in the build. A template
+    declared before its stylesheet exists is not offered by the switcher, listed in index.json or accepted by the
+    head's bootstrap, so a click on it never ends in a 404 that silently does nothing. {%- endcomment -%}
+{%- assign nb_available = "" | split: "" -%}
+{%- for nb_tt in site.data.templates -%}
+  {%- assign nb_css = "/assets/templates/" | append: nb_tt.slug | append: "/theme.css" -%}
+  {%- assign nb_css_file = site.static_files | where: "path", nb_css | first -%}
+  {%- if nb_css_file -%}{%- assign nb_available = nb_available | push: nb_tt -%}{%- endif -%}
+{%- endfor -%}

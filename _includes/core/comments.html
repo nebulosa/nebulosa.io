@@ -1,0 +1,13 @@
+{%- comment -%} A post's comments: giscus (GitHub Discussions), one thread per pathname. comments.js loads the client with
+    the active template's assets/templates/<slug>/giscus.css and follows a template switch live. Without a category id
+    in _config.yml there is no block at all. {%- endcomment -%}
+{%- if site.giscus.category_id != "" and site.giscus.category_id %}
+{%- assign k = site.data.site_copy.comments %}
+        <section class="nb-comments" aria-labelledby="nb-comments-title">
+          <h2 class="nb-comments__title" id="nb-comments-title">{{ k.title }}</h2>
+          <div class="nb-comments__thread" data-repo="{{ site.giscus.repo }}" data-repo-id="{{ site.giscus.repo_id }}"
+               data-category="{{ site.giscus.category }}" data-category-id="{{ site.giscus.category_id }}"></div>
+          <noscript><p class="nb-comments__note">{{ k.noscript }}</p></noscript>
+        </section>
+        <script src="/assets/core/comments.js?v={{ site.time | date: '%s' }}" defer></script>
+{%- endif %}

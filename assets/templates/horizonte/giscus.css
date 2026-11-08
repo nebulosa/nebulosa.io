@@ -1,0 +1,11 @@
+---
+---
+{%- comment -%} Post comments in this template, loaded inside the giscus iframe by comments.js: the template's palette as
+    --g-* tokens; _includes/core/giscus.css maps them onto giscus. {%- endcomment -%}
+{% include core/giscus.css slug="horizonte" %}
+main {
+  --g-bg: #0d0917; --g-panel: #171026; --g-ink: #f3effc; --g-mute: #aba4c4;
+  --g-line: rgba(201, 184, 255, .14); --g-line-strong: rgba(201, 184, 255, .4); --g-link: #c9b8ff;
+  --g-btn: #6d4bd8; --g-btn-hover: #7a5ae6; --g-on-btn: #ffffff;
+  --g-font: "Manrope", system-ui, "Helvetica Neue", Arial, sans-serif;
+}

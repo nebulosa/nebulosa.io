@@ -1,0 +1,11 @@
+---
+---
+{%- comment -%} Post comments in this template, loaded inside the giscus iframe by comments.js: the template's palette as
+    --g-* tokens; _includes/core/giscus.css maps them onto giscus. {%- endcomment -%}
+{% include core/giscus.css slug="polvo" %}
+main {
+  --g-bg: #120d19; --g-panel: #1b1424; --g-ink: #f3eef6; --g-mute: #b5a9c2;
+  --g-line: rgba(201, 184, 255, .16); --g-line-strong: rgba(201, 184, 255, .32); --g-link: #c9b8ff;
+  --g-btn: #6d4bd8; --g-btn-hover: #7a5ae6; --g-on-btn: #ffffff;
+  --g-font: "Source Serif 4", Georgia, "Times New Roman", serif;
+}

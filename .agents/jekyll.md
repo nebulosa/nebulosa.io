@@ -21,8 +21,22 @@ differs between pages:
 - `body_style` — inline style on `<body>` (each page has its background color).
 - `fix_css` — the per-page stylesheet in `assets/css/fixes/<name>.fix.css`.
 
-Asset paths are relative (`assets/...`), which only works while every page
-lives at the root. A page in a subdirectory needs `{{ '/assets/...' | relative_url }}`.
+The shared includes (`head`, `header`, `footer`) and the layout use
+root-absolute paths (`/assets/...`, `/services.html`) because the blog lives in
+`/blog/`. Root pages may keep relative paths; anything shared may not.
+
+# Blog
+
+Posts are `_posts/YYYY-MM-DD-<slug>.md`; `_config.yml` defaults give them the
+`post` layout and the URL `/blog/<slug>` (no extension: GitHub Pages serves
+`blog/<slug>.html` there). Front matter: `title`, `date`, `description` (meta
+and card text), `tags`, `image`. jekyll-seo-tag turns those into canonical,
+Open Graph and `BlogPosting` JSON-LD, so no SEO markup is written by hand.
+
+Covers go in `assets/img/blog/<slug>.png`, not `blog/<slug>/`: a folder named
+like the page would make GitHub Pages redirect `/blog/<slug>` to a 404.
+
+The feed is `/blog/rss.xml` (jekyll-feed); the sitemap picks posts up on its own.
 
 # Styles and scripts
 

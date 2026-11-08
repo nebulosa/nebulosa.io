@@ -1,0 +1,15 @@
+{%- comment -%} One post as an article. block: nb-card (home), nb-post-item (blog list) or nb-post-featured (blog's
+    newest); heading: h2 or h3; tags: true to list the post's tags. {%- endcomment -%}
+{%- assign b = include.block | default: "nb-post-item" -%}
+{%- assign h = include.heading | default: "h2" -%}
+<article class="{{ b }}">
+  <img class="{{ b }}__cover" src="{{ include.post.image }}" alt="" width="1200" height="627"{% unless include.eager %} loading="lazy"{% endunless %}>
+  <div class="{{ b }}__body">
+    <time class="{{ b }}__date" datetime="{{ include.post.date | date: '%Y-%m-%d' }}">{{ include.post.date | date: "%b %-d, %Y" }}</time>
+    <{{ h }} class="{{ b }}__title"><a class="{{ b }}__link" href="{{ include.post.url }}">{{ include.post.title }}</a></{{ h }}>
+    <p class="{{ b }}__desc">{{ include.post.description }}</p>
+    {%- if include.tags and include.post.tags.size > 0 %}
+    <ul class="nb-tags">{% for tag in include.post.tags %}<li class="nb-tag">{{ tag }}</li>{% endfor %}</ul>
+    {%- endif %}
+  </div>
+</article>

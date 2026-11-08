@@ -1,0 +1,11 @@
+---
+---
+{%- comment -%} Post comments in this template, loaded inside the giscus iframe by comments.js: the template's palette as
+    --g-* tokens; _includes/core/giscus.css maps them onto giscus. {%- endcomment -%}
+{% include core/giscus.css slug="constelacion" %}
+main {
+  --g-bg: #0b0912; --g-panel: #14111c; --g-ink: #f2eefa; --g-mute: #a79fb8;
+  --g-line: rgba(201, 184, 255, .14); --g-line-strong: rgba(201, 184, 255, .42); --g-link: #c9b8ff;
+  --g-btn: #c9b8ff; --g-btn-hover: #d8ccff; --g-on-btn: #120d1a;
+  --g-font: "Outfit", "Helvetica Neue", Arial, sans-serif;
+}

@@ -1,0 +1,70 @@
+---
+layout: core
+---
+{%- assign c = site.data.site_copy.home -%}
+      <section class="nb-hero" aria-labelledby="nb-hero-title">
+        {% include core/slot.html name="hero-art" %}
+        <div class="nb-hero__text">
+          <p class="nb-kicker">{{ c.kicker }}</p>
+          <h1 class="nb-hero__title" id="nb-hero-title">{{ c.title }} <span class="nb-hero__em">{{ c.title_em }}</span></h1>
+          <p class="nb-hero__lead">{{ c.lead }}</p>
+          <div class="nb-actions">
+            <a class="nb-btn nb-btn--primary" href="mailto:{{ site.email }}">{{ c.primary.label }}</a>
+            <a class="nb-btn nb-btn--secondary" href="{{ c.secondary.href }}">{{ c.secondary.label }}</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="nb-section nb-services" aria-labelledby="nb-services-title">
+        {% include core/slot.html name="services-art" %}
+        <h2 class="nb-section__title" id="nb-services-title">{{ c.services_title }}</h2>
+        <ol class="nb-services__list">
+          {%- for s in c.services %}
+          <li class="nb-service">{% include core/slot.html name="service-art" %}<span class="nb-service__num">{{ forloop.index | prepend: "0" | slice: -2, 2 }}</span><span class="nb-service__name">{{ s }}</span></li>
+          {%- endfor %}
+        </ol>
+        <a class="nb-more" href="{{ c.services_more.href }}">{{ c.services_more.label }}</a>
+      </section>
+
+      <section class="nb-section nb-staff" aria-labelledby="nb-staff-title">
+        <h2 class="nb-section__title" id="nb-staff-title">{{ c.staff_title }}</h2>
+        <p class="nb-staff__lead">{{ c.staff_lead }}</p>
+        {% include core/item-list.html block="nb-staff" items=c.staff %}
+        <a class="nb-more" href="{{ c.staff_more.href }}">{{ c.staff_more.label }}</a>
+      </section>
+
+      <section class="nb-section nb-how" aria-labelledby="nb-how-title">
+        {% include core/slot.html name="how-art" %}
+        <h2 class="nb-section__title" id="nb-how-title">{{ c.how_title }}</h2>
+        <p class="nb-how__main">{{ c.how_main }}</p>
+        <p class="nb-how__ask">{{ c.how_ask }}</p>
+        <a class="nb-more" href="{{ c.how_more.href }}">{{ c.how_more.label }}</a>
+      </section>
+
+      <section class="nb-section nb-clients" aria-labelledby="nb-clients-title">
+        <h2 class="nb-section__title" id="nb-clients-title">{{ c.clients_title }}</h2>
+        <ul class="nb-clients__list">
+          {%- for cl in site.data.clients %}
+          <li class="nb-client">{{ cl.name }}</li>
+          {%- endfor %}
+        </ul>
+      </section>
+
+      <section class="nb-section nb-insights" aria-labelledby="nb-insights-title">
+        {% include core/slot.html name="insights-art" %}
+        <div class="nb-insights__head">
+          <h2 class="nb-section__title" id="nb-insights-title">{{ c.insights_title }}</h2>
+          <a class="nb-more" href="/blog/">{{ c.insights_more }}</a>
+        </div>
+        <div class="nb-cards">
+          {%- for post in site.posts limit: 3 %}
+          {% include core/post-card.html post=post block="nb-card" heading="h3" %}
+          {%- endfor %}
+        </div>
+      </section>
+
+      <section class="nb-cta" aria-labelledby="nb-cta-title">
+        {% include core/slot.html name="cta-art" %}
+        <h2 class="nb-cta__title" id="nb-cta-title">{{ c.cta_title }}</h2>
+        <a class="nb-btn nb-btn--primary" href="mailto:{{ site.email }}">{{ site.email }}</a>
+      </section>

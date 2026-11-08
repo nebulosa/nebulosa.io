@@ -1,0 +1,20 @@
+---
+layout: null
+---
+{%- comment -%} Every template whose theme.css is in the build (nb_available), for switch.js: from _data/templates.yml
+    (like each manifest.json) plus its slot HTML from _includes/templates/<slug>/. "effects" is the script's URL only
+    when the file is in the build, so a template that declares effects before its effects.js exists loads nothing
+    instead of a 404. {%- endcomment -%}
+{%- include core/templates-available.html -%}
+{%- assign nb_v = site.time | date: '%s' | prepend: '?v=' -%}
+{
+{%- for t in nb_available %}
+  {%- assign fx_path = "/assets/templates/" | append: t.slug | append: "/effects.js" -%}
+  {%- assign fx_file = site.static_files | where: "path", fx_path | first %}
+  {{ t.slug | jsonify }}: {"name": {{ t.name | jsonify }}, "scheme": {{ t.scheme | jsonify }}, "css": {{ "/assets/templates/" | append: t.slug | append: "/theme.css" | append: nb_v | jsonify }}, "fonts": {{ t.fonts | jsonify }}, "effects": {% if t.effects and fx_file %}{{ fx_path | append: nb_v | jsonify }}{% else %}null{% endif %}, "rail": {{ t.rail | jsonify }}, "slots": {
+  {%- for k in t.slots %}
+    {%- capture html %}{% include templates/{{ t.slug }}/{{ k }}.html %}{% endcapture %}
+    {{ k | jsonify }}: {{ html | strip | jsonify }}{% unless forloop.last %},{% endunless %}
+  {%- endfor %}}}{% unless forloop.last %},{% endunless %}
+{%- endfor %}
+}

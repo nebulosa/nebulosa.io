@@ -1,0 +1,15 @@
+---
+layout: core
+---
+{%- comment -%} An inner page: a head with the page's h1 and lead, then its own sections. Heading and lead come
+    from front matter, else from the page's block in _data/site_copy.yml (keyed by nb_page). {%- endcomment -%}
+{%- assign nb_c = site.data.site_copy[page.nb_page] -%}
+{%- assign nb_lead = page.lead | default: nb_c.lead %}
+      <section class="nb-page-head" aria-labelledby="nb-page-title">
+        {% include core/slot.html name="page-head-art" %}
+        <h1 class="nb-page-head__title" id="nb-page-title">{{ page.heading | default: nb_c.heading | default: page.title }}</h1>
+        {%- if nb_lead %}
+        <p class="nb-page-head__lead">{{ nb_lead }}</p>
+        {%- endif %}
+      </section>
+{{ content }}

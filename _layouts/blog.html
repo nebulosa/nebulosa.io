@@ -1,0 +1,54 @@
+---
+layout: core
+---
+{%- comment -%} Topics by use: "<1000 - count>|<tag>" sorts most used first, ties alphabetically. {%- endcomment -%}
+{%- assign by_use = "" | split: "" -%}
+{%- assign names = "" | split: "" -%}
+{%- for t in site.tags -%}
+  {%- assign k = 1000 | minus: t[1].size | append: "|" | append: t[0] -%}
+  {%- assign by_use = by_use | push: k -%}
+  {%- assign names = names | push: t[0] -%}
+{%- endfor -%}
+{%- assign by_use = by_use | sort -%}
+{%- assign names = names | sort_natural -%}
+      <section class="nb-page-head" aria-labelledby="nb-blog-title">
+        {% include core/slot.html name="page-head-art" %}
+        <h1 class="nb-page-head__title" id="nb-blog-title">{{ page.heading | default: page.title }}</h1>
+        <p class="nb-page-head__lead">{{ page.lead }}</p>
+      </section>
+
+      <nav class="nb-topics" aria-labelledby="nb-topics-title">
+        <h2 class="nb-topics__title" id="nb-topics-title">Topics</h2>
+        <ul class="nb-topics__list">
+          {%- for k in by_use limit: 8 %}
+          {%- assign tag = k | split: "|" | last %}
+          <li class="nb-topic"><a class="nb-topic__link" href="/blog/#topic-{{ tag | slugify }}">{{ tag }}</a></li>
+          {%- endfor %}
+          <li class="nb-topic nb-topic--all"><a class="nb-topic__link" href="/blog/#topics">All topics</a></li>
+        </ul>
+      </nav>
+
+      {%- assign featured = site.posts | first %}
+      {% include core/post-card.html post=featured block="nb-post-featured" heading="h2" tags=true eager=true %}
+
+      <div class="nb-post-list">
+        {%- for post in site.posts offset: 1 %}
+        {% include core/post-card.html post=post block="nb-post-item" heading="h2" tags=true %}
+        {%- endfor %}
+      </div>
+
+      <section class="nb-section nb-topic-index" id="topics" aria-labelledby="nb-topic-index-title">
+        <h2 class="nb-section__title" id="nb-topic-index-title">All topics</h2>
+        <ul class="nb-topic-index__list">
+          {%- for tag in names %}
+          <li class="nb-topic-index__item" id="topic-{{ tag | slugify }}">
+            <h3 class="nb-topic-index__name">{{ tag }}</h3>
+            <ul class="nb-topic-index__posts">
+              {%- for post in site.tags[tag] %}
+              <li><a class="nb-topic-index__link" href="{{ post.url }}">{{ post.title }}</a></li>
+              {%- endfor %}
+            </ul>
+          </li>
+          {%- endfor %}
+        </ul>
+      </section>

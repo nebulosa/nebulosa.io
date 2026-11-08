@@ -1,0 +1,8 @@
+# Layered over _config.yml by run.sh: the checks' Web3Forms key, so a build never carries a real one into a probe.
+web3forms_key: "check-key"
+# A category id so posts render their comments block; probes route giscus.app to a stub.
+giscus:
+  repo:        nebulosa/nebulosa.io
+  repo_id:     check-repo
+  category:    Announcements
+  category_id: check-category

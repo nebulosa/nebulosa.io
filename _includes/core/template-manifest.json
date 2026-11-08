@@ -1,0 +1,3 @@
+{%- comment -%} assets/templates/<slug>/manifest.json, from that template's entry in _data/templates.yml. {%- endcomment -%}
+{%- assign t = site.data.templates | where: "slug", include.slug | first -%}
+{"slug":{{ t.slug | jsonify }},"name":{{ t.name | jsonify }},"scheme":{{ t.scheme | jsonify }},"fonts":{{ t.fonts | jsonify }},"effects":{{ t.effects | jsonify }},"rail":{{ t.rail | jsonify }}}

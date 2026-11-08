@@ -1,0 +1,9 @@
+{%- comment -%} A decorative slot, filled server-side with the default template's version (a page-specific
+    "<page>.<name>" first) when that template declares it in _data/templates.yml; otherwise left empty.
+    Kept on one line: an empty slot must be :empty. {%- endcomment -%}
+{%- assign nb_t = site.data.templates | where: "slug", site.default_template | first -%}
+{%- assign nb_pk = page.nb_page | append: "." | append: include.name -%}
+<div class="nb-slot" data-slot="{{ include.name }}" aria-hidden="true">
+{%- if nb_t.slots contains nb_pk -%}{%- include templates/{{ site.default_template }}/{{ nb_pk }}.html -%}
+{%- elsif nb_t.slots contains include.name -%}{%- include templates/{{ site.default_template }}/{{ include.name }}.html -%}
+{%- endif -%}</div>

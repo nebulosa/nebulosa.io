@@ -5,7 +5,7 @@
           <div class="col-lg-12">
             <div class="footer-top">
               <div class="footer-logo">
-                <a href="#"><img src="assets/img/nebulosa-logo.png" alt="nebulosa logo" /></a>
+                <a href="#"><img src="/assets/img/nebulosa-logo.png" alt="nebulosa logo" /></a>
                 <br />
                 <br />
                 <div class="foote-bottom">
@@ -20,9 +20,10 @@
                 <div class="footer-single">
                   <h3>About</h3>
                   <ul>
-                    <li><a href="services.html">services</a></li>
-                    <li><a href="process.html">process</a></li>
-                    <li><a href="about-us.html">company</a></li>
+                    <li><a href="/services.html">services</a></li>
+                    <li><a href="/process.html">process</a></li>
+                    <li><a href="/about-us.html">company</a></li>
+                    <li><a href="/blog/">blog</a></li>
                     <li><a href="https://github.com/nebulosa" target="_blank">open source</a></li>
                   </ul>
                 </div>
@@ -30,8 +31,20 @@
                   <h3>Contact</h3>
                   <a href="mailto:hello@nebulosa.io">hello@nebulosa.io</a>
                   <a href="tel:+52 55 8421 3003">+52 55 8421 3003</a>
-                  <a href="services.pdf" target="_blank">brochure (PDF)</a>
-                  <a href="servicios.pdf" target="_blank">folleto (PDF)</a>
+                  <a href="/services.pdf" target="_blank">brochure (PDF)</a>
+                  <a href="/servicios.pdf" target="_blank">folleto (PDF)</a>
+                  <div class="footer-social">
+                    <a href="{{ site.linkedin }}" target="_blank" rel="noopener" aria-label="Nebulosa on LinkedIn" title="LinkedIn">
+                      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true" focusable="false">
+                        <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/>
+                      </svg>
+                    </a>
+                    <a href="/blog/rss.xml" aria-label="Blog RSS feed" title="RSS">
+                      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true" focusable="false">
+                        <path d="M3 3v3.6c7.95 0 14.4 6.45 14.4 14.4H21C21 11.06 12.94 3 3 3zm0 7.2v3.6A7.2 7.2 0 0 1 10.2 21h3.6A10.8 10.8 0 0 0 3 10.2zM5.7 15.6a2.7 2.7 0 1 0 0 5.4 2.7 2.7 0 0 0 0-5.4z"/>
+                      </svg>
+                    </a>
+                  </div>
                 </div>
               </div>
 
@@ -41,3 +54,8 @@
       </div>
     </div>
     <!--    footer-area-end-->
+    {%- comment -%} Pageviews and UTM campaigns, counted by GoatCounter (as on javier.io):
+        no cookies, and count.js skips localhost, so the dev server is not counted. {%- endcomment %}
+    <script data-goatcounter="{{ site.goatcounter }}" async src="https://gc.zgo.at/count.v4.js"
+            crossorigin="anonymous"
+            integrity="sha384-nRw6qfbWyJha9LhsOtSb2YJDyZdKvvCFh0fJYlkquSFjUxp9FVNugbfy8q1jdxI+"></script>

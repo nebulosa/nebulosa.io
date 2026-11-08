@@ -1,0 +1,8 @@
+{
+  "name": "nebulosa-site-check",
+  "private": true,
+  "description": "Headless checks for the built site. Run through run.sh (Docker only).",
+  "dependencies": {
+    "playwright": "1.55.0"
+  }
+}

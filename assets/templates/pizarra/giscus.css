@@ -1,0 +1,11 @@
+---
+---
+{%- comment -%} Post comments in this template, loaded inside the giscus iframe by comments.js: the template's palette as
+    --g-* tokens; _includes/core/giscus.css maps them onto giscus. {%- endcomment -%}
+{% include core/giscus.css slug="pizarra" %}
+main {
+  --g-bg: #f5f7f8; --g-panel: #ffffff; --g-ink: #1f1b3f; --g-mute: #5c5878;
+  --g-line: #d6dde5; --g-line-strong: #cfc3f5; --g-link: #5b3bc4;
+  --g-btn: #5b3bc4; --g-btn-hover: #4a257d; --g-on-btn: #ffffff;
+  --g-font: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+}

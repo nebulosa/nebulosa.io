@@ -1,0 +1,16 @@
+{%- comment -%} Organization with sameAs is how Google ties the site to the company's
+    LinkedIn page; jekyll-seo-tag only emits a WebSite node. No telephone: contact is email and LinkedIn. {%- endcomment %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": {{ site.title | jsonify }},
+      "url": {{ site.url | append: '/' | jsonify }},
+      "logo": {{ site.url | append: '/android-icon-192x192.png' | jsonify }},
+      "email": {{ site.email | jsonify }},
+      "sameAs": [
+        {{ site.linkedin | jsonify }},
+        "https://github.com/nebulosa"
+      ]
+    }
+    </script>

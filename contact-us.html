@@ -1,148 +1,66 @@
 ---
-layout: default
-nav: contact
-body_style: "background: #08444f"
-fix_css: contact-us
+layout: page
+nb_page: contact
+title: Contact us
+description: "Write to hello@nebulosa.io or find Nebulosa on LinkedIn. English and Spanish, US time-zone overlap. Guadalajara, Mexico City and Caracas."
 ---
-    <!--    hero-area-start-->
+{%- assign c = site.data.site_copy.contact -%}
+      <section class="nb-section nb-reach" aria-labelledby="nb-reach-title">
+        <h2 class="nb-section__title" id="nb-reach-title">{{ c.reach.title }}</h2>
+        <ul class="nb-reach__list">
+          <li class="nb-reach__item"><span class="nb-reach__label">{{ c.reach.email_label }}</span> <a class="nb-reach__link" href="mailto:{{ site.email }}">{{ site.email }}</a></li>
+          <li class="nb-reach__item"><span class="nb-reach__label">{{ c.reach.linkedin_label }}</span> <a class="nb-reach__link" href="{{ site.linkedin }}" rel="noopener">{{ c.reach.linkedin_text }}</a></li>
+        </ul>
+        <p class="nb-reach__note">{{ c.reach.note }}</p>
+      </section>
 
-    <div
-      class="hero-area inner-hero"
-      style="background-image: url(assets/img/hero-img.png)"
-    >
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-6 mb-50">
-            <div class="hero-text">
-              <h3><span>Contact us</span> <br />tell us about your project</h3>
-            </div>
-            <div class="ct-frm-blk">
-              <input type="text" name="" placeholder="Name" id="" />
-              <input type="email" name="" placeholder="E-mail" id="" />
-              <h4>what do you want to talk about</h4>
-              <ul>
-                <li>product from scratch</li>
-                <li>consultancy</li>
-                <li>product revamp</li>
-                <li>business dogotization</li>
-                <li>dedicated team</li>
-                <li>partnership</li>
-              </ul>
-            </div>
+      <section class="nb-section nb-send" aria-labelledby="nb-send-title">
+        <h2 class="nb-section__title" id="nb-send-title">{{ c.send.title }}</h2>
+        <p class="nb-section__text">{{ c.send.text }}</p>
+        {%- assign k = c.send.compose %}
+        {%- comment -%} Posts to Web3Forms, which mails hello@nebulosa.io. Without JS the browser posts and Web3Forms
+            redirects to /sent.html; with JS compose.js sends it in place and falls back to a mailto link on failure. {%- endcomment %}
+        <form class="nb-compose" action="https://api.web3forms.com/submit" method="post"
+              data-subject="{{ k.subject | escape }}" data-nda-subject="{{ k.nda_subject | escape }}" data-email="{{ site.email | escape }}"
+              data-sending="{{ k.sending | escape }}" data-sent="{{ k.sent | escape }}" data-failed="{{ k.failed | escape }}">
+          <input type="hidden" name="access_key" value="{{ site.web3forms_key | escape }}">
+          <input type="hidden" name="subject" value="{{ k.subject | escape }}">
+          <input type="hidden" name="from_name" value="nebulosa.io">
+          <input type="hidden" name="redirect" value="{{ site.url }}/sent.html">
+          <input type="checkbox" name="botcheck" class="nb-compose__trap" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="nb-compose__field">
+            <label class="nb-compose__label" for="nb-compose-name">{{ k.name_label }}</label>
+            <input class="nb-compose__input" id="nb-compose-name" type="text" name="name" required autocomplete="name">
           </div>
-          <div class="col-xl-6 col-lg-6">
-            <div class="ct-frm-txtarea">
-              <h4>Request details</h4>
-              <textarea name="" id="" cols="30" rows="5"></textarea>
-              <div class="ct-frm-btm-blk">
-                <div class="ct-frm-file-inpt">
-                  <img src="./assets/img/el.png" alt="" />
-                  <input type="file" name="" id="" />
-                  <p>add your file here.</p>
-                </div>
-                <div class="ct-frm-submit-btn">
-                  <button type="submit">send request</button>
-                  >
-                </div>
-              </div>
-            </div>
-            <div class="ct-frm-btm-checkbx">
-              <label class="checkbx-container">
-                <p>send an NDA.</p>
-                <input type="checkbox" checked="checked" />
-                <span class="checkmark"></span>
-              </label>
-            </div>
+          <div class="nb-compose__field">
+            <label class="nb-compose__label" for="nb-compose-email">{{ k.email_label }}</label>
+            <input class="nb-compose__input" id="nb-compose-email" type="email" name="email" required autocomplete="email">
           </div>
-        </div>
-      </div>
-    </div>
+          <div class="nb-compose__field">
+            <label class="nb-compose__label" for="nb-compose-message">{{ k.message_label }}</label>
+            <textarea class="nb-compose__message" id="nb-compose-message" name="message" rows="6" required></textarea>
+          </div>
+          <label class="nb-compose__check">
+            <input class="nb-compose__nda" type="checkbox" name="nda" value="yes">
+            <span class="nb-compose__check-text">{{ k.nda_label }}</span>
+          </label>
+          <button class="nb-btn nb-btn--primary nb-compose__submit" type="submit">{{ k.submit }}</button>
+          <p class="nb-compose__status" role="status" aria-live="polite"></p>
+        </form>
+        <script src="/assets/core/compose.js?v={{ site.time | date: '%s' }}" defer></script>
+      </section>
 
-    <!--    hero-area-end-->
+      <section class="nb-section nb-steps nb-steps--next" aria-labelledby="nb-next-title">
+        {% include core/slot.html name="how-art" %}
+        <h2 class="nb-section__title" id="nb-next-title">{{ c.next.title }}</h2>
+        {% include core/item-list.html block="nb-steps" tag="ol" items=c.next.steps %}
+      </section>
 
-    <!--===== start wht-next-txt area =====-->
-
-    <section class="wht-next-txt-area pt-100 pb-150">
-      <div class="container">
-        <div class="row">
-          <div class="col-xl-12">
-            <h2>What happens next?</h2>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xl-8 col-lg-8">
-            <div class="wht-nxt-txt">
-              <span>step 1</span>
-              <h4>
-                First acquaintance
-                <p>
-                  After we receive your request, one of our managers will
-                  contact you to clarify the details and arrange a meeting. We
-                  normaly reply within one business day (or much sooner).
-                </p>
-              </h4>
-            </div>
-            <div class="wht-nxt-txt">
-              <span>step 2</span>
-              <h4>
-                Project discovery
-                <p>
-                  Our next step is to define project goals and how to achieve
-                  them. This is the best way to understand if we're ready to
-                  take this project into work and to take the responsibility.
-                </p>
-              </h4>
-            </div>
-            <div class="wht-nxt-txt">
-              <span>step 3</span>
-              <h4>
-                Engagement
-                <p>
-                  Once all details and requirements of the future project are
-                  defined, business goals are set and risks are encountered,
-                  it's time to sign the Agreement and start work.
-                </p>
-              </h4>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!--===== completed wht-next-txt area =====-->
-
-    <!--===== start locations area =====-->
-
-    <section class="locations-area">
-      <div class="container">
-        <h2>Our locations</h2>
-        <div class="row">
-          <div class="col-xl-6 col-lg-6">
-            <div class="location">
-              <img src="./assets/img/th2.png" alt="" />
-              <p>Guadalajara, MEX</p>
-            </div>
-          </div>
-          <div class="col-xl-6 col-lg-6">
-            <div class="location">
-              <img src="./assets/img/th3.png" alt="" />
-              <p>Mexico city, MEX</p>
-            </div>
-          </div>
-          <div class="col-xl-6 col-lg-6">
-            <div class="location">
-              <img src="./assets/img/Caracas.jpg" alt="" />
-              <p>Caracas, Venezuela</p>
-            </div>
-          </div>
-          <div class="col-xl-6 col-lg-6">
-            <div class="location">
-              <img src="./assets/img/osaka.jpg" alt="" />
-              <p>Osaka, Japan</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!--===== completed locations area =====-->
+      <section class="nb-section nb-places" aria-labelledby="nb-places-title">
+        <h2 class="nb-section__title" id="nb-places-title">{{ c.places.title }}</h2>
+        <ul class="nb-places__list">
+          {%- for p in c.places.items %}
+          <li class="nb-places__item"><span class="nb-places__city">{{ p.city }}</span>, <span class="nb-places__country">{{ p.country }}</span></li>
+          {%- endfor %}
+        </ul>
+      </section>

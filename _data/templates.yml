@@ -1,0 +1,46 @@
+# The visitor-selectable templates. The head's bootstrap script reads slug and scheme;
+# assets/templates/<slug>/manifest.json is generated from each entry.
+# slots: the decorative slots the template fills, from _includes/templates/<slug>/<slot>.html;
+# "<page>.<slot>" means a page-specific version of that slot (<page> = page.nb_page).
+# rail: how the template shows "Worked with": moving (its effects.js runs .nb-clients__list as a rail under the
+# core's rail contract) or static (the list stands still, in rows). The site checks hold it to its word.
+- slug: pizarra
+  name: Clear Docs
+  scheme: light
+  fonts:
+    - "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+  effects: true
+  rail: moving
+  slots: [hero-art]
+- slug: constelacion
+  name: Living Constellation
+  scheme: dark
+  fonts:
+    - "https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500&family=IBM+Plex+Mono:wght@400&display=swap"
+  effects: true
+  rail: moving
+  # services.services-art is empty on purpose: the home figure's lines are drawn for the home zigzag; Services joins its
+  # items with CSS lines instead.
+  slots: [backdrop, hero-art, services-art, services.services-art, insights-art, cta-art, services.page-head-art, process.page-head-art, about.page-head-art, contact.page-head-art, blog.page-head-art, footer-art]
+- slug: horizonte
+  name: Planetary Horizon
+  scheme: dark
+  fonts:
+    - "https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700;800&display=swap"
+  # effects.js only runs the clients rail; the limb, the stars and the dawn are CSS and SVG in the slots.
+  effects: true
+  rail: moving
+  # page-head-art is the flatter limb under every inner page's title (blog included); the article gets a halo instead.
+  slots: [backdrop, hero-art, cta-art, page-head-art, post.page-head-art]
+- slug: polvo
+  name: Stardust
+  scheme: dark
+  fonts:
+    - "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..600;1,8..60,400..600&display=swap"
+  # No effects.js: the dust breathes in CSS (keyed off html[data-motion]); the slot SVGs come from tools/polvo_dust.py.
+  effects: false
+  # "Worked with" stands still, a typographic list between hairlines: the editorial direction's call, the spec's one
+  # allowed exception (design review, 2026-11-06).
+  rail: static
+  # page-head-art backs the inner pages' masthead, the blog's and the article's centred head alike.
+  slots: [backdrop, hero-art, page-head-art, insights-art, cta-art]

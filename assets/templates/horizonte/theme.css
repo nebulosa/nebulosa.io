@@ -1,0 +1,498 @@
+/* horizonte (Planetary Horizon): the site seen from orbit. A plum-black sky with sparse stars, a wide cinematic
+   hero (Manrope 800) and, under it, the curved limb of a planet with a violet atmosphere and a warm dawn to the
+   right. What follows is the descent: every section is an altitude ("ALT 400 km" down to "ALT 0 · surface" at the
+   closing call), a hairline rule across the measure, the mono label and the title in a left column and the content
+   wide at its right; the footer is the night side. Ported from .superpowers/sdd/2026-11-06-tema/r2/alts/horizonte
+   (CSS only, 1280 px) onto the core:
+   - the limb, the stars and the dawn are the slots (backdrop, hero-art, page-head-art, post.page-head-art, cta-art),
+     SVG with gaussian blur; the limbs crop to cover any width (preserveAspectRatio slice) and anchor to the bottom;
+   - the altitudes are CSS generated content with an empty alternative text (decorative), by the section's place
+     among the page's sections, so Services, Process, About and Contact descend like the home;
+   - lists keep the home's language: a light numeral and a bold name per row (services, steps), two-column belts of
+     name and text (staff, principles), rows with a glowing dot (proofs, what we screen for), rounded panels (cards,
+     the featured post, which one fits, the composer).
+   The only motion is the clients rail (effects.js through the core's fx.js): while the section carries data-nb-rail
+   (set only when api.reduced is false, the html[data-motion] contract) it goes full-bleed and the names slide left on
+   one line, fading at the viewport edges through a mask (no painted patch over the stars); under reduce, and without
+   JS, the list stands still in rows in the altitude grid.
+   The measure grows with the screen: 1184 px inside 48 px gutters at 1280 px, up to 1600 px at about 1866 px
+   (--h-max); leads, prose and row texts keep a reading measure; the sky, the limbs and the footer bleed. */
+[data-template="horizonte"] {
+  --h-bg: #0d0917; --h-panel: #171026; --h-field: #0f0a1c; --h-night: #07050d;
+  --h-ink: #f3effc; --h-mute: #aba4c4; --h-lav: #c9b8ff; --h-vio: #6d4bd8;
+  --h-hair: rgba(201, 184, 255, .14); --h-hair2: rgba(201, 184, 255, .08); --h-edge: rgba(201, 184, 255, .12);
+  --h-alt: rgba(201, 184, 255, .72); /* the altitude labels */
+  --h-glass: rgba(23, 16, 38, .6);
+  --h-sans: "Manrope", ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
+  --h-mono: "DM Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  /* the measure: 1184px centred inside 48px gutters, growing to 1600px; sections keep their rule inside it */
+  --h-gutter: 48px; --h-max: clamp(1184px, calc(1184px + (100vw - 1280px) * 0.71), 1600px);
+  --h-x: max(var(--h-gutter), calc((100% - var(--h-max)) / 2));
+  --h-col: 220px; --h-colgap: 32px; /* the altitude column and its gap */
+  --h-num: 84px; /* the numeral column of numbered rows */
+  --h-rail-gap: 56px; /* between names on the rail, and between the list and its loop copy */
+  background: #0d0917; color-scheme: dark;
+}
+/* the sky: a vertical plum gradient; below the backdrop's reach (1800px) a sparse field of CSS stars keeps long
+   pages from going flat */
+[data-template="horizonte"] .nb {
+  display: flex; flex-direction: column; color: var(--h-ink);
+  font: 400 16px/1.55 var(--h-sans); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  background-color: var(--h-bg);
+  background-image:
+    radial-gradient(circle at 131px 93px, rgba(255, 255, 255, .5) 0 .7px, transparent 1.5px),
+    radial-gradient(circle at 443px 321px, rgba(201, 184, 255, .35) 0 .7px, transparent 1.5px),
+    radial-gradient(circle at 297px 551px, rgba(255, 255, 255, .3) 0 .7px, transparent 1.5px),
+    radial-gradient(circle at 599px 207px, rgba(201, 184, 255, .3) 0 .7px, transparent 1.5px),
+    radial-gradient(circle at 61px 477px, rgba(255, 255, 255, .4) 0 .7px, transparent 1.5px),
+    radial-gradient(circle at 754px 897px, rgba(255, 255, 255, .55) 0 1px, transparent 2px),
+    radial-gradient(circle at 221px 1023px, rgba(201, 184, 255, .4) 0 .8px, transparent 1.6px),
+    radial-gradient(circle at 1029px 273px, rgba(255, 255, 255, .35) 0 .8px, transparent 1.6px),
+    radial-gradient(circle at 887px 629px, rgba(201, 184, 255, .4) 0 .8px, transparent 1.6px),
+    linear-gradient(180deg, #0a0613 0, #0d0917 42%, #110c1e 100%);
+  background-size: 640px 720px, 640px 720px, 640px 720px, 640px 720px, 640px 720px, 1100px 1240px, 1100px 1240px, 1100px 1240px, 1100px 1240px, auto;
+}
+[data-template="horizonte"] .nb-header, [data-template="horizonte"] .nb-main, [data-template="horizonte"] .nb-footer { position: relative; z-index: 1; flex-shrink: 0; }
+[data-template="horizonte"] .nb-header { z-index: 2; } /* the switcher's panel opens over the hero */
+[data-template="horizonte"] .nb-main { flex: 1 0 auto; display: flex; flex-direction: column; }
+[data-template="horizonte"] .nb ul, [data-template="horizonte"] .nb ol { list-style: none; }
+[data-template="horizonte"] .nb a { text-decoration: none; }
+[data-template="horizonte"] .nb :focus-visible { outline: 2px solid var(--h-lav); outline-offset: 3px; }
+[data-template="horizonte"] .nb-section[id], [data-template="horizonte"] .nb-topic-index__item { scroll-margin-top: 24px; }
+
+/* ───────── slots: the sky behind everything, the limbs under the hero and the page titles, the dawn under the calls;
+   every other slot (another template's, hidden while a switch lands) takes no room ───────── */
+[data-template="horizonte"] .nb-slot { display: none; }
+[data-template="horizonte"] .nb-slot[data-slot="backdrop"]:not(:empty) { display: block; position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+[data-template="horizonte"] .horizonte-stars { display: block; width: 100%; height: min(100%, 1800px); }
+[data-template="horizonte"] .horizonte-star { fill: #fff; }
+[data-template="horizonte"] .horizonte-star--lav { fill: #c9b8ff; }
+[data-template="horizonte"] .horizonte-limb { display: block; width: 100%; height: 100%; }
+[data-template="horizonte"] .horizonte-glow-wide { stroke: #6d4bd8; stroke-width: 70; fill: none; opacity: .55; }
+[data-template="horizonte"] .horizonte-glow { stroke: #a98cff; stroke-width: 16; fill: none; opacity: .75; }
+[data-template="horizonte"] .horizonte-edge { stroke: #efe6ff; stroke-width: 1.5; fill: none; opacity: .95; }
+[data-template="horizonte"] .horizonte-dawn { stroke: #ffb59c; stroke-width: 28; fill: none; opacity: .5; stroke-linecap: round; }
+
+/* ───────── header: transparent, floating over the sky; logo left, the nav right, Contact as a ghost pill, the
+   switcher as a small mono pill after it ───────── */
+[data-template="horizonte"] .nb-header { display: flex; flex-wrap: wrap; align-items: center; gap: 0 10px; min-height: 76px; padding: 0 var(--h-x); }
+[data-template="horizonte"] .nb-brand { display: inline-flex; align-items: center; min-height: 44px; margin-right: auto; line-height: 0; }
+[data-template="horizonte"] .nb-logo { height: 30px; width: auto; }
+[data-template="horizonte"] .nb-nav__list { display: flex; flex-wrap: wrap; align-items: center; gap: 0 10px; }
+[data-template="horizonte"] .nb-nav__link { position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; font: 500 15px/1 var(--h-sans); color: var(--h-mute); }
+[data-template="horizonte"] .nb-nav__link:hover, [data-template="horizonte"] .nb-nav__link[aria-current] { color: #fff; }
+[data-template="horizonte"] .nb-nav__link[aria-current]::after { content: ""; position: absolute; left: 50%; bottom: 4px; width: 5px; height: 5px; margin-left: -2px; border-radius: 50%; background: var(--h-lav); box-shadow: 0 0 8px var(--h-lav); }
+[data-template="horizonte"] .nb-nav__item--cta { margin-left: 10px; }
+[data-template="horizonte"] .nb-nav__link--cta { padding: 0 20px; border: 1px solid rgba(201, 184, 255, .35); border-radius: 999px; color: #fff; }
+[data-template="horizonte"] .nb-nav__link--cta:hover, [data-template="horizonte"] .nb-nav__link--cta[aria-current] { border-color: var(--h-lav); }
+[data-template="horizonte"] .nb-nav__link--cta::after { display: none; }
+
+/* the switcher: a mono pill ("Theme: …") opening a dark panel under it with the scheme pills, the dark templates by
+   name (a glowing dot stands for the radio, which stays for the keyboard) and the effects checkbox */
+[data-template="horizonte"] .nb-switcher { margin-left: 14px; font: 400 12px/1 var(--h-mono); letter-spacing: .06em; color: var(--h-mute); }
+[data-template="horizonte"] .nb-switcher__toggle { gap: 4px; padding: 0 14px; border-color: var(--h-hair); border-radius: 999px; background: var(--h-glass); color: var(--h-mute); font: inherit; white-space: nowrap; }
+[data-template="horizonte"] .nb-switcher__toggle:hover, [data-template="horizonte"] .nb-switcher__toggle[aria-expanded="true"] { color: #fff; border-color: var(--h-lav); }
+[data-template="horizonte"] .nb-switcher__current { color: #fff; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; }
+[data-template="horizonte"] .nb-switcher__toggle::after { content: ""; width: 5px; height: 5px; margin-left: 4px; border: solid currentColor; border-width: 0 1px 1px 0; transform: translateY(-2px) rotate(45deg); }
+[data-template="horizonte"] .nb-switcher__toggle[aria-expanded="true"]::after { transform: translateY(1px) rotate(225deg); }
+[data-template="horizonte"] .nb-switcher__panel {
+  position: absolute; right: 0; top: calc(100% + 8px); z-index: 5; width: 290px; max-width: calc(100vw - 2 * var(--h-gutter));
+  flex-direction: column; align-items: stretch; gap: 8px; padding: 12px;
+  background: rgba(23, 16, 38, .97); border: 1px solid var(--h-hair); border-radius: 16px;
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, .85), 0 0 40px -10px rgba(109, 75, 216, .35);
+  font: 400 15px/1.3 var(--h-sans); letter-spacing: 0; color: var(--h-ink);
+}
+[data-template="horizonte"] .nb-switcher__schemes { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+[data-template="horizonte"] .nb-switcher__scheme { padding: 0 12px; border-color: var(--h-hair); border-radius: 999px; color: var(--h-mute); font: inherit; }
+[data-template="horizonte"] .nb-switcher__scheme:hover { color: #fff; border-color: var(--h-lav); }
+[data-template="horizonte"] .nb-switcher__scheme[aria-pressed="true"] { color: #fff; border-color: var(--h-lav); box-shadow: inset 0 0 0 1px var(--h-lav), 0 0 14px rgba(201, 184, 255, .25); font-weight: 600; }
+[data-template="horizonte"] .nb-switcher__templates { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; padding-top: 8px; border-top: 1px solid var(--h-hair2); }
+[data-template="horizonte"] .nb-switcher__option { padding: 0 10px; gap: 0; border-radius: 10px; }
+[data-template="horizonte"] .nb-switcher__option:hover { background: rgba(201, 184, 255, .06); }
+[data-template="horizonte"] .nb-switcher__radio { position: absolute; inline-size: 1px; block-size: 1px; opacity: 0; pointer-events: none; }
+[data-template="horizonte"] .nb-switcher__name { display: inline-flex; align-items: center; gap: 10px; color: var(--h-mute); }
+[data-template="horizonte"] .nb-switcher__name::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--h-mute); }
+[data-template="horizonte"] .nb-switcher__option:hover .nb-switcher__name, [data-template="horizonte"] .nb-switcher__radio:checked + .nb-switcher__name { color: #fff; }
+[data-template="horizonte"] .nb-switcher__radio:checked + .nb-switcher__name::before { background: var(--h-lav); border-color: var(--h-lav); box-shadow: 0 0 8px var(--h-lav); }
+[data-template="horizonte"] .nb-switcher__option:has(:focus-visible), [data-template="horizonte"] .nb-switcher__effects:has(:focus-visible),
+[data-template="horizonte"] .nb-compose__check:has(:focus-visible) { outline-color: var(--h-lav); }
+[data-template="horizonte"] .nb-switcher__effects { margin-top: 2px; padding: 8px 10px 0; border-top: 1px solid var(--h-hair2); color: var(--h-ink); }
+[data-template="horizonte"] .nb-switcher__effects-box, [data-template="horizonte"] .nb-compose__nda { accent-color: var(--h-lav); }
+
+/* ───────── buttons: the violet pill with a glow is the one primary; the rest are ghost pills ───────── */
+[data-template="horizonte"] .nb-btn {
+  display: inline-flex; align-items: center; justify-content: center; max-width: 100%; min-height: 52px; padding: 0 28px;
+  border: 1px solid rgba(201, 184, 255, .3); border-radius: 999px; background: var(--h-glass);
+  font: 600 16px/1.2 var(--h-sans); color: #fff; text-align: center;
+}
+[data-template="horizonte"] .nb-btn:hover { border-color: var(--h-lav); }
+/* the gradient's light end is #7a5ae6, not the mockup's #8b6cf0: white text needs 4.5:1 on every part of it */
+[data-template="horizonte"] .nb-btn--primary { border-color: transparent; background: linear-gradient(135deg, #7a5ae6, #6d4bd8 55%, #5a3bc4); box-shadow: 0 0 0 1px rgba(201, 184, 255, .25), 0 14px 40px rgba(109, 75, 216, .45); }
+/* hover brightens the ring and the glow, never the ground under the white text (brightness() would drop it under 4.5:1) */
+[data-template="horizonte"] .nb-btn--primary:hover { box-shadow: 0 0 0 1px rgba(201, 184, 255, .6), 0 16px 46px rgba(109, 75, 216, .65); }
+[data-template="horizonte"] .nb-more { display: inline-flex; align-items: center; min-height: 44px; max-width: 100%; padding: 0 16px; border: 1px solid rgba(201, 184, 255, .3); border-radius: 999px; background: rgba(23, 16, 38, .4); font: 500 14px/1.3 var(--h-sans); color: #fff; }
+[data-template="horizonte"] .nb-more:hover { border-color: var(--h-lav); }
+
+/* ───────── hero: centred, cinematic, the limb below ───────── */
+/* The limb's crest stands 130px above the hero's bottom at 1280 (SVG y 170 of 380, slot 80px below the hero) and
+   scales with the width from there (the slot below); the bottom padding scales the same way, so the buttons keep
+   their 76px above the crest at every width: 206px at 1280 (the mockup's 640px hero), 302px at 1866. */
+[data-template="horizonte"] .nb-hero { position: relative; display: flex; flex-direction: column; align-items: center; min-height: 640px; padding: 58px var(--h-x) calc(max(210px, 16.4vw) - 4px); text-align: center; }
+[data-template="horizonte"] .nb-hero__text { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 1040px; }
+/* the text blocks take the column's width (a shrink-to-fit flex item would grow to a long word instead of wrapping it) */
+[data-template="horizonte"] .nb-kicker { width: 100%; margin-bottom: 22px; font: 400 14px/1.4 var(--h-mono); letter-spacing: .2em; text-transform: uppercase; color: var(--h-lav); }
+[data-template="horizonte"] .nb-hero__title { width: 100%; max-width: 1000px; font: 800 clamp(44px, 6.7vw, 86px)/.98 var(--h-sans); letter-spacing: -.045em; color: #fff; }
+[data-template="horizonte"] .nb-hero__em { background: linear-gradient(90deg, #c9b8ff, #fff 70%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+[data-template="horizonte"] .nb-hero__lead { width: 100%; max-width: 620px; margin: 26px 0 30px; font-size: 21px; line-height: 1.5; color: var(--h-mute); }
+[data-template="horizonte"] .nb-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+/* the limb: anchored to the hero's bottom and overlapping the first section by 80px (the planet body fades into the
+   sky there); the SVG crops to cover, so wider screens see more of the arc and phones its flatter middle */
+[data-template="horizonte"] .nb-hero .nb-slot[data-slot="hero-art"]:not(:empty) { display: block; position: absolute; left: 0; right: 0; bottom: -80px; height: max(380px, 29.7vw); z-index: 0; overflow: hidden; }
+
+/* ───────── sections as altitudes: a rule across the measure, the altitude label and the title in a left column, the
+   content wide at its right. The label is decorative (an empty alternative text; the plain declaration is the
+   fallback for browsers without the slash syntax) and follows the section's place among the page's sections. ───────── */
+[data-template="horizonte"] .nb-section {
+  position: relative; display: grid; grid-template-columns: var(--h-col) minmax(0, 1fr); column-gap: var(--h-colgap); align-items: start;
+  margin: 24px var(--h-x) 0; padding: 26px 0 0; border-top: 1px solid var(--h-hair);
+}
+[data-template="horizonte"] .nb-section > * { grid-column: 2; min-width: 0; }
+[data-template="horizonte"] .nb-section > * + * { margin-top: 18px; }
+[data-template="horizonte"] .nb-section > .nb-section__title, [data-template="horizonte"] .nb-section > .nb-insights__head { grid-column: 1; grid-row: 1; margin-top: 0; }
+[data-template="horizonte"] .nb-section > .nb-section__title + *, [data-template="horizonte"] .nb-section > .nb-insights__head + * { margin-top: 0; }
+[data-template="horizonte"] .nb-hero + .nb-section, [data-template="horizonte"] .nb-page-head + .nb-section { margin-top: 0; border-top: 0; }
+[data-template="horizonte"] .nb-section__title { padding-top: 2px; font: 500 14px/1.4 var(--h-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--h-lav); }
+[data-template="horizonte"] .nb-section__title::before { display: block; margin-bottom: 6px; font: 400 12px/1 var(--h-mono); letter-spacing: .22em; color: var(--h-alt); }
+[data-template="horizonte"] .nb-main > section:nth-of-type(2) .nb-section__title::before { content: "ALT 400 km"; content: "ALT 400 km" / ""; }
+[data-template="horizonte"] .nb-main > section:nth-of-type(3) .nb-section__title::before { content: "ALT 320 km"; content: "ALT 320 km" / ""; }
+[data-template="horizonte"] .nb-main > section:nth-of-type(4) .nb-section__title::before { content: "ALT 240 km"; content: "ALT 240 km" / ""; }
+[data-template="horizonte"] .nb-main > section:nth-of-type(5) .nb-section__title::before { content: "ALT 160 km"; content: "ALT 160 km" / ""; }
+[data-template="horizonte"] .nb-main > section:nth-of-type(6) .nb-section__title::before { content: "ALT 80 km"; content: "ALT 80 km" / ""; }
+/* (.nb-main > keeps this ahead of the nth-of-type rules above, which carry one type selector more) */
+[data-template="horizonte"] .nb-page--blog .nb-main > .nb-topic-index .nb-section__title::before { content: "ALT 100 km"; content: "ALT 100 km" / ""; }
+[data-template="horizonte"] .nb-section__lead, [data-template="horizonte"] .nb-staff__lead { max-width: 760px; font-size: 19px; line-height: 1.5; color: var(--h-mute); }
+[data-template="horizonte"] .nb-section__text { max-width: 760px; font-size: 18px; line-height: 1.6; color: var(--h-mute); }
+[data-template="horizonte"] .nb-section > .nb-more { justify-self: start; }
+
+/* ───────── numbered rows: a light numeral, a bold name, the text under it (services; steps on Process and
+   Contact) ───────── */
+[data-template="horizonte"] .nb-section__title + .nb-services__list, [data-template="horizonte"] .nb-section__title + .nb-steps__list { margin-top: -10px; }
+[data-template="horizonte"] .nb-service, [data-template="horizonte"] .nb-steps__item { display: grid; grid-template-columns: var(--h-num) minmax(0, 1fr); align-items: start; padding: 11px 0 12px; border-bottom: 1px solid var(--h-hair2); }
+[data-template="horizonte"] .nb-service:last-child, [data-template="horizonte"] .nb-steps__item:last-child { border-bottom: 0; }
+[data-template="horizonte"] .nb-steps__list { counter-reset: horizonte-step; }
+[data-template="horizonte"] .nb-steps__item { counter-increment: horizonte-step; }
+[data-template="horizonte"] .nb-steps__item::before { content: counter(horizonte-step, decimal-leading-zero); content: counter(horizonte-step, decimal-leading-zero) / ""; }
+[data-template="horizonte"] .nb-service__num, [data-template="horizonte"] .nb-steps__item::before { grid-column: 1; grid-row: 1 / span 2; font: 300 34px/30px var(--h-sans); letter-spacing: -.02em; color: var(--h-lav); }
+[data-template="horizonte"] .nb-service__name, [data-template="horizonte"] .nb-steps__name { grid-column: 2; font: 600 24px/30px var(--h-sans); letter-spacing: -.02em; color: #fff; }
+[data-template="horizonte"] .nb-service__text, [data-template="horizonte"] .nb-steps__text { grid-column: 2; margin-top: 8px; max-width: 760px; font-size: 17px; line-height: 1.55; color: var(--h-mute); }
+[data-template="horizonte"] .nb-steps__note, [data-template="horizonte"] .nb-fit__note, [data-template="horizonte"] .nb-reach__note { max-width: 760px; padding-left: 18px; border-left: 2px solid var(--h-vio); font-size: 17px; line-height: 1.55; color: var(--h-mute); }
+
+/* ───────── belts of name and text: staff augmentation, principles; which one fits as two panels ───────── */
+[data-template="horizonte"] .nb-staff__list, [data-template="horizonte"] .nb-principles__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 40px; }
+[data-template="horizonte"] .nb-staff__item, [data-template="horizonte"] .nb-principles__item { padding-top: 14px; border-top: 1px solid var(--h-hair2); }
+[data-template="horizonte"] .nb-staff__name, [data-template="horizonte"] .nb-principles__name, [data-template="horizonte"] .nb-fit__name { font: 600 20px/1.3 var(--h-sans); letter-spacing: -.015em; color: #fff; }
+[data-template="horizonte"] .nb-staff__text, [data-template="horizonte"] .nb-principles__text, [data-template="horizonte"] .nb-fit__text { margin-top: 8px; font-size: 16px; line-height: 1.55; color: var(--h-mute); }
+[data-template="horizonte"] .nb-fit__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+[data-template="horizonte"] .nb-fit__item { padding: 22px 24px; border: 1px solid var(--h-edge); border-radius: 18px; background: var(--h-panel); }
+[data-template="horizonte"] .nb-staff__screen-title, [data-template="horizonte"] .nb-poc__examples-title { margin-top: 36px; font: 600 22px/1.3 var(--h-sans); letter-spacing: -.02em; color: #fff; }
+[data-template="horizonte"] .nb-staff__screen-lead { margin-top: 10px; max-width: 760px; font-size: 17px; line-height: 1.55; color: var(--h-mute); }
+[data-template="horizonte"] .nb-staff__screen-lead + *, [data-template="horizonte"] .nb-poc__examples-title + * { margin-top: 12px; }
+
+/* ───────── rows with a glowing dot: proofs we offer, what we screen for; the article's bullets share it ───────── */
+[data-template="horizonte"] .nb-staff__screen, [data-template="horizonte"] .nb-poc__examples { max-width: 820px; }
+[data-template="horizonte"] .nb-staff__screen-item, [data-template="horizonte"] .nb-poc__example { position: relative; padding: 12px 0 12px 26px; border-top: 1px solid var(--h-hair2); font-size: 17px; line-height: 1.55; }
+[data-template="horizonte"] .nb-staff__screen-item::before, [data-template="horizonte"] .nb-poc__example::before, [data-template="horizonte"] .nb-prose ul > li::before {
+  content: ""; position: absolute; left: 4px; top: 22px; width: 6px; height: 6px; border-radius: 50%; background: var(--h-lav); box-shadow: 0 0 8px var(--h-lav);
+}
+
+/* ───────── how we work (home) ───────── */
+[data-template="horizonte"] .nb-how__main { max-width: 860px; font: 500 28px/1.3 var(--h-sans); letter-spacing: -.025em; color: #fff; }
+[data-template="horizonte"] .nb-how__ask { margin-top: 14px; max-width: 720px; font-size: 18px; line-height: 1.5; color: var(--h-mute); }
+
+/* ───────── worked with: bold muted names in rows; a slow rail across the viewport when effects.js runs one ─────────
+   Static and wrapped by default: without JS, under reduce, before effects.js mounts. While the section carries
+   data-nb-rail (effects.js, only when api.reduced is false) it leaves the altitude grid: the rule and the title keep
+   the measure, the list and its loop copies sit on one unbreakable line that effects.js slides with a transform, and
+   a mask fades the names out through the gutters. */
+[data-template="horizonte"] .nb-clients__list { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 44px; padding-top: 4px; }
+[data-template="horizonte"] .nb-clients__list[aria-hidden] { display: none; }
+[data-template="horizonte"] .nb-client { font: 700 20px/1.2 var(--h-sans); letter-spacing: -.01em; color: var(--h-mute); white-space: nowrap; }
+[data-template="horizonte"] .nb-clients[data-nb-rail] {
+  display: block; margin-left: 0; margin-right: 0; padding: 26px 0 8px; border-top: 0; overflow: hidden; white-space: nowrap; line-height: 0;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--h-x), #000 calc(100% - var(--h-x)), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 var(--h-x), #000 calc(100% - var(--h-x)), transparent);
+}
+[data-template="horizonte"] .nb-clients[data-nb-rail]::before { content: ""; position: absolute; top: 0; left: var(--h-x); right: var(--h-x); height: 1px; background: var(--h-hair); }
+[data-template="horizonte"] .nb-clients[data-nb-rail] .nb-section__title { margin: 0 var(--h-x) 14px; white-space: normal; line-height: 1.4; }
+/* (margin-top 0: the section's "* + *" spacing would push the loop copies below the list) */
+[data-template="horizonte"] .nb-clients[data-nb-rail] .nb-clients__list, [data-template="horizonte"] .nb-clients[data-nb-rail] .nb-clients__list[aria-hidden] {
+  display: inline-flex; flex-wrap: nowrap; vertical-align: top; gap: 0 var(--h-rail-gap); margin-top: 0; padding: 4px var(--h-rail-gap) 4px 0; will-change: transform;
+}
+
+/* ───────── latest insights (home): the title and "All posts" in the left column, three rounded cards, covers shown
+   as they are ───────── */
+[data-template="horizonte"] .nb-insights__head { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+[data-template="horizonte"] .nb-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+[data-template="horizonte"] .nb-card, [data-template="horizonte"] .nb-post-featured { display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--h-edge); border-radius: 18px; background: var(--h-panel); }
+[data-template="horizonte"] .nb-card__cover { width: 100%; aspect-ratio: 2.4 / 1; height: auto; object-fit: cover; filter: saturate(.9) brightness(.96); }
+[data-template="horizonte"] .nb-card__body { display: flex; flex-direction: column; gap: 8px; padding: 16px 18px 18px; }
+[data-template="horizonte"] .nb-card__date, [data-template="horizonte"] .nb-post-item__date, [data-template="horizonte"] .nb-post-featured__date, [data-template="horizonte"] .nb-article__date {
+  font: 400 13px/1.3 var(--h-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--h-lav);
+}
+[data-template="horizonte"] .nb-card__title { font: 700 19px/1.3 var(--h-sans); letter-spacing: -.02em; color: #fff; }
+[data-template="horizonte"] .nb-card__link:hover, [data-template="horizonte"] .nb-post-item__link:hover, [data-template="horizonte"] .nb-post-featured__link:hover,
+[data-template="horizonte"] .nb-topic-index__link:hover, [data-template="horizonte"] .nb-reach__link:hover { color: var(--h-lav); }
+[data-template="horizonte"] .nb-card__desc { display: none; }
+
+/* ───────── the closing call: the surface at dawn (the slot paints the glow, the horizon line and "ALT 0") ───────── */
+/* a grid of 1fr | auto | auto | 1fr: title, text and button span it all; the secondary links (LinkedIn, the blog)
+   take the two middle tracks, so they share a row under the button, side by side and centred */
+[data-template="horizonte"] .nb-cta, [data-template="horizonte"] .nb-article-cta {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto auto minmax(0, 1fr); justify-items: center; align-items: center; gap: 18px 14px;
+  margin-top: 40px; padding: 56px var(--h-x) 48px; text-align: center; overflow: hidden;
+}
+[data-template="horizonte"] .nb-cta > :not(.nb-slot), [data-template="horizonte"] .nb-article-cta > :not(.nb-slot) { position: relative; z-index: 1; min-width: 0; max-width: 100%; grid-column: 1 / -1; }
+[data-template="horizonte"] .nb-cta > .nb-btn + .nb-more, [data-template="horizonte"] .nb-article-cta > .nb-btn + .nb-more { grid-column: 2; }
+[data-template="horizonte"] .nb-cta > .nb-more + .nb-more, [data-template="horizonte"] .nb-article-cta > .nb-more + .nb-more { grid-column: 3; }
+[data-template="horizonte"] .nb-cta > .nb-cta__title, [data-template="horizonte"] .nb-article-cta > .nb-article-cta__title { max-width: 900px; }
+[data-template="horizonte"] .nb-cta > .nb-cta__text { max-width: 620px; }
+[data-template="horizonte"] .nb-cta .nb-slot[data-slot="cta-art"]:not(:empty), [data-template="horizonte"] .nb-article-cta .nb-slot[data-slot="cta-art"]:not(:empty) { display: block; position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+[data-template="horizonte"] .horizonte-dawn-glow { position: absolute; inset: 0; background: radial-gradient(55% 120% at 50% 112%, rgba(109, 75, 216, .5), rgba(109, 75, 216, 0) 70%), radial-gradient(22% 50% at 50% 104%, rgba(255, 181, 156, .28), rgba(255, 181, 156, 0) 100%); }
+[data-template="horizonte"] .horizonte-horizon { position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: linear-gradient(90deg, rgba(201, 184, 255, 0), rgba(239, 230, 255, .9) 35%, rgba(239, 230, 255, .9) 65%, rgba(201, 184, 255, 0)); }
+[data-template="horizonte"] .horizonte-alt { position: absolute; left: var(--h-x); top: 18px; font: 400 12px/1 var(--h-mono); letter-spacing: .22em; text-transform: uppercase; color: var(--h-alt); }
+[data-template="horizonte"] .nb-cta__title, [data-template="horizonte"] .nb-article-cta__title { max-width: 900px; font: 800 40px/1.1 var(--h-sans); letter-spacing: -.035em; color: #fff; }
+[data-template="horizonte"] .nb-cta__text { max-width: 620px; margin-top: -4px; font-size: 18px; line-height: 1.5; color: var(--h-mute); }
+
+/* ───────── footer: the night side ───────── */
+[data-template="horizonte"] .nb-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; margin-top: auto; padding: 22px var(--h-x) 24px; background: var(--h-night); }
+/* a block, not a flex box: text that lands in the link (a long token) must wrap instead of widening it */
+[data-template="horizonte"] .nb-footer__brand { display: inline-block; min-width: 0; max-width: 100%; padding: 11px 0; line-height: 0; }
+[data-template="horizonte"] .nb-footer__brand .nb-logo { height: 22px; }
+[data-template="horizonte"] .nb-footer__tagline { flex: 1 1 260px; font-size: 16px; color: var(--h-mute); }
+[data-template="horizonte"] .nb-footer__links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 22px; }
+[data-template="horizonte"] .nb-footer__links li { min-width: 0; max-width: 100%; }
+[data-template="horizonte"] .nb-footer__link { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font: 400 14px/1.4 var(--h-mono); color: var(--h-lav); }
+[data-template="horizonte"] .nb-footer__link:hover { color: #fff; text-decoration: underline; text-underline-offset: .15em; }
+
+/* ───────── inner pages: the title big at the left, the lead at the right, a flatter limb under both ───────── */
+/* The flatter limb's crest stands 90px above the head's bottom at 1280 (SVG y 70 of 160) and scales with the width
+   from there (the slot below); the bottom padding scales the same way plus 16px, so the lead keeps about 45px
+   above the lit edge at every width: 134px at 1280, 188px at 1866. */
+[data-template="horizonte"] .nb-page-head { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px 40px; align-items: end; padding: 30px var(--h-x) calc(max(118px, 9.22vw) + 16px); }
+[data-template="horizonte"] .nb-page-head__title { position: relative; z-index: 1; font: 800 clamp(56px, 6.9vw, 88px)/.95 var(--h-sans); letter-spacing: -.05em; color: #fff; }
+[data-template="horizonte"] .nb-page-head__lead { position: relative; z-index: 1; max-width: 520px; justify-self: end; font-size: 19px; line-height: 1.5; color: var(--h-mute); }
+[data-template="horizonte"] .nb-page-head .nb-slot[data-slot="page-head-art"]:not(:empty) { display: block; position: absolute; left: 0; right: 0; bottom: 0; height: max(160px, 12.5vw); z-index: 0; overflow: hidden; }
+/* about: the first paragraph as a statement; where we are, one line */
+[data-template="horizonte"] .nb-what .nb-section__text:first-of-type { font: 500 24px/1.35 var(--h-sans); letter-spacing: -.02em; color: #fff; }
+[data-template="horizonte"] .nb-what .nb-section__text + .nb-section__text { margin-top: 14px; }
+[data-template="horizonte"] .nb-where .nb-section__text { font: 500 26px/1.3 var(--h-sans); letter-spacing: -.02em; color: #fff; }
+/* contact: reach us as labelled rows, the composer as a panel, the cities as a belt */
+[data-template="horizonte"] .nb-reach__item { display: grid; grid-template-columns: 110px minmax(0, 1fr); align-items: baseline; gap: 4px 16px; padding: 12px 0; border-bottom: 1px solid var(--h-hair2); }
+[data-template="horizonte"] .nb-reach__label { font: 400 12px/1.4 var(--h-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--h-alt); }
+[data-template="horizonte"] .nb-reach__link { font: 600 22px/1.3 var(--h-sans); letter-spacing: -.02em; color: #fff; }
+[data-template="horizonte"] .nb-compose { width: 100%; max-width: 680px; padding: 24px; gap: 14px; background: rgba(23, 16, 38, .75); border: 1px solid var(--h-edge); border-radius: 18px; }
+[data-template="horizonte"] .nb-compose__label { font: 400 12px/1.4 var(--h-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--h-lav); }
+[data-template="horizonte"] .nb-compose__input, [data-template="horizonte"] .nb-compose__message { padding: 14px 16px; background: var(--h-field); border-color: var(--h-hair); border-radius: 12px; color: var(--h-ink); font: 400 16px/1.55 var(--h-sans); }
+[data-template="horizonte"] .nb-compose__message { min-block-size: 9em; resize: vertical; }
+[data-template="horizonte"] .nb-compose__input:focus-visible, [data-template="horizonte"] .nb-compose__message:focus-visible { border-color: var(--h-lav); outline-offset: 2px; }
+[data-template="horizonte"] .nb-compose__check { font-size: 15px; }
+[data-template="horizonte"] .nb-compose__submit { margin-top: 4px; }
+[data-template="horizonte"] .nb-compose__status { font-size: 15px; line-height: 1.5; color: var(--h-ink); }
+[data-template="horizonte"] .nb-compose__mailto { color: var(--h-lav); }
+[data-template="horizonte"] .nb-places__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 24px; }
+/* a block, not a grid: the comma between city and country is a bare text node */
+[data-template="horizonte"] .nb-places__item { display: block; padding: 14px 0; border-top: 1px solid var(--h-hair2); font-size: 18px; line-height: 1.4; color: var(--h-mute); }
+[data-template="horizonte"] .nb-places__city { font: 600 20px/1.3 var(--h-sans); letter-spacing: -.02em; color: #fff; }
+[data-template="horizonte"] .nb-places { margin-bottom: 48px; }
+
+/* ───────── blog: topic pills under the head, the newest post as a wide panel, the rest as rows, the topic index as
+   the last altitude ───────── */
+[data-template="horizonte"] .nb-topics { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 26px var(--h-x) 0; }
+[data-template="horizonte"] .nb-topics__title { margin-right: 8px; font: 400 12px/1 var(--h-mono); letter-spacing: .18em; text-transform: uppercase; color: var(--h-alt); }
+[data-template="horizonte"] .nb-topics__list { display: contents; }
+[data-template="horizonte"] .nb-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+[data-template="horizonte"] .nb-tag, [data-template="horizonte"] .nb-topic__link { display: inline-flex; align-items: center; min-height: 26px; padding: 0 10px; border: 1px solid var(--h-hair); border-radius: 999px; font: 400 13px/1 var(--h-mono); color: var(--h-mute); white-space: nowrap; }
+/* a pill that is a link stands 36px tall and reaches 44px through an invisible halo */
+[data-template="horizonte"] .nb-topic__link { position: relative; min-height: 36px; padding: 0 14px; background: var(--h-glass); color: var(--h-ink); }
+[data-template="horizonte"] .nb-topic__link::before { content: ""; position: absolute; left: 0; right: 0; top: -4px; bottom: -4px; }
+[data-template="horizonte"] .nb-topic__link:hover { border-color: var(--h-lav); color: #fff; }
+[data-template="horizonte"] .nb-topic--all .nb-topic__link { color: var(--h-lav); border-style: dashed; }
+[data-template="horizonte"] .nb-post-featured { display: grid; grid-template-columns: minmax(280px, 520px) minmax(0, 1fr); align-items: stretch; margin: 22px var(--h-x) 0; }
+[data-template="horizonte"] .nb-post-featured__cover { width: 100%; height: 100%; min-height: 220px; object-fit: cover; filter: saturate(.9) brightness(.96); }
+[data-template="horizonte"] .nb-post-featured__body { display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 24px 32px; }
+[data-template="horizonte"] .nb-post-featured__title { font: 700 30px/1.15 var(--h-sans); letter-spacing: -.025em; color: #fff; }
+[data-template="horizonte"] .nb-post-featured__desc { font-size: 17px; line-height: 1.5; color: var(--h-mute); }
+[data-template="horizonte"] .nb-post-list { display: grid; grid-template-columns: minmax(0, 1fr); margin: 12px var(--h-x) 0; }
+[data-template="horizonte"] .nb-post-item { border-bottom: 1px solid var(--h-hair2); }
+[data-template="horizonte"] .nb-post-item__cover, [data-template="horizonte"] .nb-post-item__desc { display: none; }
+[data-template="horizonte"] .nb-post-item__body { display: grid; grid-template-columns: 150px minmax(0, 1fr) auto; align-items: center; gap: 10px 20px; padding: 14px 0; }
+[data-template="horizonte"] .nb-post-item__title { font: 700 21px/1.3 var(--h-sans); letter-spacing: -.02em; color: #fff; }
+[data-template="horizonte"] .nb-post-item .nb-tags { justify-content: flex-end; }
+[data-template="horizonte"] .nb-topic-index { margin-top: 44px; margin-bottom: 28px; }
+[data-template="horizonte"] .nb-topic-index__list { columns: 4 200px; column-gap: 32px; }
+[data-template="horizonte"] .nb-topic-index__item { break-inside: avoid; margin-bottom: 18px; }
+[data-template="horizonte"] .nb-topic-index__name { font: 500 13px/1.4 var(--h-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--h-lav); }
+[data-template="horizonte"] .nb-topic-index__posts { margin-top: 4px; }
+[data-template="horizonte"] .nb-topic-index__link { display: inline-flex; align-items: center; min-height: 44px; padding: 5px 0; font-size: 15px; line-height: 1.45; color: var(--h-mute); }
+
+/* ───────── article: a centred head in a violet halo, a wide rounded cover, "On this page" as a pill of waypoints,
+   one reading column, the dawn under the closing call ───────── */
+[data-template="horizonte"] .nb-article { position: relative; padding: 48px var(--h-x) 0; }
+[data-template="horizonte"] .nb-article__head { position: relative; display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; max-width: 900px; margin: 0 auto; text-align: center; }
+[data-template="horizonte"] .nb-article__head .nb-slot[data-slot="page-head-art"]:not(:empty) { display: block; position: absolute; left: 50%; top: -120px; z-index: -1; width: min(900px, 100%); height: 420px; transform: translateX(-50%); }
+[data-template="horizonte"] .horizonte-halo { position: absolute; inset: 0; background: radial-gradient(45% 50% at 50% 40%, rgba(109, 75, 216, .38), rgba(109, 75, 216, 0) 70%); }
+[data-template="horizonte"] .nb-article__meta { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px 14px; }
+[data-template="horizonte"] .nb-back { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border: 1px solid var(--h-hair); border-radius: 999px; background: var(--h-glass); font: 500 14px/1 var(--h-sans); color: var(--h-mute); }
+[data-template="horizonte"] .nb-back:hover { color: #fff; border-color: var(--h-lav); }
+[data-template="horizonte"] .nb-article__date { letter-spacing: .14em; }
+/* width 100%: centred flex items would otherwise grow to a long word instead of wrapping it */
+[data-template="horizonte"] .nb-article__title { width: 100%; max-width: 900px; font: 800 clamp(34px, 4.4vw, 56px)/1.02 var(--h-sans); letter-spacing: -.04em; color: #fff; }
+[data-template="horizonte"] .nb-article__lead { width: 100%; max-width: 760px; font-size: 20px; line-height: 1.5; color: var(--h-mute); }
+[data-template="horizonte"] .nb-article__cover { position: relative; width: 100%; max-width: 1000px; margin: 30px auto 0; overflow: hidden; border: 1px solid var(--h-hair); border-radius: 20px; }
+[data-template="horizonte"] .nb-article__img { width: 100%; height: clamp(170px, 25vw, 320px); object-fit: cover; filter: saturate(.9); }
+[data-template="horizonte"] .nb-toc { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px 22px; width: fit-content; max-width: 100%; min-height: 46px; margin: 22px auto 0; padding: 2px 22px; border: 1px solid var(--h-hair); border-radius: 24px; background: var(--h-glass); }
+[data-template="horizonte"] .nb-toc__title { min-width: 0; max-width: 100%; font: 400 13px/1.4 var(--h-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--h-lav); }
+[data-template="horizonte"] .nb-toc__list { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 22px; }
+[data-template="horizonte"] .nb-toc__link { display: inline-flex; align-items: center; min-height: 44px; font: 500 15px/1.3 var(--h-sans); color: var(--h-ink); }
+[data-template="horizonte"] .nb-toc__link:hover { color: var(--h-lav); }
+[data-template="horizonte"] .nb-prose { width: 100%; max-width: 720px; margin: 34px auto 0; font-size: 18px; line-height: 1.7; color: var(--h-ink); }
+[data-template="horizonte"] .nb-prose > * + * { margin-top: 22px; }
+[data-template="horizonte"] .nb-prose h2 { margin-top: 40px; font: 800 30px/1.15 var(--h-sans); letter-spacing: -.03em; color: #fff; scroll-margin-top: 24px; }
+[data-template="horizonte"] .nb-prose h3 { margin-top: 30px; font: 700 22px/1.3 var(--h-sans); letter-spacing: -.02em; color: #fff; scroll-margin-top: 24px; }
+[data-template="horizonte"] .nb-prose h2 + *, [data-template="horizonte"] .nb-prose h3 + * { margin-top: 14px; }
+[data-template="horizonte"] .nb-prose a { color: var(--h-lav); text-decoration: underline; text-underline-offset: .18em; text-decoration-color: rgba(201, 184, 255, .4); }
+[data-template="horizonte"] .nb-prose a:hover { color: #fff; text-decoration-color: currentColor; }
+[data-template="horizonte"] .nb-prose ul, [data-template="horizonte"] .nb-prose ol { display: grid; gap: 12px; }
+[data-template="horizonte"] .nb-prose li { position: relative; padding-left: 26px; }
+[data-template="horizonte"] .nb-prose ul > li::before { top: 11px; }
+[data-template="horizonte"] .nb-prose ol { counter-reset: horizonte-ol; }
+[data-template="horizonte"] .nb-prose ol > li { counter-increment: horizonte-ol; padding-left: 36px; }
+[data-template="horizonte"] .nb-prose ol > li::before { content: counter(horizonte-ol, decimal-leading-zero); content: counter(horizonte-ol, decimal-leading-zero) / ""; position: absolute; left: 0; top: .2em; font: 400 14px/1.4 var(--h-mono); color: var(--h-lav); }
+[data-template="horizonte"] .nb-prose code { padding: 2px 7px; border-radius: 6px; font: 400 .86em/1.4 var(--h-mono); color: var(--h-lav); background: rgba(201, 184, 255, .1); }
+[data-template="horizonte"] .nb-prose pre { padding: 16px 18px; overflow-x: auto; background: var(--h-panel); border: 1px solid var(--h-hair); border-radius: 12px; font: 400 14px/1.6 var(--h-mono); }
+[data-template="horizonte"] .nb-prose pre code { padding: 0; background: none; color: var(--h-ink); font-size: inherit; }
+[data-template="horizonte"] .nb-prose blockquote { margin: 0; padding: 4px 0 4px 22px; border-left: 2px solid var(--h-vio); color: var(--h-mute); }
+[data-template="horizonte"] .nb-prose img { border: 1px solid var(--h-hair); border-radius: 12px; }
+[data-template="horizonte"] .nb-prose table { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.5; }
+[data-template="horizonte"] .nb-prose th, [data-template="horizonte"] .nb-prose td { padding: 10px 12px; border-bottom: 1px solid var(--h-hair2); text-align: left; vertical-align: top; }
+[data-template="horizonte"] .nb-prose th { font: 500 13px/1.4 var(--h-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--h-lav); }
+[data-template="horizonte"] .nb-prose hr { margin: 32px 0; border: 0; border-top: 1px solid var(--h-hair); }
+[data-template="horizonte"] .nb-article-cta { width: 100%; max-width: 760px; margin: 40px auto 48px; padding: 48px 32px 52px; border: 1px solid var(--h-hair2); border-radius: 24px; }
+[data-template="horizonte"] .nb-article-cta .horizonte-alt { left: 24px; top: 16px; }
+[data-template="horizonte"] .nb-article-cta__title { font-size: 32px; }
+/* comments: the giscus iframe paints its own surfaces from giscus.css; the page gives it the prose column and a head */
+[data-template="horizonte"] .nb-comments { width: 100%; max-width: 720px; margin: 0 auto; padding-bottom: 72px; }
+[data-template="horizonte"] .nb-comments__title { margin-bottom: 18px; font: 800 30px/1.15 var(--h-sans); letter-spacing: -.03em; color: #fff; }
+[data-template="horizonte"] .nb-comments__note { color: var(--h-mute); }
+
+/* ═════════ wide (1440px and up): the measure grows (--h-max); the altitude column, the belts and the cards take the
+   width, leads and prose keep their measure ═════════ */
+@media (min-width: 1440px) {
+  [data-template="horizonte"] { --h-gutter: 64px; --h-col: 260px; --h-colgap: 48px; }
+  [data-template="horizonte"] .nb-hero { padding-top: 72px; }
+  [data-template="horizonte"] .nb-hero__title { max-width: 1100px; }
+  [data-template="horizonte"] .nb-staff__list, [data-template="horizonte"] .nb-principles__list { gap: 26px 56px; }
+  [data-template="horizonte"] .nb-fit__list { gap: 24px; }
+  [data-template="horizonte"] .nb-cards { gap: 24px; }
+  [data-template="horizonte"] .nb-post-featured { grid-template-columns: minmax(280px, 600px) minmax(0, 1fr); }
+  [data-template="horizonte"] .nb-topic-index__list { columns: 5 200px; column-gap: 40px; }
+  [data-template="horizonte"] .nb-prose { max-width: 760px; }
+}
+
+/* ═════════ up to 1100px: the header in two rows (logo and switcher, then the nav), a narrower altitude column, the
+   insights in one column so three cards still fit ═════════ */
+@media (max-width: 1100px) {
+  [data-template="horizonte"] { --h-col: 170px; --h-colgap: 24px; }
+  [data-template="horizonte"] .nb-header { min-height: 0; padding-top: 10px; padding-bottom: 6px; gap: 4px 8px; }
+  [data-template="horizonte"] .nb-nav { order: 3; width: 100%; }
+  [data-template="horizonte"] .nb-nav__list { margin: 0 -10px; }
+  [data-template="horizonte"] .nb-switcher { margin-left: 8px; }
+  [data-template="horizonte"] .nb-insights { grid-template-columns: minmax(0, 1fr); }
+  [data-template="horizonte"] .nb-insights > .nb-insights__head { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  [data-template="horizonte"] .nb-insights > .nb-cards { grid-column: 1; }
+}
+
+/* ═════════ narrow (up to 720px): one column everywhere, the title above its content, the limbs flatter ═════════ */
+@media (max-width: 720px) {
+  [data-template="horizonte"] { --h-gutter: 20px; --h-num: 56px; --h-rail-gap: 40px; }
+  /* logo and switcher share the first row: 124 + 8 + up to 180px inside 320 */
+  [data-template="horizonte"] .nb-header { gap: 4px 6px; }
+  [data-template="horizonte"] .nb-logo { height: 22px; }
+  [data-template="horizonte"] .nb-switcher { margin-left: 0; }
+  [data-template="horizonte"] .nb-nav__list { margin: 0 -8px; gap: 0; }
+  [data-template="horizonte"] .nb-nav__link { padding: 0 8px; font-size: 14px; }
+  [data-template="horizonte"] .nb-nav__item--cta { margin-left: 4px; }
+  [data-template="horizonte"] .nb-nav__link--cta { padding: 0 14px; }
+  [data-template="horizonte"] .nb-switcher__toggle { padding: 0 12px; }
+  [data-template="horizonte"] .nb-switcher__toggle-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  [data-template="horizonte"] .nb-switcher__current { max-width: 36vw; }
+  /* the 240px slot crops the limb at 0.69: its crest stands 93px above the hero's bottom, the buttons 57px above it */
+  [data-template="horizonte"] .nb-hero { min-height: 0; padding: 36px var(--h-x) 150px; }
+  [data-template="horizonte"] .nb-hero .nb-slot[data-slot="hero-art"]:not(:empty) { bottom: -40px; height: 240px; }
+  [data-template="horizonte"] .nb-kicker { margin-bottom: 16px; font-size: 12px; letter-spacing: .16em; }
+  [data-template="horizonte"] .nb-hero__title { font-size: clamp(38px, 11.5vw, 56px); }
+  [data-template="horizonte"] .nb-hero__lead { margin: 18px 0 22px; font-size: 17px; }
+  [data-template="horizonte"] .nb-btn { min-height: 48px; padding: 0 22px; font-size: 15px; }
+  [data-template="horizonte"] .nb-section { grid-template-columns: minmax(0, 1fr); margin-top: 20px; padding-top: 22px; }
+  [data-template="horizonte"] .nb-section > *, [data-template="horizonte"] .nb-insights > .nb-cards { grid-column: 1; }
+  [data-template="horizonte"] .nb-section > .nb-section__title, [data-template="horizonte"] .nb-section > .nb-insights__head { grid-row: auto; margin-bottom: 14px; }
+  [data-template="horizonte"] .nb-section__title + .nb-services__list, [data-template="horizonte"] .nb-section__title + .nb-steps__list { margin-top: 0; }
+  [data-template="horizonte"] .nb-section__lead, [data-template="horizonte"] .nb-staff__lead, [data-template="horizonte"] .nb-section__text, [data-template="horizonte"] .nb-page-head__lead { font-size: 17px; }
+  [data-template="horizonte"] .nb-service, [data-template="horizonte"] .nb-steps__item { padding: 10px 0 11px; }
+  [data-template="horizonte"] .nb-service__num, [data-template="horizonte"] .nb-steps__item::before { font-size: 26px; line-height: 26px; }
+  [data-template="horizonte"] .nb-service__name, [data-template="horizonte"] .nb-steps__name { font-size: 19px; line-height: 26px; }
+  [data-template="horizonte"] .nb-service__text, [data-template="horizonte"] .nb-steps__text, [data-template="horizonte"] .nb-staff__screen-item, [data-template="horizonte"] .nb-poc__example,
+  [data-template="horizonte"] .nb-steps__note, [data-template="horizonte"] .nb-fit__note, [data-template="horizonte"] .nb-reach__note, [data-template="horizonte"] .nb-staff__screen-lead { font-size: 16px; }
+  [data-template="horizonte"] .nb-staff__list, [data-template="horizonte"] .nb-principles__list, [data-template="horizonte"] .nb-fit__list, [data-template="horizonte"] .nb-places__list { grid-template-columns: minmax(0, 1fr); }
+  [data-template="horizonte"] .nb-staff__list, [data-template="horizonte"] .nb-principles__list { gap: 16px; }
+  [data-template="horizonte"] .nb-staff__screen-title, [data-template="horizonte"] .nb-poc__examples-title { margin-top: 28px; font-size: 20px; }
+  [data-template="horizonte"] .nb-how__main { font-size: 22px; }
+  [data-template="horizonte"] .nb-how__ask { font-size: 17px; }
+  [data-template="horizonte"] .nb-clients__list { gap: 10px 24px; }
+  [data-template="horizonte"] .nb-client { font-size: 17px; }
+  [data-template="horizonte"] .nb-clients[data-nb-rail] { padding-top: 22px; }
+  /* one card per row, the cover kept whole on top (its own lettering would be cropped beside the text) */
+  [data-template="horizonte"] .nb-cards { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  [data-template="horizonte"] .nb-card__body { gap: 6px; padding: 14px 16px 16px; }
+  [data-template="horizonte"] .nb-card__title { font-size: 17px; }
+  [data-template="horizonte"] .nb-cta, [data-template="horizonte"] .nb-article-cta { grid-template-columns: minmax(0, 1fr); margin-top: 32px; padding: 48px var(--h-x) 40px; gap: 16px; }
+  [data-template="horizonte"] .nb-cta > .nb-more, [data-template="horizonte"] .nb-article-cta > .nb-more { grid-column: 1; }
+  [data-template="horizonte"] .nb-cta__title, [data-template="horizonte"] .nb-article-cta__title { font-size: 28px; }
+  [data-template="horizonte"] .nb-cta__text { font-size: 16px; }
+  [data-template="horizonte"] .horizonte-alt, [data-template="horizonte"] .nb-article-cta .horizonte-alt { top: 14px; }
+  [data-template="horizonte"] .nb-footer { gap: 8px 16px; padding-top: 18px; }
+  [data-template="horizonte"] .nb-footer__links { width: 100%; justify-content: flex-start; gap: 0 18px; }
+  /* the 110px slot crops the limb at 0.69: its crest stands 62px above the head's bottom, the lead 48px above it */
+  [data-template="horizonte"] .nb-page-head { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 26px var(--h-x) 110px; }
+  [data-template="horizonte"] .nb-page-head__title { font-size: clamp(40px, 12vw, 56px); }
+  [data-template="horizonte"] .nb-page-head__lead { justify-self: stretch; max-width: none; }
+  [data-template="horizonte"] .nb-page-head .nb-slot[data-slot="page-head-art"]:not(:empty) { height: 110px; }
+  [data-template="horizonte"] .nb-what .nb-section__text:first-of-type { font-size: 20px; }
+  [data-template="horizonte"] .nb-where .nb-section__text { font-size: 21px; }
+  [data-template="horizonte"] .nb-reach__item { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  [data-template="horizonte"] .nb-reach__link { font-size: 19px; }
+  [data-template="horizonte"] .nb-compose { padding: 16px; border-radius: 14px; }
+  [data-template="horizonte"] .nb-places { margin-bottom: 36px; }
+  [data-template="horizonte"] .nb-topics { margin-top: 20px; }
+  [data-template="horizonte"] .nb-post-featured { grid-template-columns: minmax(0, 1fr); }
+  [data-template="horizonte"] .nb-post-featured__cover { height: auto; min-height: 0; aspect-ratio: 2.4 / 1; }
+  [data-template="horizonte"] .nb-post-featured__body { gap: 10px; padding: 18px 18px 20px; }
+  [data-template="horizonte"] .nb-post-featured__title { font-size: 24px; }
+  [data-template="horizonte"] .nb-post-featured__desc { font-size: 16px; }
+  [data-template="horizonte"] .nb-post-item__body { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  [data-template="horizonte"] .nb-post-item__title { font-size: 19px; }
+  [data-template="horizonte"] .nb-post-item .nb-tags { justify-content: flex-start; }
+  [data-template="horizonte"] .nb-topic-index { margin-top: 32px; }
+  [data-template="horizonte"] .nb-topic-index__list { columns: 2 140px; column-gap: 20px; }
+  [data-template="horizonte"] .nb-article { padding-top: 24px; }
+  [data-template="horizonte"] .nb-article__head .nb-slot[data-slot="page-head-art"]:not(:empty) { top: -80px; height: 320px; }
+  [data-template="horizonte"] .nb-article__lead { font-size: 17px; }
+  [data-template="horizonte"] .nb-article__cover { margin-top: 22px; border-radius: 14px; }
+  [data-template="horizonte"] .nb-toc { width: 100%; justify-content: flex-start; gap: 6px 16px; padding: 10px 16px; border-radius: 16px; }
+  [data-template="horizonte"] .nb-toc__list { justify-content: flex-start; gap: 0 16px; }
+  [data-template="horizonte"] .nb-prose { margin-top: 26px; font-size: 16.5px; line-height: 1.65; }
+  [data-template="horizonte"] .nb-prose h2 { font-size: 24px; }
+  [data-template="horizonte"] .nb-prose h3 { font-size: 19px; }
+  [data-template="horizonte"] .nb-article-cta { margin-bottom: 36px; padding: 40px 20px 40px; border-radius: 18px; }
+  [data-template="horizonte"] .nb-article-cta .horizonte-alt { left: 20px; }
+}

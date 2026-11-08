@@ -1,0 +1,522 @@
+/* polvo (Stardust): the site as a well-printed book under a sky of fine stardust. A near-black plum ground,
+   a diffuse violet haze and motes at three depths that barely breathe; Fraunces (opsz 144, weight 300) for the
+   titles with the second line in lavender italic, Source Serif 4 at 17–19 px to read, and everything that is data
+   (kickers, dates, tags, the menu) in spaced small caps. Matte: no glass, no blurred shadows; hairlines of 1 px, a
+   double rule under the mastheads and the ✦ ornament. Purple in layers (haze, lavender, violet only on the primary
+   button), never a flat fill.
+   Ported from .superpowers/sdd/2026-11-06-tema/r2/alts/polvo/theme.css onto the core: every selector under
+   [data-template="polvo"] (the html element), the artboard heights gone, a wide layout (≥ 1440), a middle one
+   (≤ 1100) and a narrow one (≤ 720) added. No effects.js: the sky is SVG in the slots (tools/polvo_dust.py) and its
+   breathing is CSS keyed off html[data-motion]; "Worked with" stands still, a typographic list (the spec's one
+   allowed exception). */
+[data-template="polvo"] {
+  --p-bg: #120d19; --p-panel: #1b1424; --p-ink: #f3eef6; --p-mute: #b5a9c2; --p-lav: #c9b8ff; --p-vio: #6d4bd8;
+  --p-line: rgba(201, 184, 255, .16); --p-line2: rgba(201, 184, 255, .32);
+  --p-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --p-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  /* the gutter, and the measure the layout grows to on wide screens: padding of max(gutter, (100% - max) / 2) on
+     every full-width block (header, sections, footer, article), so the content box is 1152 at 1280 and 1600 at 1866 */
+  --p-gutter: 64px; --p-max: 1600px;
+  --p-x: max(var(--p-gutter), calc((100% - var(--p-max)) / 2));
+  background: var(--p-bg);
+}
+[data-template="polvo"] .nb {
+  background: var(--p-bg); color: var(--p-ink);
+  font-family: var(--p-serif); font-size: 17px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  font-feature-settings: "onum", "pnum", "kern";
+}
+[data-template="polvo"] .nb a { text-decoration: none; }
+[data-template="polvo"] .nb :focus-visible { outline: 2px solid var(--p-lav); outline-offset: 4px; border-radius: 2px; }
+[data-template="polvo"] .nb-switcher__option:has(:focus-visible), [data-template="polvo"] .nb-switcher__effects:has(:focus-visible),
+[data-template="polvo"] .nb-compose__check:has(:focus-visible) { outline-color: var(--p-lav); }
+
+/* the small caps label: the editorial voice for every piece of meta */
+[data-template="polvo"] .nb-kicker, [data-template="polvo"] .nb-section__title, [data-template="polvo"] .nb-more,
+[data-template="polvo"] .nb-card__date, [data-template="polvo"] .nb-post-item__date, [data-template="polvo"] .nb-post-featured__date,
+[data-template="polvo"] .nb-article__date, [data-template="polvo"] .nb-back, [data-template="polvo"] .nb-tag,
+[data-template="polvo"] .nb-topics__title, [data-template="polvo"] .nb-topic__link, [data-template="polvo"] .nb-topic-index__name,
+[data-template="polvo"] .nb-toc__title, [data-template="polvo"] .nb-footer__link, [data-template="polvo"] .nb-nav__link,
+[data-template="polvo"] .nb-switcher__toggle, [data-template="polvo"] .nb-reach__label, [data-template="polvo"] .nb-compose__label,
+[data-template="polvo"] .nb-places__country {
+  font-family: var(--p-serif); font-variant-caps: all-small-caps; letter-spacing: .08em; font-weight: 500;
+}
+
+/* ───────── slots: the sky behind everything (a tiled pattern of motes, the haze as CSS so it follows the width),
+   a cluster behind the hero, the mastheads, the insights and the calls; the rest stay empty (base.css hides them) */
+/* two <svg> per slot, stacked: the still sky and, over it, the brightest motes alone (the breathing layer) */
+[data-template="polvo"] .nb-slot > svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+[data-template="polvo"] .nb > .nb-slot[data-slot="backdrop"] {
+  position: absolute; inset: 0; z-index: -1; overflow: hidden;
+  background:
+    radial-gradient(ellipse max(50vw, 360px) max(56vw, 400px) at 62% 380px, rgba(74, 37, 125, .38), rgba(42, 22, 80, .12) 55%, rgba(18, 13, 25, 0) 100%),
+    radial-gradient(ellipse max(40vw, 300px) max(40vw, 300px) at 18% 1400px, rgba(109, 75, 216, .14), rgba(18, 13, 25, 0) 100%);
+}
+[data-template="polvo"] .nb-hero, [data-template="polvo"] .nb-page-head, [data-template="polvo"] .nb-article__head,
+[data-template="polvo"] .nb-insights, [data-template="polvo"] .nb-cta, [data-template="polvo"] .nb-article-cta { position: relative; isolation: isolate; }
+[data-template="polvo"] .nb-hero > .nb-slot, [data-template="polvo"] .nb-page-head > .nb-slot, [data-template="polvo"] .nb-article__head > .nb-slot,
+[data-template="polvo"] .nb-insights > .nb-slot, [data-template="polvo"] .nb-cta > .nb-slot, [data-template="polvo"] .nb-article-cta > .nb-slot { position: absolute; inset: 0; z-index: -1; }
+
+/* motion: the brightest motes breathe (opacity, 7 s), nothing else moves. They are their own <svg> per slot
+   (tools/polvo_dust.py), so the animation runs on an element's opacity, which every engine composites, never on
+   content inside a <pattern> that would be rasterized again each frame. steps(35) moves the value every 200 ms
+   (1.3 % a step, invisible): between steps nothing changes, so the compositor has no frame to draw. Keyed off
+   html[data-motion] (the visitor's "Animated effects" choice, else the system's); without JS there is no attribute
+   and prefers-reduced-motion decides. */
+@keyframes polvo-breathe { from { opacity: .55; } to { opacity: 1; } }
+[data-template="polvo"]:not([data-motion="reduce"]) .polvo-twinkle { animation: polvo-breathe 7s steps(35) infinite alternate; will-change: opacity; }
+[data-template="polvo"]:not([data-motion="reduce"]) .polvo-hero-art-twinkle { animation-delay: -2.5s; }
+[data-template="polvo"]:not([data-motion="reduce"]) .polvo-page-head-art-twinkle { animation-delay: -4s; }
+[data-template="polvo"]:not([data-motion="reduce"]) .polvo-insights-art-twinkle { animation-delay: -1.5s; }
+[data-template="polvo"]:not([data-motion="reduce"]) .polvo-cta-art-twinkle { animation-delay: -5.5s; }
+@media (prefers-reduced-motion: reduce) {
+  [data-template="polvo"]:not([data-motion]) .polvo-twinkle { animation: none; }
+}
+
+/* ───────── header: logo left, the menu in small caps, Contact as a hairline pill, the switcher as another after it */
+[data-template="polvo"] .nb-header { display: flex; flex-wrap: wrap; align-items: center; gap: 0 10px; min-height: 76px; padding: 0 var(--p-x); border-bottom: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-brand { display: inline-flex; align-items: center; min-height: 44px; margin-right: auto; line-height: 0; }
+[data-template="polvo"] .nb-logo { height: 26px; width: auto; }
+[data-template="polvo"] .nb-nav__list { display: flex; flex-wrap: wrap; align-items: center; gap: 0 6px; list-style: none; }
+[data-template="polvo"] .nb-nav__link { position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; font-size: 17px; color: var(--p-mute); }
+[data-template="polvo"] .nb-nav__link:hover, [data-template="polvo"] .nb-nav__link[aria-current] { color: var(--p-ink); }
+[data-template="polvo"] .nb-nav__link[aria-current]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 9px; height: 1px; background: var(--p-lav); }
+[data-template="polvo"] .nb-nav__item--cta { margin-left: 12px; }
+[data-template="polvo"] .nb-nav__link--cta { padding: 0 20px; border: 1px solid var(--p-line2); border-radius: 999px; color: var(--p-ink); }
+[data-template="polvo"] .nb-nav__link--cta:hover, [data-template="polvo"] .nb-nav__link--cta[aria-current] { border-color: var(--p-lav); }
+[data-template="polvo"] .nb-nav__link--cta::after { display: none; }
+
+/* the switcher: a small caps pill ("Theme: …") opening a matte panel under it, framed by a double hairline; the
+   scheme pills, the templates by name behind a ✦ that stands for the radio (kept for the keyboard), the effects box */
+[data-template="polvo"] .nb-switcher { margin-left: 10px; color: var(--p-mute); }
+[data-template="polvo"] .nb-switcher__toggle { gap: 6px; padding: 0 18px; border-color: var(--p-line2); border-radius: 999px; background: transparent; color: var(--p-mute); font-size: 15px; line-height: 1; white-space: nowrap; }
+[data-template="polvo"] .nb-switcher__toggle:hover, [data-template="polvo"] .nb-switcher__toggle[aria-expanded="true"] { color: var(--p-ink); border-color: var(--p-lav); }
+[data-template="polvo"] .nb-switcher__current { color: var(--p-lav); max-width: 40vw; overflow: hidden; text-overflow: ellipsis; }
+[data-template="polvo"] .nb-switcher__toggle::after { content: "✦" / ""; margin-left: 2px; font-size: 9px; color: var(--p-lav); opacity: .8; }
+[data-template="polvo"] .nb-switcher__toggle[aria-expanded="true"]::after { opacity: 1; }
+[data-template="polvo"] .nb-switcher__panel {
+  position: absolute; right: 0; top: calc(100% + 12px); z-index: 5; width: 300px; max-width: calc(100vw - 2 * var(--p-gutter));
+  flex-direction: column; align-items: stretch; gap: 10px; padding: 16px;
+  background: var(--p-panel); border: 1px solid var(--p-line2); box-shadow: 0 0 0 3px var(--p-bg), 0 0 0 4px var(--p-line);
+  font: 400 16px/1.3 var(--p-serif); letter-spacing: 0; font-variant-caps: normal; color: var(--p-ink);
+}
+[data-template="polvo"] .nb-switcher__schemes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+[data-template="polvo"] .nb-switcher__scheme { padding: 0 12px; border-color: var(--p-line2); border-radius: 999px; color: var(--p-mute); font: inherit; }
+[data-template="polvo"] .nb-switcher__scheme:hover { color: var(--p-ink); border-color: var(--p-lav); }
+[data-template="polvo"] .nb-switcher__scheme[aria-pressed="true"] { color: var(--p-ink); border-color: var(--p-lav); box-shadow: inset 0 0 0 1px var(--p-lav); font-weight: 500; }
+[data-template="polvo"] .nb-switcher__templates { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; padding-top: 8px; border-top: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-switcher__option { padding: 0 8px; gap: 0; }
+[data-template="polvo"] .nb-switcher__option + .nb-switcher__option { border-top: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-switcher__radio { position: absolute; inline-size: 1px; block-size: 1px; opacity: 0; pointer-events: none; }
+[data-template="polvo"] .nb-switcher__name { display: inline-flex; align-items: center; gap: 12px; color: var(--p-mute); }
+[data-template="polvo"] .nb-switcher__name::before { content: "✦" / ""; flex: none; width: 12px; font-size: 11px; color: var(--p-line2); }
+[data-template="polvo"] .nb-switcher__option:hover .nb-switcher__name, [data-template="polvo"] .nb-switcher__radio:checked + .nb-switcher__name { color: var(--p-ink); }
+[data-template="polvo"] .nb-switcher__radio:checked + .nb-switcher__name::before { color: var(--p-lav); }
+[data-template="polvo"] .nb-switcher__effects { padding: 10px 8px 0; border-top: 1px solid var(--p-line); color: var(--p-ink); }
+[data-template="polvo"] .nb-switcher__effects-box, [data-template="polvo"] .nb-compose__nda { accent-color: var(--p-lav); }
+
+/* ───────── buttons: one violet primary with its glow, the rest hairline pills; hover changes the ring, never the
+   ground under the white text */
+[data-template="polvo"] .nb-actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+[data-template="polvo"] .nb-btn {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 12px 28px; border-radius: 999px;
+  font: 500 17px/1.2 var(--p-serif); letter-spacing: .01em; text-align: center; border: 1px solid transparent; max-width: 100%;
+}
+[data-template="polvo"] .nb-btn--primary { background: linear-gradient(180deg, #7a5ae6, #6d4bd8 60%, #5a3bc4); color: #fff; box-shadow: 0 0 0 1px rgba(201, 184, 255, .35), 0 14px 40px -12px rgba(109, 75, 216, .9); }
+[data-template="polvo"] .nb-btn--primary:hover { box-shadow: 0 0 0 1px var(--p-lav), 0 0 0 5px rgba(201, 184, 255, .12), 0 14px 40px -12px rgba(109, 75, 216, .9); }
+[data-template="polvo"] .nb-btn--secondary { border-color: var(--p-line2); color: var(--p-ink); }
+[data-template="polvo"] .nb-btn--secondary:hover { border-color: var(--p-lav); }
+
+/* ───────── hero: centred, like a title page; the cluster and its glow behind the title, a ✦ to close */
+[data-template="polvo"] .nb-hero { padding: 56px var(--p-x) 44px; text-align: center; }
+[data-template="polvo"] .nb-hero__text { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+[data-template="polvo"] .nb-kicker { max-width: 100%; font-size: 17px; color: var(--p-lav); }
+[data-template="polvo"] .nb-hero__title { max-width: 100%; margin-top: 22px; font-family: var(--p-display); font-weight: 300; font-size: clamp(44px, 6.25vw, 80px); line-height: 1.02; letter-spacing: -.02em; font-variation-settings: "opsz" 144; }
+[data-template="polvo"] .nb-hero__em { display: block; font-style: italic; font-weight: 300; color: var(--p-lav); }
+[data-template="polvo"] .nb-hero__lead { max-width: min(620px, 100%); margin-top: 22px; font-size: 21px; line-height: 1.5; color: var(--p-mute); }
+[data-template="polvo"] .nb-hero .nb-actions { margin-top: 36px; }
+/* `/ ""` on every ornament, middot, dash and visual counter below: decoration stays out of accessible names */
+[data-template="polvo"] .nb-hero::after { content: "✦" / ""; display: block; margin: 30px auto 0; color: var(--p-lav); font-size: 14px; line-height: 1; }
+
+/* ───────── sections: a small caps title in lavender with a hairline running to the edge; centred titles (how we
+   work, worked with, where we are) take a rule on each side */
+[data-template="polvo"] .nb-section { position: relative; padding: 44px var(--p-x) 0; }
+[data-template="polvo"] .nb-section__title { display: flex; align-items: center; gap: 16px; font-size: 16px; color: var(--p-lav); }
+[data-template="polvo"] .nb-section__title::after { content: ""; flex: 1; height: 1px; background: var(--p-line); }
+[data-template="polvo"] .nb-how .nb-section__title, [data-template="polvo"] .nb-clients .nb-section__title, [data-template="polvo"] .nb-where .nb-section__title { justify-content: center; }
+[data-template="polvo"] .nb-how .nb-section__title::before, [data-template="polvo"] .nb-clients .nb-section__title::before, [data-template="polvo"] .nb-where .nb-section__title::before,
+[data-template="polvo"] .nb-how .nb-section__title::after, [data-template="polvo"] .nb-clients .nb-section__title::after, [data-template="polvo"] .nb-where .nb-section__title::after {
+  content: ""; flex: 1 1 0; max-width: 120px; min-width: 0; height: 1px; background: var(--p-line);
+}
+[data-template="polvo"] .nb-section__lead, [data-template="polvo"] .nb-staff__lead { max-width: 820px; margin-top: 16px; font-family: var(--p-display); font-style: italic; font-weight: 300; font-size: 24px; line-height: 1.35; color: var(--p-mute); font-variation-settings: "opsz" 72; }
+[data-template="polvo"] .nb-section__text { max-width: 760px; margin-top: 16px; font-size: 19px; line-height: 1.65; }
+[data-template="polvo"] .nb-more { display: inline-flex; align-items: center; min-height: 44px; font-size: 16px; color: var(--p-lav); }
+[data-template="polvo"] .nb-more:hover { color: var(--p-ink); }
+[data-template="polvo"] .nb-section > .nb-more { display: flex; width: fit-content; max-width: 100%; margin: 6px 0 0 auto; }
+[data-template="polvo"] .nb-how > .nb-more, [data-template="polvo"] .nb-cta > .nb-more, [data-template="polvo"] .nb-article-cta > .nb-more { margin: 0 auto; }
+
+/* ───────── what we build (home, Services): two columns of hairline rows, the numeral in italic display; on
+   Services each row carries its text under the name */
+[data-template="polvo"] .nb-services { padding-top: 12px; }
+[data-template="polvo"] .nb-services__list { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 64px; margin-top: 10px; }
+[data-template="polvo"] .nb-approach .nb-services__list { margin-top: 24px; }
+[data-template="polvo"] .nb-service { display: grid; grid-template-columns: 56px minmax(0, 1fr); align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-service:nth-child(-n+2) { border-top: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-approach .nb-service { padding: 18px 0 22px; }
+[data-template="polvo"] .nb-service__num { font-family: var(--p-display); font-style: italic; font-weight: 300; font-size: 24px; line-height: 1; color: var(--p-lav); }
+[data-template="polvo"] .nb-service__name { font-family: var(--p-serif); font-weight: 400; font-size: 20px; line-height: 1.4; }
+[data-template="polvo"] .nb-approach .nb-service__name { font-family: var(--p-display); font-size: 23px; line-height: 1.25; letter-spacing: -.005em; }
+[data-template="polvo"] .nb-service__text { grid-column: 2; margin-top: 10px; font-size: 16px; line-height: 1.6; color: var(--p-mute); }
+
+/* ───────── staff augmentation (home, Services): the lead in italic display, four hairline columns; Services adds
+   what we screen for as a dashed list */
+[data-template="polvo"] .nb-staff__list, [data-template="polvo"] .nb-principles__list { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 40px; margin-top: 24px; }
+[data-template="polvo"] .nb-principles__list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+[data-template="polvo"] .nb-staff__item, [data-template="polvo"] .nb-principles__item { padding: 16px 0 20px; border-top: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-staff__name, [data-template="polvo"] .nb-principles__name, [data-template="polvo"] .nb-fit__name, [data-template="polvo"] .nb-steps__name { font-family: var(--p-display); font-weight: 400; font-size: 22px; line-height: 1.3; letter-spacing: -.005em; }
+[data-template="polvo"] .nb-staff__text, [data-template="polvo"] .nb-principles__text, [data-template="polvo"] .nb-fit__text, [data-template="polvo"] .nb-steps__text { margin-top: 8px; font-size: 16px; line-height: 1.55; color: var(--p-mute); }
+[data-template="polvo"] .nb-staff__screen-title, [data-template="polvo"] .nb-poc__examples-title { margin-top: 40px; font-family: var(--p-display); font-style: italic; font-weight: 300; font-size: 28px; line-height: 1.25; font-variation-settings: "opsz" 72; }
+[data-template="polvo"] .nb-staff__screen-title::before, [data-template="polvo"] .nb-poc__examples-title::before { content: "✦" / ""; margin-right: 14px; font-style: normal; font-size: 12px; color: var(--p-lav); vertical-align: middle; }
+[data-template="polvo"] .nb-staff__screen-lead { max-width: 760px; margin-top: 12px; font-size: 19px; line-height: 1.6; color: var(--p-mute); }
+[data-template="polvo"] .nb-staff__screen, [data-template="polvo"] .nb-poc__examples { list-style: none; margin-top: 16px; columns: 2 420px; column-gap: 64px; }
+[data-template="polvo"] .nb-staff__screen-item, [data-template="polvo"] .nb-poc__example { position: relative; padding: 10px 0 12px 28px; border-top: 1px solid var(--p-line); break-inside: avoid; font-size: 17px; line-height: 1.55; }
+[data-template="polvo"] .nb-staff__screen-item::before, [data-template="polvo"] .nb-poc__example::before { content: "—" / ""; position: absolute; left: 0; color: var(--p-lav); }
+
+/* which one fits (Services): two columns with a rule between; the note as a centred italic line */
+[data-template="polvo"] .nb-fit__list { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 20px; }
+[data-template="polvo"] .nb-fit__item { padding: 20px 40px 22px 0; border-top: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-fit__item + .nb-fit__item { padding: 20px 0 22px 40px; border-left: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-fit__name { font-size: 26px; }
+[data-template="polvo"] .nb-fit__text { font-size: 17px; }
+[data-template="polvo"] .nb-fit__note, [data-template="polvo"] .nb-steps__note, [data-template="polvo"] .nb-reach__note { margin-top: 22px; font-family: var(--p-display); font-style: italic; font-weight: 300; font-size: 21px; line-height: 1.4; color: var(--p-mute); font-variation-settings: "opsz" 72; }
+[data-template="polvo"] .nb-fit__note { max-width: 760px; margin-left: auto; margin-right: auto; text-align: center; }
+
+/* ───────── how we work (home): a pull quote between two short rules; the question under it */
+[data-template="polvo"] .nb-how { padding-top: 40px; text-align: center; }
+[data-template="polvo"] .nb-how__main { max-width: 800px; margin: 16px auto 0; font-family: var(--p-display); font-style: italic; font-weight: 300; font-size: 31px; line-height: 1.28; font-variation-settings: "opsz" 72; }
+[data-template="polvo"] .nb-how__ask { max-width: 700px; margin: 16px auto 0; font-size: 19px; color: var(--p-mute); }
+
+/* ───────── worked with (home, About): a centred title and the eleven names in display type, a ✦ between them,
+   wrapping into centred lines. The list stands still (rail: static): no data-nb-rail */
+[data-template="polvo"] .nb-clients { padding-top: 36px; text-align: center; }
+[data-template="polvo"] .nb-clients__list { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 0; margin-top: 14px; }
+[data-template="polvo"] .nb-client { padding: 4px 0; font-family: var(--p-display); font-weight: 400; font-size: 23px; line-height: 1.3; letter-spacing: .01em; color: var(--p-mute); white-space: nowrap; }
+[data-template="polvo"] .nb-client:not(:last-child)::after { content: "✦" / ""; display: inline-block; margin: 0 26px; font-size: 10px; color: var(--p-lav); vertical-align: middle; opacity: .8; }
+
+/* ───────── latest insights (home): the front page. The first story big with its cover, the other two as text
+   columns, hairlines between */
+[data-template="polvo"] .nb-insights { padding-top: 40px; }
+[data-template="polvo"] .nb-insights__head { display: flex; align-items: center; gap: 16px; }
+[data-template="polvo"] .nb-insights__head .nb-section__title { flex: 1; }
+[data-template="polvo"] .nb-cards { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 1fr); margin-top: 22px; }
+[data-template="polvo"] .nb-card { min-width: 0; }
+[data-template="polvo"] .nb-card:first-child { padding-right: 40px; border-right: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-card:nth-child(2) { padding: 0 40px; }
+[data-template="polvo"] .nb-card:nth-child(3) { padding-left: 40px; border-left: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-card__cover { aspect-ratio: 2.8 / 1; width: 100%; height: auto; object-fit: cover; object-position: 50% 40%; border: 1px solid var(--p-line2); filter: saturate(.85) contrast(1.02); }
+[data-template="polvo"] .nb-card:not(:first-child) .nb-card__cover { display: none; }
+[data-template="polvo"] .nb-card__body { margin-top: 16px; }
+[data-template="polvo"] .nb-card:not(:first-child) .nb-card__body { margin-top: 0; }
+[data-template="polvo"] .nb-card__date, [data-template="polvo"] .nb-post-item__date, [data-template="polvo"] .nb-post-featured__date { display: block; font-size: 15px; color: var(--p-lav); }
+[data-template="polvo"] .nb-card__title { margin-top: 8px; font-family: var(--p-display); font-weight: 400; font-size: 24px; line-height: 1.22; letter-spacing: -.005em; }
+[data-template="polvo"] .nb-card:first-child .nb-card__title { font-size: 25px; }
+/* the title links grow a hit box without moving the text (28 px of text + 16 = 44 on one line) */
+[data-template="polvo"] .nb-card__link, [data-template="polvo"] .nb-post-item__link, [data-template="polvo"] .nb-post-featured__link { display: inline-block; max-width: 100%; padding: 8px 0; margin: -8px 0; }
+[data-template="polvo"] .nb-card__link:hover, [data-template="polvo"] .nb-post-item__link:hover, [data-template="polvo"] .nb-post-featured__link:hover { color: var(--p-lav); }
+[data-template="polvo"] .nb-card__desc { margin-top: 10px; font-size: 16px; line-height: 1.55; color: var(--p-mute); }
+
+/* ───────── the closing call (home, inner pages): between two hairlines, the title in italic display, the text,
+   the violet button, the links in small caps */
+[data-template="polvo"] .nb-cta { margin: 48px var(--p-x) 0; padding: 28px 0 30px; border-top: 1px solid var(--p-line); border-bottom: 1px solid var(--p-line); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 22px; }
+[data-template="polvo"] .nb-page--home .nb-cta { margin-top: 32px; }
+[data-template="polvo"] .nb-cta__title, [data-template="polvo"] .nb-article-cta__title { max-width: min(900px, 100%); font-family: var(--p-display); font-style: italic; font-weight: 300; font-size: clamp(28px, 3.2vw, 40px); line-height: 1.15; font-variation-settings: "opsz" 96; }
+[data-template="polvo"] .nb-cta__text { max-width: min(640px, 100%); margin-top: -8px; font-size: 19px; line-height: 1.5; color: var(--p-mute); }
+[data-template="polvo"] .nb-cta > .nb-more, [data-template="polvo"] .nb-article-cta > .nb-more { min-height: 44px; margin-top: -10px; }
+[data-template="polvo"] .nb-cta > .nb-more + .nb-more { margin-top: -22px; }
+
+/* ───────── footer: the mark and the tagline in italic at the left, the links in small caps at the right with
+   middots between; a hairline above it where no call closes the page */
+[data-template="polvo"] .nb-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 28px; padding: 22px var(--p-x) 26px; }
+[data-template="polvo"] .nb-page--blog .nb-footer, [data-template="polvo"] .nb-page--contact .nb-footer { margin-top: 48px; border-top: 1px solid var(--p-line); }
+/* a block capped at the row, not a flex box: text that lands in the link (a long token) must wrap instead of widening it */
+[data-template="polvo"] .nb-footer__brand { display: inline-block; min-width: 0; max-width: 100%; padding: 12px 0; line-height: 0; }
+[data-template="polvo"] .nb-footer__brand .nb-logo { height: 20px; width: auto; }
+[data-template="polvo"] .nb-footer__tagline { margin-right: auto; font-style: italic; font-size: 17px; color: var(--p-mute); }
+[data-template="polvo"] .nb-footer__links { list-style: none; display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; min-width: 0; max-width: 100%; }
+[data-template="polvo"] .nb-footer__links li { display: inline-flex; align-items: center; min-width: 0; }
+[data-template="polvo"] .nb-footer__links li + li::before { content: "·" / ""; margin: 0 10px; color: var(--p-lav); }
+[data-template="polvo"] .nb-footer__link { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: 16px; color: var(--p-mute); overflow-wrap: anywhere; }
+[data-template="polvo"] .nb-footer__link:hover { color: var(--p-ink); }
+[data-template="polvo"] .nb-icon { width: 14px; height: 14px; }
+
+/* ───────── inner pages and the blog: a masthead. The title huge and light at the left, the lead in italic display
+   at the right, a double rule under both (drawn from gutter to gutter), the cluster behind */
+[data-template="polvo"] .nb-page-head { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: end; column-gap: 48px; padding: 52px var(--p-x) 26px; }
+[data-template="polvo"] .nb-page-head::after { content: ""; position: absolute; left: var(--p-x); right: var(--p-x); bottom: 0; border-bottom: 3px double var(--p-line2); }
+[data-template="polvo"] .nb-page-head__title { font-family: var(--p-display); font-weight: 300; font-size: clamp(56px, 8.75vw, 112px); line-height: .9; letter-spacing: -.03em; font-variation-settings: "opsz" 144; }
+[data-template="polvo"] .nb-page-head__lead { padding-bottom: 8px; font-family: var(--p-display); font-style: italic; font-weight: 300; font-size: 24px; line-height: 1.35; color: var(--p-mute); font-variation-settings: "opsz" 72; }
+
+/* about: the first paragraph as a statement, where we are as a centred line */
+[data-template="polvo"] .nb-what .nb-section__text:first-of-type { max-width: 900px; margin-top: 20px; font-family: var(--p-display); font-style: italic; font-weight: 300; font-size: 28px; line-height: 1.35; font-variation-settings: "opsz" 72; }
+[data-template="polvo"] .nb-where { text-align: center; }
+[data-template="polvo"] .nb-where .nb-section__text { max-width: 820px; margin: 18px auto 0; font-family: var(--p-display); font-style: italic; font-weight: 300; font-size: 26px; line-height: 1.35; font-variation-settings: "opsz" 72; }
+
+/* ───────── numbered steps (Process, Contact): hairline rows with an italic numeral in the margin, balanced into
+   two columns where there is room (one under ~920 px) */
+[data-template="polvo"] .nb-steps__list { list-style: none; margin-top: 18px; columns: 2 420px; column-gap: 64px; counter-reset: polvo-step; }
+[data-template="polvo"] .nb-steps__item { counter-increment: polvo-step; display: grid; grid-template-columns: 56px minmax(0, 1fr); align-items: baseline; padding: 16px 0 20px; border-top: 1px solid var(--p-line); break-inside: avoid; }
+[data-template="polvo"] .nb-steps__item::before { content: counter(polvo-step, decimal-leading-zero) / ""; font-family: var(--p-display); font-style: italic; font-weight: 300; font-size: 24px; line-height: 1; color: var(--p-lav); }
+[data-template="polvo"] .nb-steps__text { grid-column: 2; }
+
+/* ───────── contact: reach us as labelled rows, the composer as a matte panel in a double hairline, the cities as
+   three hairline columns */
+[data-template="polvo"] .nb-reach__list { list-style: none; margin-top: 12px; }
+[data-template="polvo"] .nb-reach__item { display: grid; grid-template-columns: 120px minmax(0, 1fr); align-items: baseline; gap: 4px 16px; padding: 8px 0; border-bottom: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-reach__label { font-size: 15px; color: var(--p-lav); }
+[data-template="polvo"] .nb-reach__link { display: inline-flex; align-items: center; min-height: 44px; max-width: 100%; font-family: var(--p-display); font-size: 24px; line-height: 1.3; color: var(--p-ink); }
+[data-template="polvo"] .nb-reach__link:hover { color: var(--p-lav); }
+[data-template="polvo"] .nb-send .nb-section__text { margin-bottom: 24px; color: var(--p-mute); }
+[data-template="polvo"] .nb-compose { width: 100%; max-width: 720px; gap: 14px; padding: 26px 28px 28px; background: var(--p-panel); border: 1px solid var(--p-line2); box-shadow: 0 0 0 3px var(--p-bg), 0 0 0 4px var(--p-line); }
+[data-template="polvo"] .nb-compose__label { font-size: 15px; color: var(--p-lav); }
+[data-template="polvo"] .nb-compose__input, [data-template="polvo"] .nb-compose__message { padding: 14px 16px; background: var(--p-bg); border-color: var(--p-line2); border-radius: 2px; color: var(--p-ink); font: 400 17px/1.6 var(--p-serif); }
+[data-template="polvo"] .nb-compose__message { min-block-size: 9em; resize: vertical; }
+[data-template="polvo"] .nb-compose__input:focus-visible, [data-template="polvo"] .nb-compose__message:focus-visible { border-color: var(--p-lav); outline-offset: 2px; }
+[data-template="polvo"] .nb-compose__check { font-size: 16px; }
+[data-template="polvo"] .nb-compose__submit { margin-top: 4px; }
+[data-template="polvo"] .nb-compose__status { font-size: 15px; line-height: 1.5; color: var(--p-ink); }
+[data-template="polvo"] .nb-compose__mailto { color: var(--p-lav); }
+[data-template="polvo"] .nb-places__list { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 40px; margin-top: 18px; }
+/* a block, not a grid: the comma between city and country is a bare text node */
+[data-template="polvo"] .nb-places__item { display: block; padding: 16px 0 18px; border-top: 1px solid var(--p-line); font-size: 17px; line-height: 1.4; color: var(--p-mute); }
+[data-template="polvo"] .nb-places__city { font-family: var(--p-display); font-size: 24px; line-height: 1.3; color: var(--p-ink); }
+[data-template="polvo"] .nb-places__country { font-size: 15px; color: var(--p-lav); }
+
+/* ───────── blog: topics as a small caps line with middots (each a 44 px target), the newest post with its cover
+   beside a 40 px title, the rest as three text columns with hairlines, the full topic index as hairline rows */
+[data-template="polvo"] .nb-topics { display: flex; align-items: flex-start; gap: 0 14px; padding: 8px var(--p-x) 0; }
+[data-template="polvo"] .nb-topics__title { flex: none; display: inline-flex; align-items: center; min-height: 44px; font-size: 15px; color: var(--p-lav); }
+[data-template="polvo"] .nb-topics__list { list-style: none; display: flex; flex-wrap: wrap; align-items: center; min-width: 0; }
+[data-template="polvo"] .nb-topic { display: inline-flex; align-items: center; }
+[data-template="polvo"] .nb-topic + .nb-topic::before { content: "·" / ""; margin: 0 4px; color: var(--p-line2); }
+[data-template="polvo"] .nb-topic__link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; padding: 0 6px; font-size: 15px; color: var(--p-mute); }
+[data-template="polvo"] .nb-topic__link:hover { color: var(--p-ink); }
+[data-template="polvo"] .nb-topic--all .nb-topic__link { color: var(--p-lav); }
+[data-template="polvo"] .nb-topic--all .nb-topic__link:hover { color: var(--p-ink); }
+[data-template="polvo"] .nb-post-featured { display: grid; grid-template-columns: minmax(0, 500px) minmax(0, 1fr); column-gap: 44px; align-items: center; margin: 24px var(--p-x) 0; padding-bottom: 28px; border-bottom: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-post-featured__cover { aspect-ratio: 1.91 / 1; width: 100%; height: auto; object-fit: cover; border: 1px solid var(--p-line2); filter: saturate(.85); }
+[data-template="polvo"] .nb-post-featured__body { min-width: 0; }
+[data-template="polvo"] .nb-post-featured__title { margin-top: 6px; font-family: var(--p-display); font-weight: 300; font-size: clamp(28px, 3.2vw, 40px); line-height: 1.1; letter-spacing: -.01em; }
+[data-template="polvo"] .nb-post-featured__desc { margin-top: 12px; font-size: 19px; line-height: 1.5; color: var(--p-mute); }
+[data-template="polvo"] .nb-tags { list-style: none; display: flex; flex-wrap: wrap; gap: 4px 0; margin-top: 12px; }
+[data-template="polvo"] .nb-tag { font-size: 14px; color: var(--p-lav); }
+[data-template="polvo"] .nb-tag + .nb-tag::before { content: "·" / ""; margin: 0 8px; color: var(--p-line2); }
+[data-template="polvo"] .nb-post-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 28px var(--p-x) 0; }
+[data-template="polvo"] .nb-post-item { min-width: 0; padding: 0 40px 28px; border-left: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-post-item:nth-child(3n+1) { padding-left: 0; border-left: 0; }
+[data-template="polvo"] .nb-post-item:nth-child(3n) { padding-right: 0; }
+[data-template="polvo"] .nb-post-item:nth-child(n+4) { padding-top: 24px; border-top: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-post-item__cover { display: none; }
+[data-template="polvo"] .nb-post-item__title { margin-top: 6px; font-family: var(--p-display); font-weight: 400; font-size: 23px; line-height: 1.22; }
+[data-template="polvo"] .nb-post-item__desc { margin-top: 10px; font-size: 16px; line-height: 1.5; color: var(--p-mute); }
+[data-template="polvo"] .nb-post-item .nb-tags { margin-top: 10px; }
+[data-template="polvo"] .nb-post-item .nb-tag { font-size: 13px; }
+[data-template="polvo"] .nb-topic-index { padding-top: 40px; }
+[data-template="polvo"] .nb-topic-index__list { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 28px 40px; margin-top: 22px; }
+[data-template="polvo"] .nb-topic-index__name { padding-bottom: 6px; border-bottom: 1px solid var(--p-line2); font-size: 15px; color: var(--p-lav); }
+[data-template="polvo"] .nb-topic-index__posts { list-style: none; }
+[data-template="polvo"] .nb-topic-index__posts li { border-bottom: 1px solid var(--p-line); }
+/* each link a 44 px row */
+[data-template="polvo"] .nb-topic-index__link, [data-template="polvo"] .nb-toc__link { display: flex; align-items: center; min-height: 44px; padding: 6px 0; font-size: 16px; line-height: 1.35; color: var(--p-mute); }
+[data-template="polvo"] .nb-topic-index__link:hover, [data-template="polvo"] .nb-toc__link:hover { color: var(--p-ink); }
+
+/* ───────── article: one long measured column (700 px) with "On this page" in the left margin at the body's height,
+   the head centred over the full width with the cluster behind it, the cover as a framed plate, a drop cap */
+[data-template="polvo"] .nb-article { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 700px) minmax(0, 1fr); column-gap: 48px; padding: 0 var(--p-x); }
+[data-template="polvo"] .nb-article > * { grid-column: 2; min-width: 0; }
+[data-template="polvo"] .nb-article__head { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; padding: 56px 0 32px; text-align: center; }
+[data-template="polvo"] .nb-article__meta { display: flex; flex-direction: column; align-items: center; gap: 2px; max-width: 100%; }
+[data-template="polvo"] .nb-back { display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; font-size: 16px; color: var(--p-mute); }
+[data-template="polvo"] .nb-back:hover { color: var(--p-ink); }
+[data-template="polvo"] .nb-article__date { font-size: 16px; color: var(--p-lav); }
+[data-template="polvo"] .nb-article__meta .nb-tags { justify-content: center; margin-top: 8px; }
+/* min(…, 100%): centred flex items would otherwise grow to an unbreakable token instead of wrapping it */
+[data-template="polvo"] .nb-article__title { max-width: min(900px, 100%); margin-top: 14px; font-family: var(--p-display); font-weight: 300; font-size: clamp(34px, 4.7vw, 60px); line-height: 1.06; letter-spacing: -.02em; font-variation-settings: "opsz" 144; }
+[data-template="polvo"] .nb-article__lead { max-width: min(640px, 100%); margin-top: 20px; font-family: var(--p-display); font-style: italic; font-weight: 300; font-size: 23px; line-height: 1.4; color: var(--p-mute); font-variation-settings: "opsz" 72; }
+[data-template="polvo"] .nb-article__cover { grid-column: 1 / -1; justify-self: center; width: min(880px, 100%); padding-top: 28px; border-top: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-article__img { width: 100%; height: 300px; object-fit: cover; object-position: 50% 45%; border: 1px solid var(--p-line2); filter: saturate(.85); }
+[data-template="polvo"] .nb-toc { grid-column: 1; grid-row: 3; justify-self: end; width: 100%; max-width: 200px; padding-top: 40px; }
+[data-template="polvo"] .nb-toc__title { font-size: 15px; color: var(--p-lav); }
+[data-template="polvo"] .nb-toc__list { list-style: none; margin-top: 10px; border-top: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-toc__list li { border-bottom: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-toc__link { font-size: 15px; }
+[data-template="polvo"] .nb-prose { grid-row: 3; padding-top: 40px; font-size: 19px; line-height: 1.68; }
+[data-template="polvo"] .nb-prose > * + * { margin-top: 1.1em; }
+[data-template="polvo"] .nb-prose > p:first-child::first-letter { float: left; padding: 10px 12px 0 0; font-family: var(--p-display); font-weight: 300; font-size: 84px; line-height: .78; color: var(--p-lav); font-variation-settings: "opsz" 144; }
+[data-template="polvo"] .nb-prose h2 { margin-top: 1.5em; margin-bottom: .45em; font-family: var(--p-display); font-weight: 400; font-size: 31px; line-height: 1.2; letter-spacing: -.01em; }
+[data-template="polvo"] .nb-prose h2::before { content: "✦" / ""; margin-right: 14px; font-size: 13px; color: var(--p-lav); vertical-align: middle; }
+[data-template="polvo"] .nb-prose h3 { margin-top: 1.4em; margin-bottom: .4em; font-family: var(--p-display); font-style: italic; font-weight: 400; font-size: 24px; line-height: 1.25; }
+[data-template="polvo"] .nb-prose a { color: var(--p-ink); text-decoration: underline; text-decoration-color: var(--p-line2); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+[data-template="polvo"] .nb-prose a:hover { text-decoration-color: var(--p-lav); }
+[data-template="polvo"] .nb-prose strong { font-weight: 600; }
+[data-template="polvo"] .nb-prose ul, [data-template="polvo"] .nb-prose ol { list-style: none; counter-reset: polvo-item; }
+[data-template="polvo"] .nb-prose li { position: relative; padding-left: 28px; counter-increment: polvo-item; }
+[data-template="polvo"] .nb-prose li + li { margin-top: .5em; }
+[data-template="polvo"] .nb-prose ul > li::before { content: "—" / ""; position: absolute; left: 0; color: var(--p-lav); }
+[data-template="polvo"] .nb-prose ol > li { padding-left: 40px; }
+[data-template="polvo"] .nb-prose ol > li::before { content: counter(polvo-item, decimal-leading-zero) / ""; position: absolute; left: 0; top: .1em; font-family: var(--p-display); font-style: italic; font-weight: 300; font-size: 1em; color: var(--p-lav); }
+[data-template="polvo"] .nb-prose blockquote { margin: 1.4em 0; padding: 4px 0 4px 24px; border-left: 1px solid var(--p-lav); font-family: var(--p-display); font-style: italic; font-weight: 300; font-size: 24px; line-height: 1.35; color: var(--p-mute); }
+[data-template="polvo"] .nb-prose code { padding: 1px 6px; font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: .85em; background: rgba(201, 184, 255, .1); border: 1px solid var(--p-line); border-radius: 3px; }
+[data-template="polvo"] .nb-prose pre { padding: 16px 20px; overflow-x: auto; background: rgba(201, 184, 255, .06); border: 1px solid var(--p-line); border-radius: 3px; font-size: 15px; line-height: 1.55; }
+[data-template="polvo"] .nb-prose pre code { padding: 0; font-size: inherit; background: none; border: 0; }
+[data-template="polvo"] .nb-prose img { border: 1px solid var(--p-line2); filter: saturate(.85); }
+[data-template="polvo"] .nb-prose hr { height: 0; margin: 2em auto; border: 0; border-top: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-prose table { width: 100%; border-collapse: collapse; font-size: 16px; }
+[data-template="polvo"] .nb-prose th, [data-template="polvo"] .nb-prose td { padding: 8px 12px 8px 0; border-bottom: 1px solid var(--p-line); text-align: left; vertical-align: top; }
+[data-template="polvo"] .nb-prose th { font-weight: 500; color: var(--p-lav); }
+[data-template="polvo"] .nb-article-cta { margin-top: 56px; padding: 40px 0; border-top: 1px solid var(--p-line); border-bottom: 1px solid var(--p-line); display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center; }
+[data-template="polvo"] .nb-article-cta__title { font-size: clamp(28px, 2.9vw, 36px); }
+/* comments: the giscus iframe paints its own surfaces from giscus.css; the page gives it the prose column and a head */
+[data-template="polvo"] .nb-comments { padding: 40px 0 72px; }
+[data-template="polvo"] .nb-comments__title { margin-bottom: 18px; font-family: var(--p-display); font-weight: 400; font-size: 31px; line-height: 1.2; letter-spacing: -.01em; }
+[data-template="polvo"] .nb-comments__note { color: var(--p-mute); }
+
+/* ═════════ wide (1440 px and up): the measure grows to 1600 (--p-x); the title page and the article column widen
+   a little, the rest takes the width through its columns ═════════ */
+@media (min-width: 1440px) {
+  [data-template="polvo"] .nb-hero { padding-top: 72px; }
+  [data-template="polvo"] .nb-hero__text { max-width: 980px; }
+  [data-template="polvo"] .nb-hero__title { font-size: 84px; }
+  [data-template="polvo"] .nb-hero__lead { max-width: 660px; }
+  [data-template="polvo"] .nb-services__list { column-gap: 80px; }
+  [data-template="polvo"] .nb-staff__list, [data-template="polvo"] .nb-principles__list { gap: 0 48px; }
+  [data-template="polvo"] .nb-how__main { max-width: 880px; font-size: 34px; }
+  [data-template="polvo"] .nb-card:first-child { padding-right: 48px; }
+  [data-template="polvo"] .nb-card:nth-child(2) { padding: 0 48px; }
+  [data-template="polvo"] .nb-card:nth-child(3) { padding-left: 48px; }
+  [data-template="polvo"] .nb-page-head { column-gap: 64px; }
+  [data-template="polvo"] .nb-post-featured { grid-template-columns: minmax(0, 560px) minmax(0, 1fr); column-gap: 56px; }
+  [data-template="polvo"] .nb-post-item { padding-left: 48px; padding-right: 48px; }
+  [data-template="polvo"] .nb-article { grid-template-columns: minmax(0, 1fr) minmax(0, 760px) minmax(0, 1fr); column-gap: 64px; }
+  [data-template="polvo"] .nb-toc { max-width: 220px; }
+  [data-template="polvo"] .nb-article__cover { width: min(960px, 100%); }
+  [data-template="polvo"] .nb-article__img { height: 330px; }
+}
+
+/* ═════════ up to 1100 px: the header in two rows (mark and switcher, then the menu); the four-column rows in two;
+   the insights with the first story across the top; the blog list in two columns; the article in one column with
+   "On this page" as a wrapped line above the body ═════════ */
+@media (max-width: 1100px) {
+  [data-template="polvo"] .nb-header { min-height: 0; padding-top: 10px; padding-bottom: 8px; gap: 2px 8px; }
+  [data-template="polvo"] .nb-nav { order: 3; width: 100%; }
+  [data-template="polvo"] .nb-nav__list { margin: 0 -12px; }
+  [data-template="polvo"] .nb-switcher { margin-left: 8px; }
+  [data-template="polvo"] .nb-staff__list, [data-template="polvo"] .nb-principles__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  [data-template="polvo"] .nb-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  [data-template="polvo"] .nb-card:first-child { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); column-gap: 40px; align-items: center; padding: 0 0 24px; border-right: 0; border-bottom: 1px solid var(--p-line); }
+  [data-template="polvo"] .nb-card:first-child .nb-card__cover { aspect-ratio: 1.91 / 1; object-position: left center; }
+  [data-template="polvo"] .nb-card:first-child .nb-card__body { margin-top: 0; }
+  [data-template="polvo"] .nb-card:nth-child(2) { padding: 24px 40px 0 0; }
+  [data-template="polvo"] .nb-card:nth-child(3) { padding: 24px 0 0 40px; }
+  /* the cover keeps 46 % of the row (a fixed 500 px track left the text 128 px at 800); its lettering sits at the left */
+  [data-template="polvo"] .nb-post-featured { grid-template-columns: minmax(240px, 46%) minmax(0, 1fr); column-gap: 32px; }
+  [data-template="polvo"] .nb-post-featured__cover { object-position: left center; }
+  [data-template="polvo"] .nb-post-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  [data-template="polvo"] .nb-post-item:nth-child(n) { padding: 0 40px 28px; border-left: 1px solid var(--p-line); border-top: 0; }
+  [data-template="polvo"] .nb-post-item:nth-child(2n+1) { padding-left: 0; border-left: 0; }
+  [data-template="polvo"] .nb-post-item:nth-child(2n) { padding-right: 0; }
+  [data-template="polvo"] .nb-post-item:nth-child(n+3) { padding-top: 24px; border-top: 1px solid var(--p-line); }
+  [data-template="polvo"] .nb-article { display: flex; flex-direction: column; align-items: stretch; }
+  [data-template="polvo"] .nb-article__cover { align-self: center; }
+  [data-template="polvo"] .nb-toc { width: 100%; max-width: none; padding-top: 32px; }
+  [data-template="polvo"] .nb-toc__list { display: flex; flex-wrap: wrap; gap: 0 24px; border-top: 0; }
+  [data-template="polvo"] .nb-toc__list li { border-bottom: 0; }
+  [data-template="polvo"] .nb-prose { padding-top: 28px; }
+}
+
+/* ═════════ narrow (up to 720 px): one column everywhere, 20 px gutters; the mastheads stack; the drop cap and the
+   display sizes come down; the footer stacks ═════════ */
+@media (max-width: 720px) {
+  [data-template="polvo"] { --p-gutter: 20px; }
+  [data-template="polvo"] .nb-header { gap: 2px 6px; }
+  [data-template="polvo"] .nb-logo { height: 22px; }
+  [data-template="polvo"] .nb-switcher { margin-left: 0; }
+  [data-template="polvo"] .nb-nav__list { margin: 0 -8px; gap: 0; }
+  [data-template="polvo"] .nb-nav__link { padding: 0 8px; font-size: 15px; }
+  [data-template="polvo"] .nb-nav__link[aria-current]::after { left: 8px; right: 8px; }
+  [data-template="polvo"] .nb-nav__item--cta { margin-left: 4px; }
+  [data-template="polvo"] .nb-nav__link--cta { padding: 0 14px; }
+  [data-template="polvo"] .nb-switcher__toggle { padding: 0 14px; font-size: 14px; }
+  [data-template="polvo"] .nb-switcher__toggle-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  [data-template="polvo"] .nb-switcher__current { max-width: 36vw; }
+  [data-template="polvo"] .nb-hero { padding: 40px var(--p-x) 36px; }
+  [data-template="polvo"] .nb-kicker { font-size: 14px; }
+  [data-template="polvo"] .nb-hero__title { margin-top: 16px; font-size: clamp(40px, 11.5vw, 56px); }
+  [data-template="polvo"] .nb-hero__lead { margin-top: 16px; font-size: 18px; }
+  [data-template="polvo"] .nb-hero .nb-actions { margin-top: 28px; }
+  [data-template="polvo"] .nb-section { padding-top: 36px; }
+  [data-template="polvo"] .nb-section__title { gap: 12px; font-size: 15px; }
+  [data-template="polvo"] .nb-section__lead, [data-template="polvo"] .nb-staff__lead { font-size: 21px; }
+  [data-template="polvo"] .nb-section__text { font-size: 18px; }
+  [data-template="polvo"] .nb-services__list { grid-template-columns: minmax(0, 1fr); }
+  [data-template="polvo"] .nb-service:nth-child(2) { border-top: 0; }
+  [data-template="polvo"] .nb-service { grid-template-columns: 44px minmax(0, 1fr); }
+  [data-template="polvo"] .nb-service__name { font-size: 18px; }
+  [data-template="polvo"] .nb-approach .nb-service__name { font-size: 21px; }
+  [data-template="polvo"] .nb-staff__list, [data-template="polvo"] .nb-principles__list, [data-template="polvo"] .nb-fit__list, [data-template="polvo"] .nb-places__list { grid-template-columns: minmax(0, 1fr); }
+  [data-template="polvo"] .nb-fit__item, [data-template="polvo"] .nb-fit__item + .nb-fit__item { padding: 18px 0 20px; border-left: 0; }
+  [data-template="polvo"] .nb-fit__name { font-size: 23px; }
+  [data-template="polvo"] .nb-staff__screen-title, [data-template="polvo"] .nb-poc__examples-title { margin-top: 32px; font-size: 24px; }
+  [data-template="polvo"] .nb-staff__screen-lead { font-size: 17px; }
+  [data-template="polvo"] .nb-staff__screen-item, [data-template="polvo"] .nb-poc__example { font-size: 16px; }
+  [data-template="polvo"] .nb-how { padding-top: 36px; }
+  [data-template="polvo"] .nb-how__main { font-size: 24px; }
+  [data-template="polvo"] .nb-how__ask { font-size: 17px; }
+  [data-template="polvo"] .nb-clients { padding-top: 32px; }
+  [data-template="polvo"] .nb-client { font-size: 19px; }
+  [data-template="polvo"] .nb-client:not(:last-child)::after { margin: 0 14px; }
+  [data-template="polvo"] .nb-insights { padding-top: 36px; }
+  [data-template="polvo"] .nb-cards { grid-template-columns: minmax(0, 1fr); }
+  [data-template="polvo"] .nb-card:first-child { display: block; padding: 0 0 22px; }
+  [data-template="polvo"] .nb-card:first-child .nb-card__cover { aspect-ratio: 2.4 / 1; object-position: 50% 40%; }
+  [data-template="polvo"] .nb-card:first-child .nb-card__body { margin-top: 14px; }
+  [data-template="polvo"] .nb-card:nth-child(2), [data-template="polvo"] .nb-card:nth-child(3) { padding: 20px 0 0; border-left: 0; }
+  [data-template="polvo"] .nb-card:nth-child(3) { margin-top: 22px; border-top: 1px solid var(--p-line); }
+  [data-template="polvo"] .nb-card__title, [data-template="polvo"] .nb-card:first-child .nb-card__title { font-size: 22px; }
+  [data-template="polvo"] .nb-cta { margin-top: 36px; padding: 26px 0 28px; gap: 18px; }
+  [data-template="polvo"] .nb-cta__text { font-size: 17px; }
+  [data-template="polvo"] .nb-footer { gap: 0 16px; padding-top: 16px; }
+  [data-template="polvo"] .nb-footer__tagline { width: 100%; margin: 0; }
+  /* gaps instead of middots: a wrapped line would otherwise open with one */
+  [data-template="polvo"] .nb-footer__links { width: 100%; justify-content: flex-start; gap: 0 18px; }
+  [data-template="polvo"] .nb-footer__links li + li::before { content: none; }
+  [data-template="polvo"] .nb-page-head { grid-template-columns: minmax(0, 1fr); row-gap: 10px; padding: 40px var(--p-x) 22px; }
+  [data-template="polvo"] .nb-page-head__title { font-size: clamp(52px, 16vw, 72px); }
+  [data-template="polvo"] .nb-page-head__lead { padding-bottom: 0; font-size: 20px; }
+  [data-template="polvo"] .nb-what .nb-section__text:first-of-type, [data-template="polvo"] .nb-where .nb-section__text { font-size: 23px; }
+  [data-template="polvo"] .nb-steps__item { grid-template-columns: 44px minmax(0, 1fr); }
+  [data-template="polvo"] .nb-steps__name { font-size: 20px; }
+  [data-template="polvo"] .nb-fit__note, [data-template="polvo"] .nb-steps__note, [data-template="polvo"] .nb-reach__note { font-size: 19px; }
+  [data-template="polvo"] .nb-reach__item { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  [data-template="polvo"] .nb-reach__link { font-size: 21px; }
+  [data-template="polvo"] .nb-compose { padding: 18px; }
+  [data-template="polvo"] .nb-places { margin-bottom: 0; }
+  [data-template="polvo"] .nb-topics { flex-wrap: wrap; gap: 0 10px; }
+  [data-template="polvo"] .nb-post-featured { grid-template-columns: minmax(0, 1fr); row-gap: 16px; margin-top: 20px; padding-bottom: 24px; }
+  [data-template="polvo"] .nb-post-featured__desc { font-size: 17px; }
+  [data-template="polvo"] .nb-post-list { grid-template-columns: minmax(0, 1fr); padding-top: 4px; }
+  [data-template="polvo"] .nb-post-item:nth-child(n) { padding: 22px 0 24px; border-left: 0; border-top: 0; border-bottom: 1px solid var(--p-line); }
+  [data-template="polvo"] .nb-post-item__title { font-size: 21px; }
+  [data-template="polvo"] .nb-topic-index { padding-top: 36px; }
+  [data-template="polvo"] .nb-article__head { padding: 36px 0 24px; }
+  [data-template="polvo"] .nb-article__lead { font-size: 20px; }
+  [data-template="polvo"] .nb-article__cover { padding-top: 20px; }
+  [data-template="polvo"] .nb-article__img { height: auto; aspect-ratio: 1.91 / 1; }
+  [data-template="polvo"] .nb-toc { padding-top: 24px; }
+  [data-template="polvo"] .nb-toc__list { gap: 0 18px; }
+  [data-template="polvo"] .nb-prose { font-size: 18px; line-height: 1.65; }
+  [data-template="polvo"] .nb-prose > p:first-child::first-letter { padding: 8px 10px 0 0; font-size: 64px; }
+  [data-template="polvo"] .nb-prose h2 { font-size: 26px; }
+  [data-template="polvo"] .nb-prose h2::before { margin-right: 10px; font-size: 11px; }
+  [data-template="polvo"] .nb-prose blockquote { font-size: 21px; }
+  [data-template="polvo"] .nb-article-cta { margin-top: 40px; padding: 30px 0; gap: 16px; }
+}
