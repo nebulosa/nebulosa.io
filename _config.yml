@@ -47,4 +47,4 @@ defaults:
         name: Nebulosa
         url: "https://nebulosa.io/"
 
-exclude: [tools, scripts, docs, .playwright-mcp, .superpowers, Gemfile, Gemfile.lock, .dockerignore, README.md, AGENTS.md, CLAUDE.md, todo.txt, Dockerfile, docker-compose.yml]
+exclude: [tools, scripts, docs, .playwright-mcp, .superpowers, Gemfile, Gemfile.lock, .dockerignore, README.md, AGENTS.md, CLAUDE.md, Dockerfile, docker-compose.yml]

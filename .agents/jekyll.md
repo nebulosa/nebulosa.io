@@ -6,7 +6,7 @@ Anything else is copied byte for byte: no Liquid, no layout, no includes.
 Two consequences:
 
 - A root-level file is published unless `exclude` in `_config.yml` names it.
-  That is why `README.md`, `AGENTS.md`, `CLAUDE.md` and `todo.txt` are listed
+  That is why `README.md`, `AGENTS.md` and `CLAUDE.md` are listed
   there. `.agents/` and `_archive/` need no entry — Jekyll skips dot- and
   underscore-directories.
 - A file under `assets/` that needs Liquid (`assets/templates/index.json`, each

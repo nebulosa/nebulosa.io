@@ -1,5 +1,5 @@
 # The site's copy, one block per page (page.nb_page). Facts come from the LinkedIn intro post, the post
-# "AI multiplies your engineers" and the other posts; the readable draft is docs/superpowers/specs/2026-11-06-copy-draft.md.
+# "AI multiplies your engineers" and the other posts.
 home:
   kicker: "AI products · Cloud platforms · Product engineering"
   title: "AI-first engineering"
