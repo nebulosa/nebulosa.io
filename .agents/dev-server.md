@@ -3,17 +3,14 @@
 Ports start at 5000 (and 35729 for livereload) and go up to the first free one.
 Compose cannot do that search itself: a published range (`"5000-5100:5000"`)
 lets Docker pick a free host port, but the container still listens on its own,
-and livereload needs both to match (see below). So look first, then start:
+and livereload needs both to match (see below). `./scripts/run.sh dev up` looks
+first, then starts; it prints the port, and a stack already up keeps its own
+(the search would skip that port and recreate the container on the next one).
 
-```bash
-docker compose ps jekyll    # already up? use the port it shows, stop here
-p=5000;  while (exec 3<>/dev/tcp/127.0.0.1/$p) 2>/dev/null; do p=$((p+1)); done
-lr=35729; while (exec 3<>/dev/tcp/127.0.0.1/$lr) 2>/dev/null; do lr=$((lr+1)); done
-JEKYLL_PORT=$p JEKYLL_LIVERELOAD_PORT=$lr docker compose up -d
-```
-
-Check `ps` first because a running stack holds its own port: the search would
-skip it and `up` would recreate the container on the next one.
+To see the running server on a phone, `./scripts/run.sh dev tunnel` opens a
+Serveo tunnel at `https://nebulosa-demo.serveousercontent.com` in the
+foreground; run it in the background and stop it when the owner is done.
+Livereload does not reach the phone: reload by hand.
 
 Pass the ports on the command line; a port belongs to one machine, not to the
 repo. A bare `docker compose up` binds 5000 or fails with

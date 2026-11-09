@@ -34,6 +34,10 @@ cached old script breaks. A new asset reference follows the same pattern.
 
 `tools/check/run.sh` builds the site and runs the Playwright checks over every
 template, page and width; `--only`, `--templates` and `--pages` narrow it.
+The whole suite is heavy work and runs on a build node:
+`./scripts/run.sh dev check remote`, which brings the log and the screenshots
+back to `tools/check/out/`. On this machine `./scripts/run.sh dev check` takes
+only a narrowed run, and refuses the whole suite.
 
 # Blog
 

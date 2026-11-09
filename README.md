@@ -4,8 +4,10 @@ Nebulosa | Cosmic Engine website
 https://nebulosa.io — Jekyll, built and served with Docker.
 
 ```bash
-docker compose up -d --build     # http://localhost:5000
-docker compose down
+./scripts/run.sh dev up        # prints http://localhost:<port>
+./scripts/run.sh dev tunnel    # the same server on a phone, QR included
+./scripts/run.sh dev check remote    # the Playwright checks, on a build node
+./scripts/run.sh dev down
 ```
 
 Build `_site` without the server:
