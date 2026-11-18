@@ -3,7 +3,7 @@ title: "Your app, read back to you"
 date: 2026-10-16
 description: "AI agents can now drive Ghidra and IDA. What an attacker can learn from your app, and how we run that check on your own build first."
 tags: [AI, CyberSecurity, ReverseEngineering, DevSecOps]
-image: /assets/img/blog/your-app-read-back-to-you.png
+image: /assets/img/blog/your-app-read-back-to-you.jpg
 ---
 
 An open-source project called REA went viral this week. It lets AI coding agents drive professional reverse-engineering tools like Ghidra and IDA, so anyone can ask "how does this app work?" and get an answer with evidence.

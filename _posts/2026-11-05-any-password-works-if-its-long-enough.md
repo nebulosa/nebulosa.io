@@ -3,7 +3,7 @@ title: "Any password works, if it's long enough"
 date: 2026-11-05
 description: "A musl quirk lets any 257+ character password log in to some Alpine servers running OpenSSH without PAM. Who's exposed and what to do now."
 tags: [DevSecOps, CyberSecurity, OpenSSH, CloudSecurity]
-image: /assets/img/blog/any-password-works-if-its-long-enough.png
+image: /assets/img/blog/any-password-works-if-its-long-enough.jpg
 linkedin_original: https://www.linkedin.com/pulse/any-password-works-its-long-enough-nebulosa-io-mbrge
 ---
 

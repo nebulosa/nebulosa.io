@@ -3,7 +3,7 @@ title: "Who's watching checkout at 3 a.m.?"
 date: 2026-10-20
 description: "One read-only AI agent per subsystem, plus a coordinator that pages a person once. How we'd watch production at 3 a.m."
 tags: [AIAgents, SRE, Observability, DevOps]
-image: /assets/img/blog/whos-watching-checkout-at-3am.png
+image: /assets/img/blog/whos-watching-checkout-at-3am.jpg
 linkedin_original: https://www.linkedin.com/pulse/whos-watching-checkout-3-am-nebulosa-io-kjfye
 ---
 

@@ -3,7 +3,7 @@ title: "AI multiplies your engineers. Including the bad ones."
 date: 2026-10-26
 description: "Coding agents amplify whoever steers them. What that looks like in real systems, and how Nebulosa screens engineers for judgment."
 tags: [AIEngineering, StaffAugmentation, Nearshore, SoftwareQuality]
-image: /assets/img/blog/ai-multiplies-your-engineers.png
+image: /assets/img/blog/ai-multiplies-your-engineers.jpg
 linkedin_original: https://www.linkedin.com/pulse/ai-multiplies-your-engineers-including-bad-ones-nebulosa-io-oetye
 ---
 

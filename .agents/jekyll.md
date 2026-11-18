@@ -47,8 +47,10 @@ Posts are `_posts/YYYY-MM-DD-<slug>.md`; `_config.yml` defaults give them the
 and card text), `tags`, `image`. jekyll-seo-tag turns those into canonical,
 Open Graph and `BlogPosting` JSON-LD, so no SEO markup is written by hand.
 
-Covers go in `assets/img/blog/<slug>.png`, not `blog/<slug>/`: a folder named
-like the page would make GitHub Pages redirect `/blog/<slug>` to a 404.
+Covers go in `assets/img/blog/<slug>.jpg` (1200×627), not `blog/<slug>/`: a
+folder named like the page would make GitHub Pages redirect `/blog/<slug>` to a
+404. Each cover is a frame of the film on the post's subject
+(`assets/videos/<film>/horizontal.mp4`), so no two look alike.
 
 The feed is `/blog/rss.xml` (jekyll-feed); the sitemap picks posts up on its own.
 

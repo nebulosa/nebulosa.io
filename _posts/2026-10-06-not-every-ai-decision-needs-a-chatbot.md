@@ -3,7 +3,7 @@ title: "Not every AI decision needs a chatbot"
 date: 2026-10-06
 description: "Decision models return typed answers with a confidence score in milliseconds. Four places they pay off: triage, guardrails, routing and alerts."
 tags: [AIEngineering, AIAgents, LLMOps, Automation, OpenSource]
-image: /assets/img/blog/not-every-ai-decision-needs-a-chatbot.png
+image: /assets/img/blog/not-every-ai-decision-needs-a-chatbot.jpg
 ---
 
 Jev put a new kind of AI model on the map: decision models. No chat, no text. You send data, you get typed answers with a confidence score, in milliseconds and at a fraction of LLM prices.

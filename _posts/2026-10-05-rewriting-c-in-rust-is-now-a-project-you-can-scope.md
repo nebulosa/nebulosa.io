@@ -3,7 +3,7 @@ title: "Rewriting C in Rust is now a project you can scope"
 date: 2026-10-05
 description: "AI now writes the first draft of C-to-Rust migrations. The real work is the test oracle, the unsafe boundary and a way back. How we run it."
 tags: [Rust, MemorySafety, DevSecOps, AppSec, AIEngineering]
-image: /assets/img/blog/rewriting-c-in-rust-is-now-a-project-you-can-scope.png
+image: /assets/img/blog/rewriting-c-in-rust-is-now-a-project-you-can-scope.jpg
 linkedin_original: https://www.linkedin.com/pulse/rewriting-c-rust-now-project-you-can-scope-nebulosa-io-6nwxf
 ---
 
