@@ -161,13 +161,16 @@ class Run {
 }
 
 // Horizontal fit of the page: scrollWidth, html/body overflow-x (hiding overflow there would mask it), and visible
-// elements past the right edge. Only the clients rail (.nb-clients) and a [data-slot] that clips may hold such elements.
+// elements past the right edge. Only the clients rail (.nb-clients), a [data-slot] that clips, and a horizontal scroller
+// (overflow-x auto or scroll, like the home page's Films strip on a phone) may hold such elements: the scroller clips
+// them, and is itself held to the edge.
 function overflowProbe() {
   const iw = window.innerWidth;
   const ox = e => getComputedStyle(e).overflowX;
   const allowed = el => {
     for (let a = el; a && a !== document.body; a = a.parentElement) {
       if (a.matches('.nb-clients') || (a.matches('[data-slot]') && ox(a) !== 'visible')) return true;
+      if (a !== el && (ox(a) === 'auto' || ox(a) === 'scroll')) return true;
     }
     return false;
   };
@@ -1360,12 +1363,13 @@ async function pointerIdle(run) {
 async function videos(run) {
   if (run.pageNames && !run.pageNames.some(n => n === 'videos' || n === 'video' || n === 'home')) return [];
   const fails = [];
-  const cards = fs.readdirSync(path.join(__dirname, '..', '..', '_videos')).filter(f => f.endsWith('.md')).map(f => f.slice(0, -3));
+  // One page per film in the build (only the build and this folder reach the node).
+  const cards = fs.readdirSync(path.join(SITE, 'videos')).filter(f => f.endsWith('.html') && f !== 'index.html').map(f => f.slice(0, -5));
   // Every film's files and its entry in the agents' JSON.
   let list = [];
   try { list = JSON.parse(fs.readFileSync(path.join(SITE, 'videos', 'index.json'), 'utf8')); }
   catch (e) { fails.push(`/videos/index.json: ${e.message}`); }
-  if (list.length !== cards.length) fails.push(`/videos/index.json: ${list.length} films (want ${cards.length}, one per _videos card)`);
+  if (list.length !== cards.length) fails.push(`/videos/index.json: ${list.length} films (want ${cards.length}, one per film page)`);
   for (const f of list) {
     for (const k of ['horizontal', 'vertical', 'poster', 'poster_vertical']) {
       const u = f.files && f.files[k];

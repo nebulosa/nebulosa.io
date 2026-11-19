@@ -112,7 +112,9 @@ html:not(.js) .nb-switcher { display: none; }
   position: absolute; right: 8px; bottom: 8px; padding: 2px 7px; border-radius: 4px; background: rgba(0, 0, 0, .72);
   color: #fff; font-size: 12px; font-variant-numeric: tabular-nums;
 }
-.nb-video-card__title { margin: 0; }
+/* A long word in a title must not widen its card past a phone: grid items keep their min-content width otherwise. */
+.nb-videos > *, .nb-video-card, .nb-video-card__link { min-inline-size: 0; }
+.nb-video-card__title { margin: 0; overflow-wrap: anywhere; }
 
 .nb-visor {
   inline-size: min(1180px, calc(100vw - 32px)); max-inline-size: none; max-block-size: calc(100dvh - 32px);
