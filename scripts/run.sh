@@ -33,13 +33,17 @@ EXCLUDES=(--exclude /.git --exclude /_site/ --exclude /.jekyll-cache/ --exclude 
   --exclude .superpowers/ --exclude .playwright-mcp/)
 
 check_remote() {
-  local claim node=() q="" a rc=130
+  # rc is global: the EXIT trap runs after the function's locals are gone (set -e ending the script inside it).
+  local claim node=() q="" a
+  rc=130
   [[ -f $POOL ]] || { echo "check remote: no node pool at $POOL (clone shared.com there, or set SHARED_NODES)" >&2; exit 1; }
   [[ ${1:-} == --node ]] && { node=(--node "$2"); shift 2; }
   claim=$(bash "$POOL" claim --kind nebulosa:check "${node[@]}") || exit $?
   eval "$claim"   # NODE TARGET SSH_OPTS LOCK CLAIM …
   trap 'bash "$POOL" release --node "$NODE" --claim "$CLAIM" --exit "$rc"' EXIT
   # shellcheck disable=SC2086 # SSH_OPTS is a list of ssh flags
+  ssh $SSH_OPTS "$TARGET" 'mkdir -p ~/nebulosa-check/tree'   # a fresh droplet has none
+  # shellcheck disable=SC2086
   rsync -az --delete "${EXCLUDES[@]}" -e "ssh $SSH_OPTS" ./ "$TARGET:nebulosa-check/tree/"
   for a in "$@"; do q+=" $(sq "$a")"; done
   set +e
