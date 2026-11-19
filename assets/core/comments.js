@@ -7,9 +7,12 @@
   var ORIGIN = 'https://giscus.app';
   var html = document.documentElement;
   var version = ((document.currentScript && document.currentScript.src) || '').replace(/^[^?]*/, '');
-  // Absolute: the stylesheet is loaded inside the giscus iframe, from giscus.app.
+  // Absolute: the stylesheet is loaded inside the giscus iframe, from giscus.app. Chrome's Local Network Access stops
+  // a public page (that iframe) from fetching from localhost, so the dev server hands it the live site's copy.
+  var local = /^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname);
+  var site = local ? 'https://nebulosa.io' : location.origin;
   var theme = function () {
-    return location.origin + '/assets/templates/' + html.getAttribute('data-template') + '/giscus.css' + version;
+    return site + '/assets/templates/' + html.getAttribute('data-template') + '/giscus.css' + version;
   };
   var sent = theme(), ready = false;
 

@@ -1151,7 +1151,9 @@ async function comments(run) {
       if (JSON.stringify(r.box) !== JSON.stringify(GISCUS)) fails.push(`${at}: thread ids ${JSON.stringify(r.box)} (want ${JSON.stringify(GISCUS)})`);
       if (!r.client) { fails.push(`${at}: no giscus client script`); continue; }
       const theme = new URL(r.client.theme || '', run.origin);
-      if (theme.origin !== run.origin || theme.pathname !== `/assets/templates/${t}/giscus.css`) fails.push(`${at}: data-theme ${r.client.theme} (want ${run.origin}/assets/templates/${t}/giscus.css)`);
+      // On localhost the theme comes from the live site (comments.js: Chrome's Local Network Access).
+      const themeOrigin = /^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(new URL(run.origin).hostname) ? 'https://nebulosa.io' : run.origin;
+      if (theme.origin !== themeOrigin || theme.pathname !== `/assets/templates/${t}/giscus.css`) fails.push(`${at}: data-theme ${r.client.theme} (want ${themeOrigin}/assets/templates/${t}/giscus.css)`);
       for (const [k, v] of Object.entries({ repo: GISCUS.repo, 'repo-id': GISCUS.repoId, 'category-id': GISCUS.categoryId, mapping: 'pathname', strict: '1', lang: 'en', loading: 'lazy' })) {
         if (r.client[k] !== v) fails.push(`${at}: giscus data-${k}=${JSON.stringify(r.client[k])} (want ${JSON.stringify(v)})`);
       }

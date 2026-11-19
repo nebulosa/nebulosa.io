@@ -57,7 +57,10 @@ The feed is `/blog/rss.xml` (jekyll-feed); the sitemap picks posts up on its own
 Comments are giscus over this repo's GitHub Discussions (`giscus` in
 `_config.yml`). The giscus iframe loads the template's `giscus.css`
 cross-origin, which needs `Access-Control-Allow-Origin`: GitHub Pages sends it,
-and `_plugins/dev_cors.rb` makes the dev server send it too.
+and `_plugins/dev_cors.rb` makes the dev server send it too. On localhost the
+iframe gets the live site's copy instead (`comments.js`): Chrome's Local Network
+Access stops giscus.app from fetching from localhost, so a `giscus.css` edit
+shows in local comments only once deployed.
 
 # The previous site
 
