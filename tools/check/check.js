@@ -22,6 +22,7 @@ const { serve } = require('./server');
 const PAGES = {
   home: '/', services: '/services.html', process: '/process.html', about: '/about-us.html',
   contact: '/contact-us.html', blog: '/blog/', post: '/blog/any-password-works-if-its-long-enough', sent: '/sent.html',
+  videos: '/videos/', video: '/videos/c-to-rust',
 };
 const TEMPLATES = ['constelacion', 'pizarra', 'horizonte', 'polvo'];
 const WIDTHS = [1280, 360, 1600, 1866];
@@ -34,7 +35,7 @@ const SCHEME = { pizarra: 'light', constelacion: 'dark', horizonte: 'dark', polv
 // still if its editorial direction asks. A manifest declaring rail: static outside this list fails the rail check.
 const STILL_RAIL_ALLOWED = ['polvo'];
 const KEY = 'nebulosa.template';
-const NAV = ['Home', 'Services', 'Process', 'About', 'Blog', 'Contact us'];
+const NAV = ['Home', 'Services', 'Process', 'About', 'Blog', 'Videos', 'Contact us'];
 const CLIENTS = ['IBM', 'Capital One', 'FICO', 'GSK', 'Santander', 'AXA', 'AutoZone', 'DigitalOcean', 'Canonical', 'Tripwire', 'izzi'];
 const FORBIDDEN = /blockchain|crypto|smart contract|wallet|8421|Osaka|Steelkiwi|YoTutors/i;
 const GOAT_SRC = 'https://gc.zgo.at/count.v4.js';
@@ -1351,11 +1352,98 @@ async function pointerIdle(run) {
   return fails;
 }
 
+// The films: /videos/ lists every card in _videos with its files built; a card opens the viewer as a modal in place,
+// moves the address to /videos/<slug>, asks the film to play (the tap's activation) and focuses the dialog, not the ×;
+// Escape and Back close it and return to /videos/. A film's page loaded from outside opens the viewer without asking
+// to play. An upright phone gets the vertical <source>. The shares point at the film's page. The home strip shows
+// three films. Playwright's Chromium has no H.264, so playback is read from play() calls, never from the picture.
+async function videos(run) {
+  if (run.pageNames && !run.pageNames.some(n => n === 'videos' || n === 'video' || n === 'home')) return [];
+  const fails = [];
+  const cards = fs.readdirSync(path.join(__dirname, '..', '..', '_videos')).filter(f => f.endsWith('.md')).map(f => f.slice(0, -3));
+  // Every film's files and its entry in the agents' JSON.
+  let list = [];
+  try { list = JSON.parse(fs.readFileSync(path.join(SITE, 'videos', 'index.json'), 'utf8')); }
+  catch (e) { fails.push(`/videos/index.json: ${e.message}`); }
+  if (list.length !== cards.length) fails.push(`/videos/index.json: ${list.length} films (want ${cards.length}, one per _videos card)`);
+  for (const f of list) {
+    for (const k of ['horizontal', 'vertical', 'poster', 'poster_vertical']) {
+      const u = f.files && f.files[k];
+      if (!u || !fs.existsSync(path.join(SITE, new URL(u).pathname))) fails.push(`${f.slug}: ${k} ${u} not in the build`);
+    }
+    if (f.page !== `https://nebulosa.io/videos/${f.slug}`) fails.push(`${f.slug}: page ${f.page}`);
+  }
+  const countPlay = () => {
+    window.__plays = 0;
+    const p = HTMLMediaElement.prototype.play;
+    HTMLMediaElement.prototype.play = function () { window.__plays++; return p.call(this).catch(() => undefined); };
+  };
+  const state = page => page.evaluate(() => {
+    const d = document.getElementById('nb-visor');
+    return {
+      open: d.open, modal: d.matches(':modal'), path: location.pathname, plays: window.__plays,
+      focus: document.activeElement === d ? 'dialog' : (document.activeElement && document.activeElement.className),
+      title: d.querySelector('.nb-visor__title').textContent,
+      vertical: matchMedia(d.querySelector('.nb-visor__src-v').media).matches,
+      wa: d.querySelector('[data-net="whatsapp"]').href,
+    };
+  });
+  for (const t of run.templates) {
+    const s = await run.open('/videos/', { template: t, init: [[countPlay]] });
+    try {
+      const n = await s.page.locator('.nb-videos .nb-video-card').count();
+      if (n !== cards.length) fails.push(`${t} /videos/: ${n} cards (want ${cards.length})`);
+      const first = s.page.locator('.nb-videos a[data-video]').nth(1);
+      const slug = await first.getAttribute('data-video');
+      await first.click();
+      await s.page.waitForTimeout(150);
+      let r = await state(s.page);
+      if (!r.modal) fails.push(`${t}: a card did not open the viewer as a modal`);
+      if (r.path !== `/videos/${slug}`) fails.push(`${t}: address ${r.path} after opening ${slug}`);
+      if (r.plays < 1) fails.push(`${t}: opening ${slug} did not ask the film to play`);
+      if (r.focus !== 'dialog') fails.push(`${t}: focus on ${r.focus} (want the dialog itself)`);
+      if (!r.wa.includes(encodeURIComponent(`/videos/${slug}`))) fails.push(`${t}: WhatsApp share ${r.wa} lacks the film's page`);
+      if (r.vertical) fails.push(`${t}: 1280 wide chose the vertical source`);
+      await s.page.keyboard.press('Escape');
+      await s.page.waitForTimeout(100);
+      r = await state(s.page);
+      if (r.open || r.path !== '/videos/') fails.push(`${t}: Escape left open=${r.open} at ${r.path}`);
+      await first.click();
+      await s.page.waitForTimeout(100);
+      await s.page.goBack();
+      await s.page.waitForTimeout(150);
+      r = await state(s.page);
+      if (r.open || r.path !== '/videos/') fails.push(`${t}: Back left open=${r.open} at ${r.path}`);
+    } finally { await s.close(); }
+  }
+  // A film's page from outside: open, modal, focused, not asked to play; an upright phone gets the vertical file.
+  for (const w of [1280, 360]) {
+    const s = await run.open('/videos/c-to-rust', { width: w, init: [[countPlay]] });
+    try {
+      const r = await state(s.page);
+      if (!r.modal || r.title !== 'C to Rust') fails.push(`${w} /videos/c-to-rust: modal=${r.modal} title=${r.title}`);
+      if (r.plays) fails.push(`${w} /videos/c-to-rust: asked to play without a tap on this site`);
+      if (r.focus !== 'dialog') fails.push(`${w} /videos/c-to-rust: focus on ${r.focus}`);
+      if (r.vertical !== (w === 360)) fails.push(`${w} /videos/c-to-rust: vertical source ${r.vertical}`);
+    } finally { await s.close(); }
+  }
+  // The home strip: three films showing, every film in the page.
+  const h = await run.open('/');
+  try {
+    const r = await h.page.evaluate(() => {
+      const slots = [...document.querySelectorAll('.nb-videos--strip .nb-videos__slot')];
+      return { all: slots.length, shown: slots.filter(x => !x.hidden).length };
+    });
+    if (r.all !== cards.length || r.shown !== 3) fails.push(`home Films: ${r.shown} of ${r.all} showing (want 3 of ${cards.length})`);
+  } finally { await h.close(); }
+  return fails;
+}
+
 const CHECKS = {
   'core-markup': coreMarkup, 'no-js-default': noJsDefault, 'no-overflow': noOverflow, wide, 'wide-probe': wideProbe, 'no-console-errors': noConsoleErrors,
   'copy-rules': copyRules, seo, switcher, 'switch-cleanup': switchCleanup, 'storage-blocked': storageBlocked,
   'stale-slug': staleSlug, 'reduced-motion': reducedMotion, rail, contact, motion, 'pointer-idle': pointerIdle, 'list-targets': listTargets,
-  'decor-names': decorNames, comments,
+  'decor-names': decorNames, comments, videos,
 };
 
 async function main() {
