@@ -90,6 +90,9 @@ function sitePages() {
       if (!e.name.endsWith('.html')) continue;
       const rel = path.relative(SITE, p).split(path.sep).join('/');
       if (rel === '404.html') continue;
+      // The film pages share one layout and differ only in data: the per-page checks visit PAGES.video as the sample
+      // (the videos check covers every film's files and JSON entry).
+      if (rel.startsWith('videos/') && rel !== 'videos/index.html' && '/' + rel.slice(0, -'.html'.length) !== PAGES.video) continue;
       if (rel.endsWith('index.html')) out.push('/' + rel.slice(0, -'index.html'.length));
       else if (rel.startsWith('blog/')) out.push('/' + rel.slice(0, -'.html'.length));
       else out.push('/' + rel);
