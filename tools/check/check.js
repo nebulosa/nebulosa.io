@@ -25,6 +25,7 @@ const PAGES = {
   videos: '/videos/', video: '/videos/c-to-rust',
 };
 const TEMPLATES = ['constelacion', 'pizarra', 'horizonte', 'polvo'];
+const VIDEO_PAGES = ['videos', 'video'];
 const WIDTHS = [1280, 360, 1600, 1866];
 // Wide screens (owner, 2026-11-07): from about 1440px the layout grows to about 1600px. At WIDE_AT the widest content
 // box in main must be at least WIDE_MIN wide, for every template not in WIDE_EXEMPT (empty on purpose).
@@ -107,8 +108,11 @@ class Run {
 
   // The URL paths the per-page checks visit: the --pages selection, else every built page.
   paths() { return this.pageNames ? this.pageNames.map(n => PAGES[n]) : sitePages(); }
-  // The named PAGES the sweep loads: the --pages selection, else all of them.
-  named() { return Object.entries(PAGES).filter(([n]) => !this.pageNames || this.pageNames.includes(n)); }
+  // The named PAGES the sweep loads: the --pages selection, else all of them but the film pages (VIDEO_PAGES), whose
+  // fit the videos check probes at 360px with the viewer open: 4 loads instead of the sweep's 32.
+  named() {
+    return Object.entries(PAGES).filter(([n]) => this.pageNames ? this.pageNames.includes(n) : !VIDEO_PAGES.includes(n));
+  }
 
   // A fresh context + page. opts: {width, template, js, reducedMotion, init: [fn, arg][], routes: [url, handler][]}
   async open(urlPath, opts = {}) {
@@ -1421,6 +1425,15 @@ async function videos(run) {
       await s.page.waitForTimeout(150);
       r = await state(s.page);
       if (r.open || r.path !== '/videos/') fails.push(`${t}: Back left open=${r.open} at ${r.path}`);
+    } finally { await s.close(); }
+  }
+  // A film's page fits a phone with the viewer open (the grid sits under it), in every template.
+  for (const t of run.templates) {
+    const s = await run.open(PAGES.video, { template: t, width: 360 });
+    try {
+      const f = await s.page.evaluate(overflowProbe);
+      if (f.sw > f.iw) fails.push(`${t} ${PAGES.video} 360px: scrollWidth ${f.sw} > ${f.iw}`);
+      if (f.wide) fails.push(`${t} ${PAGES.video} 360px: ${f.wide} element(s) past the right edge: ${f.wideDesc.join(', ')}`);
     } finally { await s.close(); }
   }
   // A film's page from outside: open, modal, focused, not asked to play; an upright phone gets the vertical file.
