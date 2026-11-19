@@ -1,0 +1,15 @@
+{%- comment -%} One film as a card: its poster, length and title, linking to /videos/<slug> (videos.js opens the viewer
+    in place instead). heading: h2 or h3. {%- endcomment -%}
+{%- assign h = include.heading | default: "h2" -%}
+{%- assign v = include.video -%}
+{%- assign s = v.seconds | modulo: 60 | prepend: "0" | slice: -2, 2 -%}
+<article class="nb-video-card">
+  <a class="nb-video-card__link" href="{{ v.url }}" data-video="{{ v.slug }}">
+    <span class="nb-video-card__frame">
+      <img class="nb-video-card__poster" src="/assets/videos/{{ v.slug }}/poster.jpg" alt="" width="1280" height="720" loading="lazy">
+      <span class="nb-video-card__play" aria-hidden="true"></span>
+      <span class="nb-video-card__time"><span class="nb-sr-only">Length </span>{{ v.seconds | divided_by: 60 }}:{{ s }}</span>
+    </span>
+    <{{ h }} class="nb-video-card__title">{{ v.title }}</{{ h }}>
+  </a>
+</article>

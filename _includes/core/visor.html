@@ -1,0 +1,46 @@
+{%- comment -%} The viewer of one film, a <dialog>: the player (the vertical file on a phone held upright, the
+    horizontal one elsewhere), the downloads, the caption and the shares. Server-rendered for include.video, open when
+    include.open (the film's own page); videos.js refills it for any other film. {%- endcomment -%}
+{%- assign v = include.video -%}
+{%- assign base = "/assets/videos/" | append: v.slug -%}
+{%- assign link = site.url | append: v.url -%}
+{%- assign tags = v.tags | join: " " -%}
+{%- capture share_text %}{% if v.caption != "" %}{{ v.caption }}{% else %}{{ v.title }}{% endif %}{% endcapture -%}
+<dialog class="nb-visor" id="nb-visor" aria-labelledby="nb-visor-title" autofocus{% if include.open %} open{% endif %}>
+  <div class="nb-visor__frame">
+    <a class="nb-visor__close" href="/videos/" aria-label="Close the film">×</a>
+    <div class="nb-visor__media">
+      <video class="nb-visor__video" controls playsinline preload="metadata" poster="{{ base }}/poster.jpg"
+             data-poster-vertical="{{ base }}/poster-vertical.jpg">
+        <source class="nb-visor__src-v" src="{{ base }}/vertical.mp4" type="video/mp4" media="(max-width: 720px) and (orientation: portrait)">
+        <source class="nb-visor__src-h" src="{{ base }}/horizontal.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="nb-visor__kit">
+      <h2 class="nb-visor__title" id="nb-visor-title">{{ v.title }}</h2>
+      <p class="nb-visor__line"{% if v.caption == "" %} hidden{% endif %}>{{ v.caption }}</p>
+      <div class="nb-visor__downloads">
+        <a class="nb-btn nb-btn--primary nb-visor__download nb-visor__download--h" href="{{ base }}/horizontal.mp4" download="nebulosa-{{ v.slug }}-16x9.mp4">↓ Horizontal 16:9 <span class="nb-visor__size">{{ v.size_horizontal | divided_by: 104857.6 | round | divided_by: 10.0 }} MB</span></a>
+        <a class="nb-btn nb-btn--secondary nb-visor__download nb-visor__download--v" href="{{ base }}/vertical.mp4" download="nebulosa-{{ v.slug }}-9x16.mp4">↓ Vertical 9:16 <span class="nb-visor__size">{{ v.size_vertical | divided_by: 104857.6 | round | divided_by: 10.0 }} MB</span></a>
+      </div>
+      <div class="nb-visor__caption"{% if v.caption == "" %} hidden{% endif %}>
+        <p class="nb-visor__caption-label">Caption</p>
+        <button type="button" class="nb-visor__copy" data-copy="caption">Copy</button>
+        <p class="nb-visor__caption-text">{{ v.caption }}{% if tags != "" %} <span class="nb-visor__tags">{{ tags }}</span>{% endif %}</p>
+      </div>
+      <button type="button" class="nb-btn nb-btn--primary nb-visor__native" hidden>Share the video…</button>
+      <div class="nb-share">
+        <p class="nb-share__label">Share the link</p>
+        <ul class="nb-share__list">
+          <li><a class="nb-share__link" data-net="whatsapp" target="_blank" rel="noopener" href="https://wa.me/?text={{ share_text | append: ' ' | append: link | url_encode | replace: "+", "%20" }}">WhatsApp</a></li>
+          <li><a class="nb-share__link" data-net="linkedin" target="_blank" rel="noopener" href="https://www.linkedin.com/sharing/share-offsite/?url={{ link | url_encode | replace: "+", "%20" }}">LinkedIn</a></li>
+          <li><a class="nb-share__link" data-net="x" target="_blank" rel="noopener" href="https://x.com/intent/post?text={{ share_text | url_encode | replace: "+", "%20" }}&amp;url={{ link | url_encode | replace: "+", "%20" }}">X</a></li>
+          <li><a class="nb-share__link" data-net="facebook" target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u={{ link | url_encode | replace: "+", "%20" }}">Facebook</a></li>
+          <li><a class="nb-share__link" data-net="email" href="mailto:?subject={{ v.title | url_encode | replace: "+", "%20" }}&amp;body={{ link | url_encode | replace: "+", "%20" }}">Email</a></li>
+          <li><button type="button" class="nb-share__link" data-copy="link" data-link="{{ link }}" hidden>Copy link</button></li>
+        </ul>
+      </div>
+      <p class="nb-visor__status" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+</dialog>

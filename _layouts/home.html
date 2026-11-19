@@ -63,6 +63,23 @@ layout: core
         </div>
       </section>
 
+      {%- assign films = site.videos | sort: "date" | reverse %}
+      {%- comment -%} The head borrows nb-insights__head: every template already lays out a title with its "All …" link that way. {%- endcomment %}
+      <section class="nb-section nb-films" aria-labelledby="nb-films-title">
+        <div class="nb-insights__head nb-films__head">
+          <h2 class="nb-section__title" id="nb-films-title">{{ c.films_title }}</h2>
+          <a class="nb-more" href="/videos/">{{ c.films_more }}</a>
+        </div>
+        {%- comment -%} Every film is here; films.js shows three at random on each visit, and without JS the three newest
+            stay. A hidden card's lazy poster is never fetched. {%- endcomment %}
+        <div class="nb-videos nb-videos--strip" data-show="3">
+          {%- for v in films %}
+          <div class="nb-videos__slot"{% if forloop.index > 3 %} hidden{% endif %}>{% include core/video-card.html video=v heading="h3" %}</div>
+          {%- endfor %}
+        </div>
+      </section>
+      <script src="/assets/core/films.js?v={{ site.time | date: '%s' }}" defer></script>
+
       <section class="nb-cta" aria-labelledby="nb-cta-title">
         {% include core/slot.html name="cta-art" %}
         <h2 class="nb-cta__title" id="nb-cta-title">{{ c.cta_title }}</h2>

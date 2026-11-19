@@ -6,6 +6,13 @@
     <title>{% if nb_title %}{{ nb_title | escape }} | {{ site.title }}{% else %}{{ site.title }} | AI-first engineering from Latin America{% endif %}</title>
     {%- comment -%} title=false: the <title> above is ours. {%- endcomment %}
     {% seo title=false %}
+    {%- if page.collection == "videos" %}
+    {%- comment -%} A film's page: link previews that play the film where the network allows it. {%- endcomment %}
+    <meta property="og:video" content="{{ site.url }}/assets/videos/{{ page.slug }}/horizontal.mp4">
+    <meta property="og:video:type" content="video/mp4">
+    <meta property="og:video:width" content="1920">
+    <meta property="og:video:height" content="1080">
+    {%- endif %}
     {%- if page.robots %}
     <meta name="robots" content="{{ page.robots }}">
     {%- endif %}

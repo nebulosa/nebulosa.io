@@ -86,3 +86,70 @@ html:not(.js) .nb-switcher { display: none; }
   min-block-size: 44px; min-inline-size: 44px; padding: 0 20px; border: 1px solid currentColor; border-radius: 22px;
   background: transparent; color: inherit; font: inherit; cursor: pointer;
 }
+
+/* Videos: the grid of films, the cards, the viewer (a modal <dialog>) and its kit. Structure and 44 px targets,
+   inherited colors; a template adds color, type and its margins. The play mark, the length and the player's
+   letterbox sit on the film's own dark frame, so they are drawn in white on black whatever the template. */
+.nb-videos { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 32px 24px; }
+.nb-videos--strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 720px) {
+  .nb-videos--strip { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 78%; overflow-x: auto; scroll-snap-type: x mandatory; }
+  .nb-videos--strip > * { scroll-snap-align: start; }
+}
+.nb-video-card__link { display: grid; gap: 10px; text-decoration: none; }
+.nb-video-card__frame { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 6px; background: #000; }
+.nb-video-card__poster { inline-size: 100%; block-size: 100%; object-fit: cover; }
+.nb-video-card__play {
+  position: absolute; inset: 0; margin: auto; inline-size: 54px; block-size: 54px; border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .75); background: rgba(0, 0, 0, .45); transition: transform .2s;
+}
+.nb-video-card__play::after {
+  content: ""; position: absolute; left: 21px; top: 17px;
+  border-left: 16px solid #fff; border-top: 10px solid transparent; border-bottom: 10px solid transparent;
+}
+.nb-video-card__link:hover .nb-video-card__play { transform: scale(1.08); }
+.nb-video-card__time {
+  position: absolute; right: 8px; bottom: 8px; padding: 2px 7px; border-radius: 4px; background: rgba(0, 0, 0, .72);
+  color: #fff; font-size: 12px; font-variant-numeric: tabular-nums;
+}
+.nb-video-card__title { margin: 0; }
+
+.nb-visor {
+  inline-size: min(1180px, calc(100vw - 32px)); max-inline-size: none; max-block-size: calc(100dvh - 32px);
+  padding: 0; border: 1px solid currentColor; border-radius: 12px; color: inherit; overflow: auto;
+}
+.nb-visor::backdrop { background: rgba(0, 0, 0, .8); }
+/* autofocus puts the focus on the dialog itself (not on the ×): a screen reader hears the film's title, Tab reaches the
+   controls, and nothing is ringed for a mouse open. */
+.nb-visor:focus { outline: none; }
+.nb-visor__frame { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; padding: 20px; }
+.nb-visor__close {
+  position: absolute; top: 6px; right: 6px; z-index: 1; display: inline-flex; align-items: center; justify-content: center;
+  min-inline-size: 44px; min-block-size: 44px; font-size: 28px; line-height: 1; text-decoration: none;
+}
+.nb-visor__media { align-self: start; min-inline-size: 0; }
+.nb-visor__video { display: block; inline-size: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: 8px; }
+.nb-visor__kit { display: flex; flex-direction: column; gap: 14px; min-inline-size: 0; padding-top: 30px; }
+.nb-visor__downloads { display: flex; flex-wrap: wrap; gap: 8px; }
+/* Its own gap: inside a template's flex button the space before the size is trimmed away. */
+.nb-visor__size { margin-inline-start: .5em; opacity: .75; font-size: .85em; font-variant-numeric: tabular-nums; }
+.nb-visor__caption { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 6px 12px; padding: 12px 14px; border: 1px solid currentColor; border-radius: 8px; }
+.nb-visor__caption[hidden] { display: none; }
+.nb-visor__caption-text { grid-column: 1 / -1; }
+.nb-visor__copy, .nb-share__link {
+  display: inline-flex; align-items: center; justify-content: center; min-block-size: 44px; min-inline-size: 44px; padding: 0 14px;
+  border: 1px solid currentColor; border-radius: 22px; background: transparent; color: inherit; font: inherit; text-decoration: none; cursor: pointer;
+}
+.nb-visor__native { inline-size: 100%; }
+.nb-share { display: grid; gap: 8px; }
+.nb-share__list { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; }
+.nb-visor__status:empty { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
+@media (max-width: 720px) {
+  .nb-visor { inline-size: 100vw; block-size: 100dvh; max-block-size: 100dvh; margin: 0; border: 0; border-radius: 0; }
+  .nb-visor__frame { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 52px 16px 28px; }
+  .nb-visor__kit { padding-top: 0; }
+}
+/* Upright phones play the vertical file (the <source> media query is the same one). */
+@media (max-width: 720px) and (orientation: portrait) {
+  .nb-visor__video { aspect-ratio: 9 / 16; inline-size: auto; max-inline-size: 100%; block-size: min(68dvh, 150vw); margin: 0 auto; }
+}

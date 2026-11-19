@@ -519,3 +519,17 @@
   [data-template="polvo"] .nb-prose blockquote { font-size: 21px; }
   [data-template="polvo"] .nb-article-cta { margin-top: 40px; padding: 30px 0; gap: 16px; }
 }
+
+/* Videos */
+[data-template="polvo"] .nb-page--videos .nb-videos, [data-template="polvo"] .nb-page--video .nb-videos { padding: 28px var(--p-x) 0; }
+[data-template="polvo"] .nb-films .nb-videos { margin-top: 22px; }
+[data-template="polvo"] .nb-video-card__frame { border: 1px solid var(--p-line); }
+[data-template="polvo"] .nb-video-card__title { font-family: var(--p-display); font-weight: 400; font-size: 22px; line-height: 1.22; color: var(--p-ink); }
+[data-template="polvo"] .nb-visor { background: var(--p-panel); color: var(--p-ink); border-color: var(--p-line2); }
+[data-template="polvo"] .nb-visor__title { font-family: var(--p-display); font-weight: 400; font-size: 32px; line-height: 1.15; }
+[data-template="polvo"] .nb-visor__line, [data-template="polvo"] .nb-visor__close { color: var(--p-mute); }
+[data-template="polvo"] .nb-visor__caption { background: var(--p-bg); border-color: var(--p-line2); }
+[data-template="polvo"] .nb-visor__caption-label, [data-template="polvo"] .nb-share__label { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--p-mute); }
+[data-template="polvo"] .nb-visor__tags { color: var(--p-lav); }
+[data-template="polvo"] .nb-visor__copy, [data-template="polvo"] .nb-share__link { border-color: var(--p-line2); font-size: 15px; }
+[data-template="polvo"] .nb-visor__status { color: var(--p-lav); font-size: 14px; }

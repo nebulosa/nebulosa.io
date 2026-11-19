@@ -33,7 +33,13 @@ home:
   clients_title: "Worked with"
   insights_title: "Latest insights"
   insights_more: "All posts →"
+  films_title: "Films"
+  films_more: "All films →"
   cta_title: "Need a proof? Contact Nebulosa."
+
+videos:
+  heading: "Videos"
+  lead: "Short films on how we build software. Watch them here, download either format, share them anywhere."
 
 services:
   heading: "Services"

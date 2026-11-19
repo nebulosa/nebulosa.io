@@ -34,6 +34,13 @@ plugins:
 feed:
   path: blog/rss.xml
 
+# The approved films (tools/videos/import.py writes the cards and copies the files to assets/videos/<slug>/).
+# /videos/<slug> is the grid with that film's viewer open, and carries its own preview card for link shares.
+collections:
+  videos:
+    output: true
+    permalink: /videos/:name
+
 # Extensionless /blog/<slug> is served from blog/<slug>.html by GitHub Pages.
 # That is also why covers live in assets/img/blog/, not in a blog/<slug>/ folder.
 defaults:
@@ -46,5 +53,9 @@ defaults:
         type: Organization
         name: Nebulosa
         url: "https://nebulosa.io/"
+  - scope: { type: videos }
+    values:
+      layout: videos
+      nb_page: video
 
 exclude: [tools, scripts, docs, .playwright-mcp, .superpowers, Gemfile, Gemfile.lock, .dockerignore, README.md, AGENTS.md, CLAUDE.md, Dockerfile, docker-compose.yml]

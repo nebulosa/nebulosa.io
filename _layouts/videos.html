@@ -1,0 +1,23 @@
+---
+layout: core
+---
+{%- comment -%} /videos/ (the grid) and /videos/<slug> (the same grid with that film's viewer open). The films'
+    data rides along as JSON for videos.js, which opens the viewer in place and keeps the address in step. {%- endcomment -%}
+{%- assign list = site.videos | sort: "date" | reverse -%}
+{%- assign c = site.data.site_copy.videos -%}
+{%- if page.collection == "videos" -%}{%- assign shown = page -%}{%- else -%}{%- assign shown = list | first -%}{%- endif %}
+      <section class="nb-page-head" aria-labelledby="nb-videos-title">
+        {% include core/slot.html name="page-head-art" %}
+        <h1 class="nb-page-head__title" id="nb-videos-title">{{ c.heading }}</h1>
+        <p class="nb-page-head__lead">{{ c.lead }}</p>
+      </section>
+
+      <div class="nb-videos">
+        {%- for v in list %}
+        {% include core/video-card.html video=v heading="h2" %}
+        {%- endfor %}
+      </div>
+
+      {% include core/visor.html video=shown open=page.collection %}
+      <script type="application/json" id="nb-videos-data">[{% for v in list %}{"slug":{{ v.slug | jsonify }},"title":{{ v.title | jsonify }},"caption":{{ v.caption | jsonify }},"tags":{{ v.tags | jsonify }},"url":{{ v.url | jsonify }},"size_horizontal":{{ v.size_horizontal }},"size_vertical":{{ v.size_vertical }}}{% unless forloop.last %},{% endunless %}{% endfor %}]</script>
+      <script src="/assets/core/videos.js?v={{ site.time | date: '%s' }}" defer></script>

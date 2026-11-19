@@ -1,0 +1,14 @@
+---
+---
+{%- comment -%} Every film on the site with what an agent needs to post it elsewhere: absolute file URLs, the
+    approved caption and tags (empty until approved), and where it is already posted. Newest first. {%- endcomment -%}
+{%- assign list = site.videos | sort: "date" | reverse -%}
+[{% for v in list %}{% assign base = site.url | append: "/assets/videos/" | append: v.slug %}
+  {"slug": {{ v.slug | jsonify }}, "title": {{ v.title | jsonify }}, "seconds": {{ v.seconds }},
+   "caption": {{ v.caption | jsonify }}, "tags": {{ v.tags | jsonify }},
+   "files": {"horizontal": {{ base | append: "/horizontal.mp4" | jsonify }}, "vertical": {{ base | append: "/vertical.mp4" | jsonify }},
+             "poster": {{ base | append: "/poster.jpg" | jsonify }}, "poster_vertical": {{ base | append: "/poster-vertical.jpg" | jsonify }}},
+   "bytes": {"horizontal": {{ v.size_horizontal }}, "vertical": {{ v.size_vertical }}},
+   "posted": {% if v.posted %}{{ v.posted | jsonify }}{% else %}{}{% endif %},
+   "page": {{ site.url | append: v.url | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}
+]
